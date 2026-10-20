@@ -159,6 +159,7 @@ git status --short
 ## 文件导航
 
 - [`README.md`](README.md)：GitHub 首页，面向研究者和开发者；
+- [`CODE-PROVENANCE.md`](CODE-PROVENANCE.md)：本项目代码、上游代码和许可证边界；
 - [`README.txt`](README.txt)：详细 Linux/Windows 运维步骤；
 - [`ARCHITECTURE-PLAN.txt`](ARCHITECTURE-PLAN.txt)：总体架构和后续路线；
 - [`PHASE1-STATUS.json`](PHASE1-STATUS.json)：机器可读的状态与证据；

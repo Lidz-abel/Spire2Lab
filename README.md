@@ -187,6 +187,8 @@ The canonical progress record is [`PROJECT-HANDOFF.md`](PROJECT-HANDOFF.md). It 
 
 The project is currently in **Phase 1, awaiting Windows live-game inputs**. Local simulator and UI evidence must not be reported as full original-game parity.
 
+Code ownership and upstream boundaries are documented in [`CODE-PROVENANCE.md`](CODE-PROVENANCE.md).
+
 ## Citation
 
 If Spire2Lab becomes useful in research, please cite the repository:
