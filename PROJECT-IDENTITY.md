@@ -1,9 +1,9 @@
-# SpireLab
+# Spire2Lab
 
-SpireLab 是面向《杀戮尖塔 2》的可复现自主强化学习实验环境。
+Spire2Lab 是面向《杀戮尖塔 2》的可复现自主强化学习实验环境。
 
-- 对外项目名：`SpireLab`
-- 建议 GitHub 仓库名：`spirelab`
+- 对外项目名：`Spire2Lab`
+- GitHub 仓库名：`Spire2Lab`
 - 中文描述：杀戮尖塔 2 自主强化学习实验室
 - 英文描述：A reproducible research lab for search, hierarchical decision-making, and efficient reinforcement learning in Slay the Spire 2.
 - 当前内部 Python 包：`sts2lab`

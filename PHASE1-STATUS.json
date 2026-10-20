@@ -1,7 +1,7 @@
 {
   "goal": "完成第一阶段",
-  "project_name": "SpireLab",
-  "repository_slug": "spirelab",
+  "project_name": "Spire2Lab",
+  "repository_slug": "Spire2Lab",
   "status": "awaiting_windows_input",
   "requirements": {
     "versioned_semantic_protocol": "implemented_v0.2.0",

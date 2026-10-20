@@ -1,6 +1,6 @@
-SpireLab — 第一阶段实验环境
+Spire2Lab — 第一阶段实验环境
 
-项目目录：/user/chenzk/sts2-lab（建议 GitHub 仓库名：spirelab）
+项目目录：/user/chenzk/sts2-lab（GitHub：Lidz-abel/Spire2Lab）
 当前状态：Linux 战斗环境与面板可运行；原版适配已接入运行控制并通过合成接口测试，Windows 实机兼容与逐步一致性尚未通过。
 完整验收清单见 PHASE1-STATUS.json。不得将模拟器自测视为本机原版一致性证明。
 整体架构、第一阶段建设顺序与后续路线见 ARCHITECTURE-PLAN.txt。
