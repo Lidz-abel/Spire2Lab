@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <AssemblyName>Sts2Emulator</AssemblyName>
+    <OutputType>Library</OutputType>
+    <NativeLib>Shared</NativeLib>
+    <TargetFramework>net9.0</TargetFramework>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <PublishAot>true</PublishAot>
+    <InvariantGlobalization>true</InvariantGlobalization>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="../vendor/sts2/src/Sts2Emulator/**/*.cs" Exclude="../vendor/sts2/src/Sts2Emulator/obj/**/*.cs;../vendor/sts2/src/Sts2Emulator/bin/**/*.cs;../vendor/sts2/src/Sts2Emulator/Interop/NativeExports.cs" />
+    <Compile Include="generated/NativeExports.cs" />
+    <Compile Include="LabExports.cs" />
+    <TrimmerRootDescriptor Include="../vendor/sts2/src/Sts2Emulator/ILLink.Roots.xml" />
+    <UnmanagedEntryPointsAssembly Include="Sts2Emulator" />
+  </ItemGroup>
+</Project>

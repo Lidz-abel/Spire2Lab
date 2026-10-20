@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "spirelab"
+version = "0.1.0"
+description = "Versioned, observable Slay the Spire 2 combat research environment"
+requires-python = ">=3.12"
+dependencies = ["fastapi==0.145.0", "uvicorn==0.54.0", "httpx==0.28.1", "pydantic==2.14.1", "gymnasium==1.4.0", "numpy==2.5.4"]
+
+[project.optional-dependencies]
+dev = ["pytest==9.1.1", "pytest-asyncio==1.4.0", "playwright==1.64.0", "black==26.10.1"]
+
+[tool.setuptools.packages.find]
+include = ["sts2lab*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

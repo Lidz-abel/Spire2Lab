@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Spire Lab · 战斗实验台</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <header><a class="brand" href="/">◈ <span>SPIRE <b>LAB</b></span></a><span class="subtitle">自主决策实验台 / PHASE 01</span><div class="connection"><i id="connection-dot"></i><span id="connection">正在连接</span></div></header>
+  <div class="workspace">
+    <aside class="sidebar">
+      <div class="eyebrow">EXPERIMENT</div><h1>战斗实验</h1><p class="muted">观察每一次选择，追溯每一步结果。</p>
+      <form id="scenario-form">
+        <label for="backend">实验后端</label><select id="backend"><option value="native_simulator">Linux 模拟器</option><option value="original_game">Windows 原版游戏</option></select>
+        <p id="backend-hint" class="small muted">新建固定初始条件的模拟战斗。</p>
+        <label for="encounter">遭遇</label><select id="encounter"><option value="nibbits-weak">Nibbits · 初始遭遇</option><option value="slimes-weak">Slimes · 初始遭遇</option><option value="sludge-spinner">Sludge Spinner</option></select>
+        <div class="form-grid"><div><label for="seed">环境种子</label><input id="seed" type="number" min="0" max="2147483647" value="1" required></div><div><label for="policy-seed">策略种子</label><input id="policy-seed" type="number" value="0" required></div></div>
+        <label for="policy">智能体</label><select id="policy"><option value="heuristic">规则策略 · 可解释评分</option><option value="random">随机策略 · 合法动作均匀抽样</option></select>
+        <button id="new-session" class="secondary full" type="submit">新建实验</button>
+      </form>
+      <div class="rule-line"></div>
+      <div class="eyebrow">ENVIRONMENT</div><dl class="environment"><dt>执行后端</dt><dd id="backend-label">等待连接</dd><dt>目标游戏版本</dt><dd>v0.107.1</dd><dt>角色 / 进阶</dt><dd>铁甲战士 / A0</dd><dt>初始条件</dt><dd>10 张牌 · 燃烧之血</dd><dt>原版参考集</dt><dd id="acceptance-status" class="pending">等待本机原版校验</dd></dl>
+      <p id="source-note" class="small muted"></p>
+      <div class="rule-line"></div>
+      <div class="eyebrow">REPLAY</div><label for="run-list">已记录实验</label><select id="run-list"><option>正在加载</option></select>
+      <div class="button-row"><button id="load-replay" class="secondary">打开回放</button><button id="back-live" class="secondary" hidden>返回实时</button></div>
+      <a id="download" class="text-link" href="#">下载当前完整轨迹 ↗</a>
+      <p class="small muted">种子与构建版本进入实验记录，不进入智能体观测。</p>
+    </aside>
+    <main>
+      <div id="error" role="alert" hidden></div>
+      <div id="archive-controls" hidden><p class="small muted">无法确认游戏结果时，可以归档本次实验。未决动作会保留为未知结果，归档不会操作游戏。</p><button id="archive" class="secondary">归档异常实验</button></div>
+      <div class="toolbar"><div><span id="mode" class="pill">实时实验</span><span id="status" class="status">准备中</span></div><div class="button-row"><label class="speed">间隔 <select id="speed"><option value="1.5">1.5 秒</option><option value="0.8" selected>0.8 秒</option><option value="0.25">0.25 秒</option></select></label><button id="reconcile" class="secondary" hidden>确认游戏结果</button><button id="run" class="secondary">▶ 自动运行</button><button id="step" class="primary">执行一步 →</button></div></div>
+      <div id="replay-controls" hidden><label for="replay-position">回放位置 <span id="replay-label"></span></label><input id="replay-position" type="range" min="0" value="0"><p class="small muted">正在查看记录中的观测与真实决策；回放不会执行游戏动作。</p></div>
+      <div class="arena-heading"><div><div class="eyebrow">COMBAT OBSERVATION</div><h2 id="encounter-title">正在读取战斗状态</h2></div><span id="turn" class="turn">—</span></div>
+      <div class="battle-grid"><section id="player" class="player-card" aria-label="玩家状态"></section><section id="enemies" class="enemies" aria-label="敌人状态"></section></div>
+      <div id="outcome" hidden></div>
+      <div class="hand-heading"><h3>当前手牌 <span id="hand-count"></span></h3><div id="piles"></div></div>
+      <section id="hand" class="hand" aria-label="当前手牌"></section>
+      <details class="inspector"><summary>查看牌堆组成与智能体实际输入</summary><p class="small muted">抽牌堆以无序组成展示；已知牌顶和牌底单独记录。此处不含真实隐藏顺序。</p><pre id="observation-json"></pre></details>
+      <section class="timeline"><div class="panel-heading"><h3>执行记录</h3><span class="small muted">动作 → 实际变化</span></div><div id="history"></div></section>
+    </main>
+    <aside class="decision-panel"><div class="eyebrow">AGENT DECISION</div><h2>这一步，怎么选</h2><p id="decision-meta" class="small muted"></p><div id="proposal"></div><h3 class="candidate-heading">候选动作</h3><p class="small muted">分数来自当前策略，不代表胜率。点击候选动作可单步干预。</p><div id="candidates"></div><div class="rule-line"></div><div class="eyebrow">ACTUAL RESULT</div><div id="last-result" class="result"></div></aside>
+  </div>
+  <footer><span>SpireLab · 实验协议 v0.2</span><span id="decision-id">连接后显示决策编号</span></footer>
+  <script type="module" src="/static/app.js"></script>
+</body>
+</html>

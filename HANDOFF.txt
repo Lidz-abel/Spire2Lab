@@ -1,0 +1,180 @@
+Goal: 完成第一阶段. NOT COMPLETE. Preserve requirements in PHASE1-STATUS.json.
+Latest checkpoint (2026-10-19): awaiting Windows inputs after repeated missing-report/tunnel checks.
+Architecture and first-phase construction plan: ARCHITECTURE-PLAN.txt.
+The scoped acceptance gate is implemented in sts2lab/acceptance.py and scripts/audit_acceptance.py;
+config/acceptance.json fixes 60 original reference cases plus required boundary coverage.
+Recent evidence: 43 Python tests passed; 6 native browser workflows and 5 synthetic-original browser
+workflows passed without JavaScript errors. Synthetic checks are NOT live-original proof.
+Acceptance audit failed as expected: no artifacts/windows/report.json; all 60 original cases missing.
+No Windows DLLs, compiled live Mod, original initial-state/RNG alignment, or live parity proof yet.
+The build script hash is bound into the Mod manifest and acceptance evidence.
+README documents evidence index and audit invocation. PHASE1-STATUS.json is the current status.
+Older implementation notes below are historical when they conflict with this checkpoint.
+Next meaningful critical-path work needs Windows version/reference assemblies and an active bridge.
+Do not spawn subagents. Do not mark the goal complete on simulator evidence alone.
+
+Scope and decisions
+- Linux compute; separate low-powered Windows Steam PC. Windows can SSH to Linux.
+- Phase1: Ironclad A0, starter deck 5 Strike + 4 Defend + Bash, Burning Blood, no potions,
+  80/80 HP, 99 gold, floor2, three encounters: nibbits-weak/slimes-weak/sludge-spinner.
+- Structured player-visible observations, random and explainable heuristic agents, live dashboard,
+  replay, simulator, original adapter, training interface, actual original-game parity required.
+- Later search, hierarchy, efficient training and original graphics. No RL training in phase1.
+- Target in workspace v0.107.1; user's date 2026-06-19 public version is NOT actual version proof.
+- Async SSH destination/port question was already sent; no reply. Do not repeat it unnecessarily.
+- No Windows report or assemblies received at end of current turn.
+
+Pinned upstreams (unchanged sources)
+- vendor/sts2 evangambit/sts2 37e4264115546b6ac640d54aab3d7e2ac6983d2d, MIT, v0.107.1.
+  Canonical archive SHA409f62e2654c6c4e7fbb748b1ef3c3e6cc147118c313bff6db992d1054dbdd27.
+- vendor/sts2mcp-v107 evangambit/STS2MCP 18bc23be210bbe804ae4471dfd2cb33bd481e247, MIT.
+  Archive SHA5b8053e5eca28f0a6293f58588effdcb107fcc42f910186c31b2bf049710c56f.
+  Pinned after v0.107 fix, before v0.111 migration. Includes debug staging and ordered piles.
+- Other vendor/sts2mcp* candidate dirs are ignored and not used.
+- .tools/dotnet/dotnet 9.0.319; Python3.12 .venv, requirements.lock; GCC NativeAOT (no clang).
+
+Current implementation
+- NativeLab readonly exporter links original mechanics; generated NativeExports only gains partial.
+  Native exports API29/run19/Lab1. Global RLock; upstream handle pool256 is not thread safe.
+- .tools/native current library SHA90f73b83758827c8f8377b35f5ea19f1f59fc8c4a6b72ed01be02b0500f6a65d.
+  scripts/build_native.py publishes to temporary directory then replaces binary and manifest;
+  existing mapped .so survives. A running process refuses new env creation if library SHA changes.
+  Existing process continued serving after rebuild; new-session refusal was observed.
+  Old build2034dd... was replaced BEFORE history preservation was added, so not necessarily recoverable.
+  The updated script now archives previous build in .tools/native-history before replacement;
+  that added history branch has NOT yet been exercised by another rebuild.
+- contracts.py protocol0.2.0: optional terminal energy/maxenergy, optional intent magnitudes/hits,
+  unavailable_fields marks absent original terminal data rather than representing known zero/empty.
+- Simulator sorts powers and unordered piles canonically. Non-damage intent internal values hidden.
+  Exception: LeafSlimeS/LeafSlimeM/TwigSlimeM native Debuff mapped to StatusCard with visible count.
+  Verified original upstream A8 captures show StatusCard labels1/2; generic nonattack Buff/Defend labels empty.
+  This is source/fixture evidence, NOT this user's live parity. Policies see only Observation.
+- Gym encoding combat-entities-v2: StatusCard canonical intent ID6, visible count, zero unavailable hits;
+  unknown nonattack amounts encoded as zero placeholders. Padded entity bounds fail rather than truncate.
+  Standard check_env, two-process sampling, masked invalid no-op samples explicitly marked not training.
+- OriginalEnvironment in original.py: maps actual Mod fields, strict opening scope, unique decision refs,
+  actions mapped to original entity IDs; supports starter cards and SLIMED only. Original seed unknown/None.
+  Card IDs/upgrades/cost/playability independent; printed damage/block from pinned catalog and excluded
+  from parity evidence. Explicit lab_has_enchantment=False required on all cards and permanent deck.
+  Canonical names from catalog.py loads names.py directly without initializing native simulator.
+  Raw captures private artifacts/original-raw/<epoch>; names and SHA recorded in metadata/transition facts.
+- runtime.py supports native_simulator/original_game via async factory. Cached views responsive while
+  executing/reconciling. Pause stops future decisions immediately. Request de-dup; no blind POST retries.
+  awaiting_confirmation retains request until POST /api/reconcile produces one verified transition.
+  Unresolved actions block new sessions. Native environment errors surfaced as503 JSON; bridge errors409.
+- bridge.py checks protocol1, game hash, processnonce; POST once, polls changed+settled+same request ack.
+  Transport failures/unknown results stay unresolved. Original process restart currently cannot recover
+  into a new session through UI while pending; ending/archiving an unresolved session is a remaining gap.
+- bridge/McpMod.Lab.cs: state tokens, processnonce, gamehash, settled250ms, stale reject, request dedup4096,
+  readiness via IsPlayPhase/PlayerActionsDisabled/Hand.InCardPlay. Acks excluded from statehash.
+  LabHasEnchantment uses reflection on CardModel.Enchantment and FAILS if property cannot be read;
+  exact API/property and actual compile/run still need user's DLLs. No guesses silently treated absent.
+- build_bridge.py --prepare-only executed successfully: exact source hooks patched, copies prepared
+  into .tools/bridge-src. Adds lab_character_id; pile IDs/upgrades; has_enchantment all cards/deck;
+  power serialization now throws on errors rather than silently skipping powers.
+  Build mode still needs user's sts2.dll,GodotSharp.dll,0Harmony.dll/report. NOT compiled yet.
+- Corrected installer to upstream's mods/STS2_MCP/STS2_MCP.dll + mod_manifest.json layout.
+  Installer checks game/mod/manifestSHA, backs up old files outside game and rolls back managed files
+  on copy failure. Root legacy pair backed up and removed to avoid duplicate loading.
+  Windows PowerShell scripts not executed; pwsh absent here. No actual game/save changes performed.
+- parity.py + scripts/compare_traces.py: requires original+native traces, checks trace command causality,
+  game fingerprints/raw-capture hashes/process continuity/ack, re-normalizes originals, reexecutes native
+  candidate using current exact library, compares independent public fields and semantic actions.
+  Handles enemy slot gaps via living target index, strips borrowed printed values/display names/IDs.
+  Terminal omissions explicit; live omissions refused. Synthetic transport evidence refused.
+  Reports compared scope/fields; partial trace never passes full-battle gate; global parity always false.
+  Initial-state/RNG alignment generation NOT implemented. Merely giving equal seeds is insufficient.
+- UI backend selector, unknown original seed, execution/confirmation states, reconcile button, pause
+  during execution, missing terminal field display, source labels, synthetic fixture watermark.
+  Existing step/run/manual intervention/replay/download/mobile flows preserved. No streaming pixels yet;
+  original_pixels capability is FALSE, native_game_window TRUE. Do not advertise captured video support.
+
+Current evidence
+- artifacts/lab-tests.xml: 32 passed (latest current Python changes).
+- artifacts/browser-checks.json: 6 actual-browser native paths, no JS errors.
+- artifacts/original-dashboard-synthetic/report.json: 4 actual-browser paths against SYNTHETIC HTTP:
+  backend selection, timeout->reconcile no repost, terminal missing fields, mobile. Not real game proof.
+  Latest screenshot includes a synthetic-data note. Script self-starts/stops temporary server.
+- artifacts/benchmark-development.json: 60 battles/980 decisions complete, both30wins; simulator-only.
+  Includes actual current build/config/protocol/policy seed and version/timing scope, reset excluded.
+  Around1000 decisions/sec on this CPU for policy+step; use actual report rather than hardcoding.
+  Heldout not used. Do not claim learning quality or original-game win rate.
+- Earlier upstream C#4801pass/1skip, Python519pass/7skip/1fail of527. Failure TENDER_POWER absent from
+  upstream PRESENCE_ONLY_POWERS. Outside starter scope; don't hide or describe all upstream tests green.
+- git diff --check and cached --check passed before final documentation update.
+
+Next work
+1. Real original initialization and simulator alignment/capture workflow. Need actual original DLLs
+   and tunnel to verify/build, stage clean benchmark safely, run action+full battle, compare traces.
+   Existing attach demands an exact opening; no automatic staging tool yet.
+2. Independent improvements still possible: verify bootstrap's pre-existing vendor directories against
+   pinned archives (currently preserves without verification); exercise build-history retention;
+   add explicit ending/archiving of unrecoverable pending sessions without retrying game action;
+   strengthen comparison pipeline tests beyond current projection/rejection tests.
+3. Future game graphics: align real captures by run/decision IDs; never label a simulated branch as
+   an original screenshot. This user's requested later graphics are not a pixel-policy requirement now.
+
+Operations
+- bash scripts/start.sh serves loopback8765; Windows SSH forward8765 and reverse18526->15526.
+- httpx trust_env=False; curl --noproxy127.0.0.1,localhost needed due environment proxy.
+- .venv/bin/python -m pytest -q --junitxml=artifacts/lab-tests.xml
+- .venv/bin/python scripts/benchmark.py --split development
+- PLAYWRIGHT_BROWSERS_PATH="$PWD/.tools/browsers" .venv/bin/python scripts/check_dashboard.py
+- Same prefix ... scripts/check_original_dashboard.py (self-hosted synthetic test server).
+- .venv/bin/python scripts/build_bridge.py --prepare-only (not a compilation proof).
+- .venv/bin/python scripts/compare_traces.py original.jsonl simulated.jsonl --output artifacts/parity/report.json
+
+QA server was session8969 PID2799497 on127.0.0.1:8765; stopped at turn teardown after browser tests.
+No live downloads/builds/test jobs should remain. Verify actual state rather than trusting this note.
+Repository has only new files, most staged from earlier work and later edits unstaged. No commit yet.
+Sites skill used in local-only mode; no hosting, cloud registration or publication. No subagents.
+
+2026-10-19 continuation — authoritative update (supersedes older counts/gaps above)
+- Current turn made substantial progress, not a blocked/no-progress turn. Goal remains active.
+- Still no Windows artifacts/report/DLLs and no listener18526. No actual game access.
+- Read SSH_CONNECTION server side only: userchenzk, private10.26.16.241, port22.
+  Windows reachability/external NAT target NOT established. Do not treat this as a working Windows target.
+- source_integrity.py verifies canonical archive SHA, all expected file bytes, unsafe paths, extra build
+  sources outside archive. obj/bin/etc build dirs skipped for extra-source detection only; expected files
+  always verified. Cached once per process on native loading, runs every build/bootstrap.
+- Archived source inputs from verified /tmp/sts2-pinned.tar.gz and /tmp/sts2mcp-v107.tar.gz into
+  .tools/vendor-archives/<name>-<commit>.tar.gz. Actual1417files (1383+34) passed verification.
+- Full scripts/bootstrap.py executed in current environment: uv37packages checked, sources verified,
+  SDK/native build completed, 38tests passed. Native SHA still90f73b...65d. Previous binary/manifest
+  preserved in .tools/native-history/<sameSHA> and independently hashed. Evidencebootstrap-check.json.
+- runtime.archive(run_id), POST/api/archive, abnormal-session UI archive button implemented.
+  Blocks stale/run-in-progress requests, records unresolved ID/unknown outcome, closes client without
+  gameplay commands, shows last-confirmed observation as stale, clears dedup cache, allows new session.
+  Unresolved archived traces remain invalid parity evidence; no invented terminal/reward transition.
+- semantic trace loading centralized in traces.load_semantic_trace; rejects overlapping/unresolved
+  actions, stale entity references, errors, events after closure. replay_trace uses this validation too.
+  parity._load remains an imported alias for compatibility with tests/tools.
+- reference_replay.py + scripts/replay_reference.py implemented. CLI requires one declared seed, new
+  candidate/report paths. Real captures first corroborated; public initial state AND original ordered
+  draw pile must match untouched Simulator. Applies reference actions by hand/living-target semantics,
+  stops at first mismatch. Never searches seeds or edits simulator state. Then compare_traces runs.
+  Component tests use explicitly synthetic simulator-derived fixtures; CLI refuses synthetic originals.
+  This is a usable generation/comparison path, NOT proven initial alignment with real game.
+- package_windows.py emits artifacts/installers/sts2-lab-windows.zip with Connect/Install scripts,
+  START-HERE.txt, package.json hashes; no game assemblies. ZIP contents/hash checked.
+  PackageSHAbc272da98150b4d922013d217a7c92ad85f79ee8e6598fa57a097bcdb667de56 at creation.
+- Latest pytest38pass artifacts/lab-tests.xml. Native browser6paths and synthetic original browser5paths
+  pass; fifth verifies unknown archive -> new native experiment with no further game POST.
+  No JavaScript errors. Prior60battle/980step benchmark same native SHA; no need to rerun absent mechanics
+  changes. Windows scripts remain not executed, bridge source only prepared, never compiled.
+- New files tests/test_source_integrity.py, tests/test_reference_replay.py and above modules/scripts.
+- QA native server session10670 PID2805285 started for browser checks; stopped at teardown.
+- No pending build/test/download jobs. Verify actual processes rather than trusting notes.
+
+Remaining critical path
+1. Receive actual Windows references/tunnel, compile lab Mod, verify reflected Enchantment API and
+   all original raw fields against actual game. Run known opening -> one step -> complete battles.
+2. Real initialization/staging and RNG alignment remain unproven. The new replay tool is intentionally
+   strict: if ordinary simulator reset doesn't match original opening, report mismatch. Need capture
+   actual live RNG seeds/counters or deterministic pre-battle setup; DO NOT use upstream's seed search
+   against full outcomes to manufacture passing parity. Upstream validate_real_game_trace.py contains
+   such a search and must not be adopted for acceptance.
+3. Acceptance suite/registry still needs explicit scenario/seed/field coverage and raw-evidence hashes
+   before health/reference_status can report any verified scope. A few synthetic tests never suffice.
+4. Until Windows arrives, can still improve the acceptance audit and capture workflow from pinned
+   source evidence; avoid speculative game API writes or unbounded polishing. No original-game proof.

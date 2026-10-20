@@ -1,0 +1,8 @@
+{
+  "repository": "https://github.com/evangambit/sts2",
+  "commit": "37e4264115546b6ac640d54aab3d7e2ac6983d2d",
+  "archive_sha256": "409f62e2654c6c4e7fbb748b1ef3c3e6cc147118c313bff6db992d1054dbdd27",
+  "game_version_target": "0.107.1",
+  "license": "MIT",
+  "local_game_verified": false
+}

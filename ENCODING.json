@@ -1,0 +1,64 @@
+{
+  "version": "combat-entities-v2",
+  "scope": "phase1 ironclad starter scenarios only",
+  "ids": "categorical; use embeddings, never infer numerical ordering",
+  "player": [
+    "hp",
+    "max_hp",
+    "block",
+    "energy",
+    "max_energy",
+    "gold",
+    "zero_based_turn",
+    "hand_count"
+  ],
+  "card_rows": [
+    "native_card_type_id",
+    "upgraded",
+    "current_cost",
+    "printed_damage",
+    "printed_block",
+    "bonus_damage",
+    "enchant_amount"
+  ],
+  "enemy_rows": [
+    "native_enemy_type_id",
+    "hp",
+    "max_hp",
+    "block",
+    "intent_1_type_plus_one",
+    "intent_1_magnitude",
+    "intent_1_hits",
+    "intent_1_deals_damage",
+    "intent_2_type_plus_one",
+    "intent_2_magnitude",
+    "intent_2_hits",
+    "intent_2_deals_damage",
+    "present"
+  ],
+  "powers": "player followed by up to six living enemies; each row contains native buff type ID and amount",
+  "relic_rows": [
+    "native_relic_type_id",
+    "counter"
+  ],
+  "actions": [
+    "kind: 1=play_card 2=end_turn",
+    "hand_index_or_minus_one",
+    "living_enemy_index_or_minus_one"
+  ],
+  "piles": "draw, discard, exhaust; unordered compositions, never hidden order",
+  "known_order": "known top, known bottom; top-to-bottom within each section",
+  "padding": "zero card/enemy/relic IDs indicate padding; legal actions use explicit mask",
+  "bounds": "10 hand cards, 64 cards per pile, 6 enemies, 16 powers per creature, 8 relics, 64 actions; overflow fails explicitly",
+  "extension_rule": "Enchantment identities, additional resources and selection screens need a versioned encoding extension before enabling corresponding content.",
+  "intent_visibility": "Attacks expose displayed total damage and hit count. StatusCard exposes the displayed card count with zero hits. Other non-damage intents expose type only; zero magnitude/hits are unavailable placeholders.",
+  "intent_ids": {
+    "padding": 0,
+    "Attack": 1,
+    "Defend": 2,
+    "Buff": 3,
+    "Debuff": 4,
+    "Unknown": 5,
+    "StatusCard": 6
+  }
+}

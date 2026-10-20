@@ -1,0 +1,8 @@
+{
+  "repository": "https://github.com/evangambit/STS2MCP",
+  "commit": "18bc23be210bbe804ae4471dfd2cb33bd481e247",
+  "archive_sha256": "5b8053e5eca28f0a6293f58588effdcb107fcc42f910186c31b2bf049710c56f",
+  "license": "MIT",
+  "status": "candidate_requires_compilation_against_local_game",
+  "note": "Pinned before the v0.111 API migration, after the v0.107 compatibility fix. Includes debug encounter controls and ordered piles for verification. Requires compilation against the user's actual game DLLs. Raw ordered piles must never be passed to agents."
+}

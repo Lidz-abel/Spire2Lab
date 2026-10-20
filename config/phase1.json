@@ -1,0 +1,20 @@
+{
+  "protocol_version": "0.2.0",
+  "benchmark_version": "ironclad-starter-v1",
+  "game_version": "0.107.1",
+  "character": "Ironclad",
+  "ascension": 0,
+  "deck": [472,472,472,472,472,131,131,131,131,30],
+  "relics": [36],
+  "potions": [],
+  "hp": 80,
+  "max_hp": 80,
+  "gold": 99,
+  "floor": 2,
+  "completed_combats": 0,
+  "encounters": ["nibbits-weak", "slimes-weak", "sludge-spinner"],
+  "development_seeds": [1,2,3,4,5,6,7,8,9,10],
+  "heldout_seeds": [1001,1002,1003,1004,1005,1006,1007,1008,1009,1010],
+  "max_steps": 300,
+  "reference_status": "awaiting_local_game_capture"
+}

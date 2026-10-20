@@ -1,0 +1,10 @@
+{
+  "suite_version": "phase1-live-reference-v1",
+  "seed_split": "development",
+  "policies": ["random", "heuristic"],
+  "minimum_complete_cases": 60,
+  "required_coverage": ["play_card", "end_turn", "turn_advance", "status_card_intent", "status_card_present", "power_present", "enemy_removed", "won", "lost"],
+  "allow_additional_boundary_probes": true,
+  "scope": "Ironclad A0 starter benchmark; finite original-game reference traces only",
+  "global_game_parity_claim": false
+}
