@@ -5,6 +5,10 @@
 项目地址：<https://github.com/Lidz-abel/Spire2Lab>
 
 本地目录：`/user/chenzk/sts2-lab`
+
+当前 Git 检查点：本地 `main` 已包含 README、转接文档和远程 LICENSE 的合并提交。
+
+远程已知检查点：`origin/main` 为 `4f24e17`（仅远程初始 LICENSE）。本地内容已经提交，待网络恢复后执行 `git push -u origin main`。
 项目目标：**完成第一阶段**
 
 ## 新会话启动指令
@@ -130,6 +134,8 @@ powershell -ExecutionPolicy Bypass -File .\Install-Windows-Mod.ps1 `
 ## Git 提交规则
 
 远程仓库：`https://github.com/Lidz-abel/Spire2Lab.git`
+
+最近一次推送尝试在服务器侧 HTTPS TLS 握手阶段失败；本地提交没有丢失，也没有远程写入。网络恢复后先运行 `git fetch origin main`，确认远程没有新增提交，再执行 `git push -u origin main`。
 
 每个 commit 只表达一个可核查进度，推荐顺序：
 
