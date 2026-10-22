@@ -2,18 +2,19 @@
 Run on the Windows PC that owns the Steam installation.
 Reads build information and copies three reference DLLs to the user's Linux server,
 then opens loopback-only SSH tunnels. Does not change saves or install a game mod.
-Example: .\Connect-Windows.ps1 -Server chenzk@my-server -SshPort 22
+Example: .\Connect-Windows.ps1 -Server user@server -RemoteRoot /srv/Spire2Lab -SshPort 22
 #>
 [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true)][ValidatePattern('^[a-zA-Z0-9_.@:\[\]-]+$')][string]$Server,
+    [Parameter(Mandatory=$true)][ValidatePattern('^/[a-zA-Z0-9_][a-zA-Z0-9_./-]*$')][string]$RemoteRoot,
     [ValidateRange(1,65535)][int]$SshPort = 22,
     [string]$GameDir = '',
     [switch]$SkipAssemblyCopy
 )
 $ErrorActionPreference = 'Stop'
 if ($Server.StartsWith('-')) { throw 'Server must be an SSH hostname or user@hostname.' }
-$RemoteRoot = '/user/chenzk/sts2-lab'
+$RemoteRoot = $RemoteRoot.TrimEnd('/')
 foreach ($Tool in @('ssh','scp')) { if (-not (Get-Command $Tool -ErrorAction SilentlyContinue)) { throw "Windows OpenSSH client is required: $Tool was not found." } }
 
 if (-not $GameDir) {
@@ -67,8 +68,8 @@ $ReportFile = Join-Path $env:TEMP 'sts2-lab-windows-report.json'
 $Report | ConvertTo-Json -Depth 6 | Set-Content -Encoding UTF8 $ReportFile
 Write-Host "Game installation: $GameDir"
 Write-Host "Steam build: $BuildId; sending reference hashes to your server."
-& ssh -p $SshPort $Server "mkdir -p $RemoteRoot/artifacts/windows/assemblies"
-if ($LASTEXITCODE -ne 0) { throw 'SSH setup failed.' }
+& ssh -p $SshPort $Server "test -f '$RemoteRoot/pyproject.toml' && test -f '$RemoteRoot/scripts/build_bridge.py' && mkdir -p '$RemoteRoot/artifacts/windows/assemblies'"
+if ($LASTEXITCODE -ne 0) { throw 'SSH setup failed. Check the server, port, and -RemoteRoot checkout path.' }
 & scp -P $SshPort $ReportFile "${Server}:$RemoteRoot/artifacts/windows/report.json"
 if ($LASTEXITCODE -ne 0) { throw 'Diagnostic upload failed.' }
 if (-not $SkipAssemblyCopy) {

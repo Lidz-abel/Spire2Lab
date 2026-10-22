@@ -22,6 +22,25 @@ VS Code Git 凭据服务连接被拒绝，GitHub 拒绝匿名写入。远程核�
 本次 Logo 和 README 尚未上传。已请用户在本机 Git 客户端恢复登录，未索取令牌。
 项目目标：**完成第一阶段**
 
+当前实施工作（2026-10-22，用户要求继续第一阶段）：Windows report 和桥接隧道仍缺失，
+原版验收仍为 0/60。已完成可独立推进的进程采样测量和 Windows 接入脚本改进：
+
+- `benchmark_sampling.py`：1/2/4 个 spawn 进程，各 3 轮，每轮 300 场，合计 2,700 场、
+  44,100 次决策；所有对应公开轨迹指纹一致，超时和异常退出后的进程清理测试通过。
+  本机 AMD EPYC 7T83、Python 3.12.3，平均约 951/1,616/3,025 决策/秒；包括初态准备、
+  策略、模拟、公开轨迹哈希和 IPC，排除启动/预热/退出，另报端到端口径。
+  RSS 为各进程生命周期峰值，峰值之和不是同时物理内存。证据：
+  `artifacts/sampling-development.json`，不得当作 RL 收益或原版性能。
+- Windows 两个脚本新增必填 `-RemoteRoot`，支持更换服务器项目路径；上传前检查远程
+  项目文件。安装时保留 LICENSE.txt 和 build.json；失败恢复已管理文件。
+  PowerShell 7.6.6 在 Linux 上以合成文件、模拟 SSH/SCP/Steam 测试路径、连接失败、
+  非法路径、指纹拒绝、成功安装和回滚。Windows 实机执行仍待确认。
+- 接入 ZIP 已重新生成；必须使用本轮版本并给两个脚本传相同服务器、项目路径和端口。
+- 完整项目测试：47 passed（1 项现有依赖弃用警告）；新目录安装复现接下来独立验证。
+
+为本轮增加的 `sampling.py` 先定义了固定工作量、信息边界、测量口径和进程退出用例，
+再使用 Python 标准库实现；规则仍经原有适配器执行，未替换上游引擎或 Mod。
+
 当前路线：`three-stage-v1`。三个阶段依次为可信实验平台、搜索与分层决策、
 高效训练与原版评测；详细任务 P1-01 至 P1-08 见 `ARCHITECTURE-PLAN.txt`。
 此前五阶段划分已被这份路线替代，原版画面要求合并到阶段 2/3，原创优先继续执行。
@@ -117,10 +136,11 @@ Spire2Lab 面向《杀戮尖塔 2》的自主强化学习研究，目标是支�
 
 | 证据 | 结果 | 说明 |
 | --- | --- | --- |
-| Python 测试 | 43 passed | `artifacts/lab-tests.xml` |
+| Python 测试 | 47 passed | `artifacts/lab-tests.xml`；包含模拟 PowerShell 流程，非 Windows 实机 |
 | 模拟器面板浏览器检查 | 6 passed | `artifacts/browser-checks.json` |
 | 合成原版接口面板检查 | 5 passed | `artifacts/original-dashboard-synthetic/report.json` |
 | 开发集模拟器基准 | 60 episodes / 980 decisions | `artifacts/benchmark-development.json` |
+| 进程采样测量 | 9 rounds / 2,700 episodes / 44,100 decisions | `artifacts/sampling-development.json`；对应轨迹一致，含硬件与计时边界 |
 | 验收矩阵 | incomplete | Windows report 缺失，60 条原版 case 全部缺失 |
 | 原版实机 | 未验证 | 尚无 Windows DLL、Mod 编译运行和真实捕获 |
 
@@ -143,7 +163,7 @@ cd /user/chenzk/sts2-lab
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File .\Connect-Windows.ps1 `
-  -Server 用户@服务器 -SshPort 22
+  -Server 用户@服务器 -RemoteRoot /user/chenzk/sts2-lab -SshPort 22
 ```
 
 脚本会：
@@ -164,7 +184,7 @@ cd /user/chenzk/sts2-lab
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File .\Install-Windows-Mod.ps1 `
-  -Server 用户@服务器 -SshPort 22
+  -Server 用户@服务器 -RemoteRoot /user/chenzk/sts2-lab -SshPort 22
 ```
 
 然后启动 Steam 游戏、启用 Mod、保持连接窗口运行，打开 `http://127.0.0.1:8765`，先完成一次稳定战斗状态读取和单步动作。之后再处理原版场景初始化、随机对齐和 60 条参考集。
@@ -230,3 +250,4 @@ git status --short
 | 2026-10-22 | 用户明确要求 | 平台尽可能原创，允许参考开源实现 | 本轮记录原创原则、O-01 至 O-05 迁移计划及 `AGENTS.md`；独立引擎/Mod 尚未实现；第一阶段仍待 Windows 实机输入 |
 | 2026-10-22 | 用户重新规划 | 按三个阶段推进，准备完成第一阶段；再次提供 `.git` 仓库地址 | `three-stage-v1`；P1-01 至 P1-08 明确任务/证据/依赖；当前仍为 0/60 原版参考；远程只读检查为 `0a5c869`，不代表写入认证恢复 |
 | 2026-10-22 | 用户品牌与文档要求 | 持久记录完整 README 设计标准；优先原创尖塔 Logo、当前 README 与 GitHub 上传 | `PROJECT-IDENTITY.md` 保存验收清单；新增三份 SVG，README 按真实实现重组；核心代码与实机验收状态不变 |
+| 2026-10-22 | 用户继续第一阶段 | 推进环境建设与验收 | 新增 1/2/4 进程采样测量与一致性检查；Windows 脚本支持指定目录并保留安装来源；47 项测试通过；原版仍为 0/60 |

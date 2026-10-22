@@ -22,7 +22,9 @@ Spire2Lab — 第一阶段实验环境
 
 Windows 接入
   1. 将 scripts/Connect-Windows.ps1 复制到 Windows。
-     powershell -ExecutionPolicy Bypass -File .\Connect-Windows.ps1 -Server 用户@服务器 -SshPort 22
+     powershell -ExecutionPolicy Bypass -File .\Connect-Windows.ps1 -Server 用户@服务器 -RemoteRoot /user/chenzk/sts2-lab -SshPort 22
+     RemoteRoot 必须为实际项目绝对路径（在 Linux 项目目录执行 pwd 查看）；换目录后需修改。
+     当前支持字母、数字、下划线、点、斜线和短横线，不支持空格。两个脚本使用相同路径。
      自动查找 Steam 游戏，记录构建 ID 和 DLL 哈希，将三个编译引用 DLL 发送到你的服务器。
      DLL 仅保存在被 Git 忽略的 artifacts/windows/assemblies，不发布、不进入项目源码。
      隧道：Windows 127.0.0.1:8765 -> Linux 127.0.0.1:8765。
@@ -32,8 +34,8 @@ Windows 接入
      .venv/bin/python scripts/build_bridge.py
      当前桥接代码尚未用你的 DLL 编译；编译成功也不等于实机行为验证通过。
   3. 将 scripts/Install-Windows-Mod.ps1 复制到 Windows，关闭游戏后执行：
-     powershell -ExecutionPolicy Bypass -File .\Install-Windows-Mod.ps1 -Server 用户@服务器
-     安装器会校验本机游戏指纹，备份已有同名 Mod，再通过 Steam 启动游戏。
+     powershell -ExecutionPolicy Bypass -File .\Install-Windows-Mod.ps1 -Server 用户@服务器 -RemoteRoot /user/chenzk/sts2-lab -SshPort 22
+     安装器会校验本机游戏指纹，备份已有同名 Mod，安装 DLL、manifest、LICENSE.txt 和 build.json，再通过 Steam 启动游戏。
      游戏首次加载 Mod 可能要求你在界面中启用。
   4. 在面板选择“Windows 原版游戏”，连接符合范围的首回合战斗。
      此操作读取当前对局，不会替你创建或重置游戏。环境种子不会伪装成原版实际种子。
@@ -73,6 +75,10 @@ Windows 接入
   .venv/bin/python scripts/build_bridge.py --prepare-only
   .venv/bin/python scripts/benchmark.py --split development
   .venv/bin/python scripts/benchmark.py --split heldout
+  .venv/bin/python scripts/benchmark_sampling.py --workers 1 2 4 --repeats 3 --episodes-per-case 5
+  多进程报告为 artifacts/sampling-development.json；包含硬件、源码哈希、吞吐、延迟和进程 RSS。
+  固定用例在每轮重复，逐步公开轨迹哈希必须一致。计时包括/排除哪些开销见报告 measurement。
+  RSS 峰值之和不等于同时刻物理内存；这些是模拟器测量，不是原版一致性或训练收益。
   .venv/bin/python -c "from sts2lab.verification import replay_trace; print(replay_trace('artifacts/runs/你的运行ID.jsonl'))"
   浏览器验证（先启动服务）：
     PLAYWRIGHT_BROWSERS_PATH="$PWD/.tools/browsers" .venv/bin/playwright install chromium

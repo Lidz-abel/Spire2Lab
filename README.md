@@ -150,16 +150,28 @@ Evaluate the fixed simulator inventory:
 
 The script writes `artifacts/benchmark-development.json`, including per-episode outcomes, configuration, build fingerprints, and policy-plus-step timing without rendering. It also supports `--split heldout`; keep that split separate from tuning. The timing report does not record a full hardware inventory, so it is not a standardized cross-machine performance comparison.
 
+Measure process scaling and verify that scheduling preserves seeded trajectories:
+
+```bash
+.venv/bin/python scripts/benchmark_sampling.py --workers 1 2 4 --repeats 3 --episodes-per-case 5
+```
+
+This writes `artifacts/sampling-development.json` with CPU/memory context, source fingerprints,
+warm and end-to-end throughput, decision latency percentiles, and worker peak RSS. All layouts
+execute the same cases; public trajectory hashes must match. Repetitions measure timing variation,
+not additional independent evaluation seeds. The sum of worker RSS peaks is not simultaneous
+physical memory usage. See the report's measurement definitions before comparing results.
+
 ### Original Windows game
 
 The original-game workflow is separate from the simulator quick start:
 
-1. Run [`Connect-Windows.ps1`](scripts/Connect-Windows.ps1) on the Steam PC to collect version evidence, upload compile-time references, and open the SSH tunnels.
+1. Run [`Connect-Windows.ps1`](scripts/Connect-Windows.ps1) on the Steam PC with `-Server`, `-RemoteRoot` (the Linux checkout's absolute path), and `-SshPort` to collect version evidence, upload compile-time references, and open the SSH tunnels.
 2. On Linux, run `.venv/bin/python scripts/build_bridge.py` against those references.
-3. Close the game and run [`Install-Windows-Mod.ps1`](scripts/Install-Windows-Mod.ps1), then launch through Steam and enable the Mod.
+3. Close the game and run [`Install-Windows-Mod.ps1`](scripts/Install-Windows-Mod.ps1) with the same server, path and port, then launch through Steam and enable the Mod.
 4. Start the Linux dashboard and verify one settled state/action/result before attempting a full reference battle.
 
-The helpers currently assume the maintainer's server checkout layout; review their remote paths before using a different installation. The bridge has not yet been compiled or run against the local Windows game. Detailed operator steps are in [README.txt](README.txt).
+The helpers require an absolute remote path using letters, digits, `_`, `.`, `/`, and `-`; spaces are currently unsupported. Connection setup checks the remote checkout before uploading. The installer verifies fingerprints, preserves license/build records, and backs up managed files for rollback. These behaviors have mocked PowerShell tests; the bridge has not yet been compiled or run against the local Windows game. Detailed operator steps are in [README.txt](README.txt).
 
 ## Validation
 
@@ -168,6 +180,8 @@ The current evidence is **engineering validation**, not a learned-agent performa
 | Check | What it establishes | Boundary |
 | --- | --- | --- |
 | [Environment tests](tests/test_environment.py) | Starter conditions, information boundaries, snapshot isolation, legal battles, Gym contract and vector sampling | Simulator scope |
+| [Sampling tests](tests/test_sampling.py) | Trajectory consistency across worker layouts, failure handling and timeout cleanup | Simulator scope |
+| [Windows helper tests](tests/test_windows_scripts.py) | Configurable paths, preflight refusal, fingerprint checks and install rollback | Mocked PowerShell; requires `pwsh` or `SPIRE2LAB_PWSH`, not a Steam installation |
 | [Dashboard checks](scripts/check_dashboard.py) | Step, override, run/pause, replay and mobile layout | Native simulator UI |
 | [Original adapter tests](tests/test_original.py) | Mapping and control contracts | Synthetic transport and upstream fixtures, not a local Steam capture |
 | [Acceptance gate](config/acceptance.json) | 60 independent original reference battles plus required boundary coverage | **Incomplete: no local live-game cases** |

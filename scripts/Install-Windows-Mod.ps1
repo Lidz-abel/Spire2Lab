@@ -2,11 +2,14 @@
 [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true)][ValidatePattern('^[a-zA-Z0-9_.@:\[\]-]+$')][string]$Server,
+    [Parameter(Mandatory=$true)][ValidatePattern('^/[a-zA-Z0-9_][a-zA-Z0-9_./-]*$')][string]$RemoteRoot,
     [ValidateRange(1,65535)][int]$SshPort = 22,
     [string]$GameDir = ''
 )
 $ErrorActionPreference = 'Stop'
 if ($Server.StartsWith('-')) { throw 'Invalid SSH server.' }
+$RemoteRoot = $RemoteRoot.TrimEnd('/')
+if (-not (Get-Command scp -ErrorAction SilentlyContinue)) { throw 'Windows OpenSSH client is required: scp was not found.' }
 $ReportPath = Join-Path $env:TEMP 'sts2-lab-windows-report.json'
 if (-not $GameDir) {
     if (-not (Test-Path $ReportPath)) { throw 'Run Connect-Windows.ps1 first or supply -GameDir.' }
@@ -14,9 +17,10 @@ if (-not $GameDir) {
 }
 if (Get-Process -Name 'SlayTheSpire2','Slay the Spire 2','sts2' -ErrorAction SilentlyContinue) { throw 'Close Slay the Spire 2 before installing the mod, then rerun this command.' }
 $Stage = Join-Path $env:LOCALAPPDATA 'STS2Lab\mod-package'
+$ManagedNames = @('STS2_MCP.dll','mod_manifest.json','LICENSE.txt','build.json')
 New-Item -ItemType Directory -Force -Path $Stage | Out-Null
-foreach ($Name in @('STS2_MCP.dll','mod_manifest.json','LICENSE.txt','build.json')) {
-    & scp -P $SshPort "${Server}:/user/chenzk/sts2-lab/artifacts/windows/mod/$Name" (Join-Path $Stage $Name)
+foreach ($Name in $ManagedNames) {
+    & scp -P $SshPort "${Server}:$RemoteRoot/artifacts/windows/mod/$Name" (Join-Path $Stage $Name)
     if ($LASTEXITCODE -ne 0) { throw "Download failed: $Name; the Linux mod build must finish first." }
 }
 $Build = Get-Content -Raw (Join-Path $Stage 'build.json') | ConvertFrom-Json
@@ -39,7 +43,7 @@ foreach ($Name in $LegacyNames) {
 }
 try {
     New-Item -ItemType Directory -Force -Path $Target | Out-Null
-    foreach ($Name in @('STS2_MCP.dll','mod_manifest.json')) {
+    foreach ($Name in $ManagedNames) {
         Copy-Item -Force (Join-Path $Stage $Name) (Join-Path $Target $Name)
     }
     foreach ($Name in $LegacyNames) {
@@ -47,7 +51,7 @@ try {
     }
 } catch {
     # Restore only the files managed by this installer. Keep other mod content intact.
-    foreach ($Name in @('STS2_MCP.dll','mod_manifest.json')) {
+    foreach ($Name in $ManagedNames) {
         $Saved = Join-Path (Join-Path $Backup 'STS2_MCP') $Name
         if (Test-Path $Saved) { Copy-Item -Force $Saved (Join-Path $Target $Name) }
         elseif (Test-Path (Join-Path $Target $Name)) { Remove-Item (Join-Path $Target $Name) }

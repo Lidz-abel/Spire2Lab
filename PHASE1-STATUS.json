@@ -40,41 +40,69 @@
         "id": "P1-03",
         "title": "最小实机闭环",
         "status": "not_live_verified",
-        "depends_on": ["P1-01"]
+        "depends_on": [
+          "P1-01"
+        ]
       },
       {
         "id": "P1-04",
         "title": "可重复场景与随机性对齐",
         "status": "not_implemented",
-        "depends_on": ["P1-03"]
+        "depends_on": [
+          "P1-03"
+        ]
       },
       {
         "id": "P1-05",
         "title": "面板与决策记录验收",
         "status": "simulator_and_synthetic_tested_live_pending",
-        "depends_on": ["P1-02", "P1-03"]
+        "depends_on": [
+          "P1-02",
+          "P1-03"
+        ]
       },
       {
         "id": "P1-06",
         "title": "搜索训练接口与复现能力验收",
-        "status": "partially_tested_scaling_and_fresh_install_pending",
-        "depends_on": ["P1-02"]
+        "status": "scaling_and_reproducibility_measured_fresh_install_pending",
+        "depends_on": [
+          "P1-02"
+        ]
       },
       {
         "id": "P1-07",
         "title": "原版参考集验收",
         "status": "incomplete_no_live_cases",
-        "depends_on": ["P1-03", "P1-04", "P1-05", "P1-06"]
+        "depends_on": [
+          "P1-03",
+          "P1-04",
+          "P1-05",
+          "P1-06"
+        ]
       },
       {
         "id": "P1-08",
         "title": "第一阶段交付",
         "status": "not_ready",
-        "depends_on": ["P1-01", "P1-02", "P1-03", "P1-04", "P1-05", "P1-06", "P1-07"]
+        "depends_on": [
+          "P1-01",
+          "P1-02",
+          "P1-03",
+          "P1-04",
+          "P1-05",
+          "P1-06",
+          "P1-07"
+        ]
       }
     ],
-    "first_execution_unit": ["P1-01", "P1-03"],
-    "linux_work_without_windows_input": ["P1-02", "P1-06"],
+    "first_execution_unit": [
+      "P1-01",
+      "P1-03"
+    ],
+    "linux_work_without_windows_input": [
+      "P1-02",
+      "P1-06"
+    ],
     "original_visuals": {
       "stage_one": "reserve_run_and_decision_associations",
       "stage_two": "capture_decision_boundary_screenshots",
@@ -103,7 +131,7 @@
     "hidden_information_boundary": "starter_scope_tested",
     "snapshot_restore_and_branch_isolation": "tested",
     "gymnasium_interface": "tested_combat_entities_v2",
-    "process_isolated_vector_sampling": "tested_two_workers",
+    "process_isolated_vector_sampling": "gym_two_workers_tested_and_semantic_sampling_one_two_four_workers_reproducible",
     "windows_game_version_and_bridge": "awaiting_windows_reference_files",
     "real_game_adapter": "canonical_mapping_async_runtime_and_browser_tested_with_synthetic_transport_not_live",
     "real_game_one_step": "not_verified",
@@ -112,16 +140,17 @@
     "cross_backend_comparison_tool": "implemented_with_capture_hash_checks_and_candidate_reexecution_no_local_live_evidence",
     "bridge_source_hooks": "prepare_only_verified_not_compiled",
     "native_atomic_publish": "staged_binary_replacement_exercised",
-    "windows_install_script": "corrected_pinned_mod_layout_not_executed_on_windows",
+    "windows_install_script": "configurable_checkout_hash_refusal_license_and_build_install_rollback_mock_tested_not_executed_on_windows",
     "pinned_source_integrity": "archive_hash_and_1417_source_files_verified_build_and_first_load_guarded",
     "bootstrap": "current_workspace_install_verify_build_test_completed",
     "native_build_history": "previous_binary_and_manifest_archive_verified",
     "unknown_action_archive": "tested_and_browser_verified_no_game_action_or_fabricated_outcome",
     "reference_candidate_generation": "declared_seed_public_and_private_opening_checks_no_search_no_state_overrides_component_tested_live_pending",
-    "scoped_reference_acceptance_gate": "implemented_60_case_matrix_and_boundary_coverage_no_live_cases_available"
+    "scoped_reference_acceptance_gate": "implemented_60_case_matrix_and_boundary_coverage_no_live_cases_available",
+    "sampling_scaling_measurement": "nine_rounds_2700_episodes_44100_decisions_equal_public_trajectory_hashes_worker_cleanup_tested"
   },
   "evidence": {
-    "local_tests": "artifacts/lab-tests.xml (43 passed)",
+    "local_tests": "artifacts/lab-tests.xml (47 passed, 1 existing dependency deprecation warning; 2026-10-22)",
     "browser_checks": "artifacts/browser-checks.json (6 passed, 0 JavaScript errors)",
     "development_benchmark": "artifacts/benchmark-development.json (60 complete episodes, 980 steps)",
     "upstream_csharp": "artifacts/upstream-tests/upstream.trx (4801 passed, 1 skipped)",
@@ -132,9 +161,11 @@
     "windows_onboarding_package": "artifacts/installers/sts2-lab-windows.zip (scripts only, not executed on Windows)",
     "acceptance_audit": "artifacts/acceptance/status.json (incomplete; 60 original-game cases missing)",
     "readme_branding": "artifacts/branding/structure-check.json and readme-render-check.json (3 SVGs, 30 local links/anchors, 4 local theme/viewport previews; not GitHub-hosted rendering)",
-    "readme_example": "artifacts/branding/python-example.txt (one real native simulator action, verified 2026-10-22)"
+    "readme_example": "artifacts/branding/python-example.txt (one real native simulator action, verified 2026-10-22)",
+    "sampling_benchmark": "artifacts/sampling-development.json (1/2/4 workers, 3 repeats, 300 episodes per round; source and hardware recorded; simulator only)",
+    "windows_script_checks": "tests/windows_scripts.ps1 via tests/test_windows_scripts.py (PowerShell 7.6.6 on Linux; synthetic files and mocked SSH/SCP/Steam; not Windows execution)"
   },
-  "next_external_step": "Run scripts/Connect-Windows.ps1 on the Windows Steam PC to transfer version evidence and reference DLLs, and establish the SSH tunnel.",
+  "next_external_step": "Run scripts/Connect-Windows.ps1 on the Windows Steam PC with -Server, -RemoteRoot (actual Linux checkout path), and -SshPort; transfer version evidence and reference DLLs and keep the SSH tunnel open.",
   "completion_rule": "Do not mark complete until original-game behavior and declared supported scenario parity have been verified. Simulator-only tests do not prove local game parity.",
   "limitations": [
     "Windows report and reference assemblies are still absent.",
