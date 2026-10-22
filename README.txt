@@ -1,7 +1,7 @@
 Spire2Lab — 第一阶段实验环境
 
 项目目录：/user/chenzk/sts2-lab（GitHub：Lidz-abel/Spire2Lab）
-当前状态：Linux 战斗环境与面板可运行；用户回传 Windows 主菜单 HTTP 成功响应，运行时 DLL 指纹匹配。服务器新隧道、实机战斗动作与逐步一致性尚未通过。
+当前状态：Linux 战斗环境与面板可运行；服务器经 SSH 隧道直读 Windows 主菜单通过，协议、DLL 指纹和状态稳定性匹配。发行版本核验、实机战斗动作与逐步一致性尚未通过。
 完整验收清单见 PHASE1-STATUS.json。不得将模拟器自测视为本机原版一致性证明。
 整体架构、第一阶段建设顺序与后续路线见 ARCHITECTURE-PLAN.txt。
 当前采用 three-stage-v1：可信实验平台 → 搜索与分层决策 → 高效训练与原版评测。
@@ -35,7 +35,7 @@ Windows 接入
      保持脚本窗口打开，即可在 Windows 浏览器访问面板。
   2. Linux 核对实际版本后构建：
      .venv/bin/python scripts/build_bridge.py
-     已使用收到的 Steam public build 23811903 引用编译成功；游戏语义版本和实机运行仍待确认。
+     已使用收到的 Steam public build 23811903 引用编译成功；主菜单接口已实测，游戏语义版本和战斗行为仍待确认。
      DLL 文件版本 0.1.0.0 不能当作 v0.107.1 的证明；编译成功也不等于实机行为验证通过。
   3. 将 scripts/Install-Windows-Mod.ps1 复制到 Windows，关闭游戏后执行：
      在另一个 PowerShell 窗口进入脚本目录，直接执行，无需再次调用 powershell 启动命令：
@@ -45,23 +45,32 @@ Windows 接入
      游戏首次加载 Mod 可能要求你在界面中启用。
      已核对的本机 build 23811903 在首次同意加载后会保存设置并主动退出；从 Steam 再次启动即可。
      重启后先停留主菜单，核对版本及桥接接口；若再次退出，先检查启动日志。
-  4. 在面板选择“Windows 原版游戏”，连接符合范围的首回合战斗。
+  4. 保持游戏主菜单和隧道，在 Linux 项目目录执行只读连接验收：
+     .venv/bin/python scripts/check_bridge.py
+     默认连续读取 5 次；校验协议、DLL 指纹、进程实例、主菜单状态令牌与最后一次结算标志。
+     只调用 GET，不发送游戏动作。成功退出 0，失败退出非零；每次另存一份带时间戳的
+     artifacts/windows/bridge-check-*.json，不覆盖旧证据。测试传输明确标记 synthetic_transport。
+     主菜单 lab_action_ready=false 是正常的；本检查不证明战斗或发行版本通过。
+     当前收到的 DLL 元数据是通用版本 0.1.0.0，已从元数据确认游戏读取 release_info.json。
+     需从 Windows 游戏安装根目录补充该文件到 artifacts/windows/release_info.json 后核对
+     版本及其与 DLL 的关联；不能修改原始 report.json 或目标标签来绕过验收。
+  5. 版本门通过后，在面板选择“Windows 原版游戏”，连接符合范围的首回合战斗。
      此操作读取当前对局，不会替你创建或重置游戏。环境种子不会伪装成原版实际种子。
      原版必须是铁甲战士 A0、初始牌组/遗物、未附魔、无药水、80/80 HP、99 金币、
      第 2 层、首回合 5 张手牌、3 点能量；选择与实际敌人一致的遭遇。
      原版初始化与随机状态对齐工具仍需补齐，不能只凭相同种子宣称一致。
-  5. 动作响应丢失会显示“结果待确认”。点击“确认游戏结果”只读取状态，不重发动作。
+  6. 动作响应丢失会显示“结果待确认”。点击“确认游戏结果”只读取状态，不重发动作。
      等待结算期间可暂停后续决策；已提交的动作不能撤销。
      未决动作禁止直接切换实验。无法继续确认时，可点“归档异常实验”，保留未知结果；
      归档不操作游戏，也不生成胜负或奖励。之后可以创建新实验。
 
 桥接构建采用固定上游的 mods/STS2_MCP/STS2_MCP.dll 与 mod_manifest.json 布局。
 安装器会备份已有文件并在复制失败时尝试恢复。用户已回传 Windows 安装成功输出；
-用户随后回传主菜单接口与 lab_protocol=1，运行时指纹匹配；服务器新隧道与战斗接口仍待验证。
+服务器随后经隧道直接读取主菜单，lab_protocol=1、运行时指纹和连续状态核验通过；战斗接口仍待验证。
 失败回滚目前仅有模拟测试证据。
 
 现有 Windows 安装改用 21526
-  本轮已按用户终端记录迁移到 21526，Windows 根路径和主菜单状态 HTTP 成功；服务器新隧道待验证。
+  本轮已迁移到 21526；Windows 本机及服务器经 18526 隧道读取主菜单均通过。下列步骤供以后迁移参考，无需再次执行。
   1. 正常退出游戏，在原 Connect-Windows.ps1 窗口按 Ctrl+C 关闭旧隧道。
   2. 在 Windows PowerShell 检查：
        Get-NetTCPConnection -LocalPort 21526 -State Listen -ErrorAction SilentlyContinue

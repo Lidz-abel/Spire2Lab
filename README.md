@@ -30,7 +30,7 @@ Spire2Lab is an experimental foundation for researchers studying sequential deci
 
 The immediate goal is a trustworthy environment for later work on search, hierarchical decisions, and reinforcement learning. The platform separates player-visible information from hidden simulator state and keeps original-game evidence distinct from simulator tests. This makes it possible to investigate both **what an agent decided** and **whether the environment behaved as expected**.
 
-> **Development status — phase 1.** The local simulator and dashboard are usable. The bridge is compiled, and a user-provided Windows transcript confirms main-menu HTTP responses with a matching game DLL fingerprint. Server tunnel verification, controlled original-game battles, repeatable initialization, and real-game parity are still pending. Search algorithms, hierarchical policies, RL training, and original-game imagery are planned capabilities.
+> **Development status — phase 1.** The local simulator and dashboard are usable. The compiled bridge has passed read-only main-menu checks from Linux through the Windows SSH tunnel, including protocol, game DLL fingerprint, and stable-state checks. Semantic release verification, controlled original-game battles, repeatable initialization, and real-game parity are still pending. Search algorithms, hierarchical policies, RL training, and original-game imagery are planned capabilities.
 
 ## Key features
 
@@ -169,9 +169,10 @@ The original-game workflow is separate from the simulator quick start:
 1. Run [`Connect-Windows.ps1`](scripts/Connect-Windows.ps1) on the Steam PC with `-Server`, `-RemoteRoot` (the Linux checkout's absolute path), and `-SshPort` to collect version evidence, upload compile-time references, and open the SSH tunnels.
 2. On Linux, run `.venv/bin/python scripts/build_bridge.py` against those references.
 3. Close the game and run [`Install-Windows-Mod.ps1`](scripts/Install-Windows-Mod.ps1) with the same server, path and port, then launch through Steam and enable the Mod.
-4. Start the Linux dashboard and verify one settled state/action/result before attempting a full reference battle.
+4. Keep the game at its main menu and the tunnel open. On Linux, run `.venv/bin/python scripts/check_bridge.py`. It uses GET requests only and saves a separate report under `artifacts/windows/`.
+5. Resolve the version gate, then use the Linux dashboard to verify one settled battle state/action/result before attempting a full reference battle. A passing main-menu check does not certify combat.
 
-The helpers require an absolute remote path using letters, digits, `_`, `.`, `/`, and `-`; spaces are currently unsupported. Connection setup checks the remote checkout before uploading. The installer verifies fingerprints, preserves license/build records, and backs up managed files for rollback. These behaviors have mocked PowerShell tests. References from Steam public build `23811903` have been received and hash-verified, and the bridge compiles against them. A user-provided Windows transcript confirms main-menu HTTP access and a matching runtime DLL fingerprint; the semantic release still needs independent verification, and combat behavior remains unverified. Detailed operator steps, including custom game ports and VS Code forwarding conflicts, are in [README.txt](README.txt).
+The helpers require an absolute remote path using letters, digits, `_`, `.`, `/`, and `-`; spaces are currently unsupported. Connection setup checks the remote checkout before uploading. The installer verifies fingerprints, preserves license/build records, and backs up managed files for rollback. These behaviors have mocked PowerShell tests. References from Steam public build `23811903` have been received and hash-verified, and the bridge compiles against them. Direct Linux reads through the tunnel now confirm a stable main-menu state and matching runtime DLL fingerprint. The DLL exposes a generic version; verification against the game's `release_info.json` remains pending. Combat behavior is unverified. Detailed operator steps, including custom game ports and VS Code forwarding conflicts, are in [README.txt](README.txt).
 
 ## Validation
 
@@ -184,6 +185,7 @@ The current evidence is **engineering validation**, not a learned-agent performa
 | [Windows helper tests](tests/test_windows_scripts.py) | Configurable paths, preflight refusal, fingerprint checks and install rollback | Mocked PowerShell; requires `pwsh` or `SPIRE2LAB_PWSH`, not a Steam installation |
 | [Dashboard checks](scripts/check_dashboard.py) | Step, override, run/pause, replay and mobile layout | Native simulator UI |
 | [Original adapter tests](tests/test_original.py) | Mapping and control contracts | Synthetic transport and upstream fixtures, not a local Steam capture |
+| [Main-menu bridge check](scripts/check_bridge.py) | HTTP access, protocol, reference fingerprint, process and state stability | Live read-only check passed; no semantic release or combat validation |
 | [Acceptance gate](config/acceptance.json) | 60 independent original reference battles plus required boundary coverage | **Incomplete: no local live-game cases** |
 
 Run the project tests after installation:

@@ -1,6 +1,6 @@
 # Spire2Lab 代码来源说明
 
-更新时间：2026-10-22
+更新时间：2026-10-23
 
 本文件记录工程来源与依赖边界。“本项目新增实现”指在本项目中编写的代码，包括 AI 辅助编写的适配、验证和实验工具；这项分类本身不构成逐行原创性审计或科研创新结论。游戏内容、上游代码与参考资料各自记录来源。
 
@@ -51,6 +51,7 @@ O-02 至 O-04 随实机证据逐步替换；阶段 2 实现搜索/层级核心�
 | `sts2lab/policies.py` | 本项目 | 随机策略和可解释启发式策略 |
 | `sts2lab/runtime.py`、`server.py` | 本项目 | 实验控制、异步执行、确认状态和 FastAPI 面板服务 |
 | `sts2lab/bridge.py`、`original.py` | 本项目 | 原版状态映射、动作提交、去重、重协调和未知结果处理 |
+| `sts2lab/bridge_check.py`、`scripts/check_bridge.py`、`tests/test_bridge_check.py` | 本项目 | 基于现有 BridgeClient 的只读主菜单验收；输入引用指纹，输出逐次 GET 证据与检查结果；合成测试覆盖版本/实例/状态变化与超时，不能替代原版战斗证据 |
 | `sts2lab/traces.py`、`parity.py`、`reference_replay.py`、`acceptance.py` | 本项目 | 轨迹哈希链、重执行、原版对照和有限验收门 |
 | `sts2lab/catalog.py` | 本项目代码 + 上游数据表 | 加载和转换上游名称/定义；名称和卡牌定义的事实来源是上游 |
 | `native/LabExports.cs` | 本项目 | 只读观测导出扩展；不新增卡牌效果或敌人规则 |

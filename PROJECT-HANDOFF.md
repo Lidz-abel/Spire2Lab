@@ -22,6 +22,33 @@ VS Code Git 凭据服务连接被拒绝，GitHub 拒绝匿名写入。远程核�
 本次 Logo 和 README 尚未上传。已请用户在本机 Git 客户端恢复登录，未索取令牌。
 项目目标：**完成第一阶段**
 
+2026-10-23 Linux → Windows 隧道只读验收通过：用户确认隧道连接后，服务器使用
+实际 BridgeClient 读取根路径及连续 5 次主菜单状态，协议 1、游戏 DLL SHA-256、
+进程实例、状态令牌均匹配；最后读数 lab_settled=true，主菜单 lab_action_ready=false
+符合设计。证据 artifacts/windows/tunnel-main-menu-20261022T165341.json。
+本轮新增 scripts/check_bridge.py 与 sts2lab/bridge_check.py，把只读检查做成可重复
+命令：校验原始报告/收到的 DLL/Mod 构建引用一致，再采集 GET；不覆盖旧证据，
+合成传输与实机传输明确区分。新命令实机运行的 7 项检查全部通过，证据
+artifacts/windows/bridge-check-20261022T165923467279.json。其通过仅限主菜单连接，
+不能满足版本门或战斗验收。tests/test_bridge.py 与 test_bridge_check.py 共 12 项
+通过，包含实例变化、令牌变化、协议/指纹不匹配、未稳定和超时；均为合成 HTTP。
+测试记录 artifacts/windows/bridge-check-tests.xml，不计为原版战斗。
+
+当前发行版本门仍未通过：收到的 DLL 元数据版本为 0.1.0.0。只读 PE 元数据和调用
+目标检查确认 ReleaseInfoManager 从游戏安装根目录读取 release_info.json；ReleaseInfo
+包含 Version、Commit、Date、Branch、MainAssemblyHash。证据
+artifacts/windows/release-metadata-inspection.json，不执行游戏 DLL，也不推定哈希算法。
+已请求用户在另一 Windows PowerShell 上传该文件到 artifacts/windows/release_info.json；
+尚未收到。接手后先检查是否到账，再核实实际字段与原始 DLL 的关联，按证据完善
+验收器；不得覆盖 report.json、改目标版本或伪造 release_info 来绕过门禁。
+额外 GET /api/v1/profiles 显示当前槽位 1 有数据，2/3 无数据，私有响应存于
+artifacts/windows/profiles-readonly.json；未切换槽位，未发送任何 POST 或游戏动作。
+完整审计仍缺 60/60 原版战斗及全部边界覆盖。版本确认后推进隔离实验槽位、战斗
+单步与受控场景初始化，不能把菜单连通标成 P1-03 或第一阶段完成。
+GitHub 认证没有恢复证据，本轮保留本地进度提交，不重复触发失败的推送认证。
+验证补充：新 Python 文件 Black 检查通过，状态 JSON 与 34 个 README 本地链接/锚点
+通过；完整 audit_acceptance.py 仍以预期退出码 1 返回上述版本错误和 60 个缺失场景。
+
 2026-10-23 首次 Windows 本机 HTTP 成功：用户完整回传配置输出 port=21526，
 以及绕过代理的 GET / 和 GET /api/v1/singleplayer JSON。根路径 status=ok，
 状态为 menu/main、lab_protocol=1。运行时 game_assembly_sha256 与服务器重新
@@ -321,6 +348,7 @@ Spire2Lab 面向《杀戮尖塔 2》的自主强化学习研究，目标是支�
 - 随机和可解释启发式策略：`sts2lab/policies.py`
 - FastAPI + 无构建步骤浏览器面板：`sts2lab/server.py`、`web/`
 - Windows 原版异步适配器与桥接：`sts2lab/original.py`、`sts2lab/bridge.py`
+- 主菜单只读连接检查及独立证据输出：`scripts/check_bridge.py`、`sts2lab/bridge_check.py`
 - 轨迹哈希链、语义重执行和比较器：`sts2lab/traces.py`、`sts2lab/parity.py`
 - 参考重放与验收矩阵：`sts2lab/reference_replay.py`、`sts2lab/acceptance.py`
 - Windows 接入和安装脚本：`scripts/Connect-Windows.ps1`、`scripts/Install-Windows-Mod.ps1`
@@ -329,7 +357,7 @@ Spire2Lab 面向《杀戮尖塔 2》的自主强化学习研究，目标是支�
 
 ### 当前可核查证据
 
-最近一次本地检查：
+历史基线与本轮检查分别保留；局部复查不代表重跑全套：
 
 | 证据 | 结果 | 说明 |
 | --- | --- | --- |
@@ -339,8 +367,10 @@ Spire2Lab 面向《杀戮尖塔 2》的自主强化学习研究，目标是支�
 | 开发集模拟器基准 | 60 episodes / 980 decisions | `artifacts/benchmark-development.json` |
 | 进程采样测量 | 9 rounds / 2,700 episodes / 44,100 decisions | `artifacts/sampling-development.json`；对应轨迹一致，含硬件与计时边界 |
 | 全新检出安装 | 46 passed / 1 optional skip；60 条公开轨迹一致 | `artifacts/repro-check.json`；同一 Linux 主机，新依赖和新二进制 |
-| 验收矩阵 | incomplete | Windows report 缺失，60 条原版 case 全部缺失 |
-| 原版实机 | 未验证 | 尚无 Windows DLL、Mod 编译运行和真实捕获 |
+| 桥接与只读诊断测试 | 12 passed | `artifacts/windows/bridge-check-tests.xml`；合成 HTTP，未重跑整个项目测试集 |
+| 原版主菜单 | 7 项检查通过 | `artifacts/windows/bridge-check-20261022T165923467279.json`；服务器经隧道直接采集，仅 GET |
+| 验收矩阵 | incomplete | Windows report / DLL / Mod 构建已存在；发行版本门未通过，60 条原版 battle case 全部缺失 |
+| 原版战斗 | 未验证 | 主菜单连接不证明状态映射、动作执行、初态对齐或逐步一致性 |
 
 运行验收状态：
 
@@ -353,42 +383,25 @@ cd /user/chenzk/sts2-lab
 
 ## 当前阻塞与下一项动作
 
-当前关键路径是首次启用 Mod 后重新启动游戏并读取首个原版状态。以下保留完整接入顺序；
-版本报告/DLL 上传、Linux 编译和 Windows 安装已完成，用户现在应保持隧道并从 Steam 重启：
+当前关键路径是补充真实发行版本证据，再执行第一次战斗动作。Windows 安装、
+21526 游戏端口、18526 反向隧道和主菜单只读检查已通过，不需要重复安装或迁移。
+游戏保持主菜单，SSH 窗口保持打开；用户从游戏安装根目录上传 `release_info.json`
+到服务器 `artifacts/windows/release_info.json`。接手先检查是否已收到，再确认字段、
+版本、构建关联与实际 DLL，补齐验收器对这种发行信息的支持。原始报告必须保留。
 
-第一执行单元为 P1-01 → P1-03：核对版本、编译桥接、取得一次真实状态、执行一张牌并
-确认结算。随后由我们实现 P1-04 的场景准备和重复捕获工具，再扩充参考集；无需用户
-手工拼凑 60 场。Linux 侧可同时推进 P1-02 的适配器边界和 P1-06 的复现/接口证据。
-
-```powershell
-Set-ExecutionPolicy -Scope Process Bypass -Force
-.\Connect-Windows.ps1 `
-  -Server 用户@服务器 -RemoteRoot /user/chenzk/sts2-lab -SshPort 22
-```
-
-脚本会：
-
-1. 找到 Steam 的《杀戮尖塔 2》安装目录；
-2. 记录 Steam Build ID 和 `sts2.dll`、`GodotSharp.dll`、`0Harmony.dll` 的版本/哈希；
-3. 把报告和编译引用上传到 Linux 的 `artifacts/windows/`；
-4. 建立 Windows → Linux 面板转发和 Linux → Windows 游戏 Mod 的反向隧道。
-
-收到 Windows 文件后，在 Linux 执行：
+重做主菜单检查（需要已收到的 Windows 引用、Mod 构建记录和运行中的游戏）：
 
 ```bash
 cd /user/chenzk/sts2-lab
-.venv/bin/python scripts/build_bridge.py
+.venv/bin/python scripts/check_bridge.py
 ```
 
-构建成功后，在 Windows 关闭游戏并执行：
-
-```powershell
-Set-ExecutionPolicy -Scope Process Bypass -Force
-.\Install-Windows-Mod.ps1 `
-  -Server 用户@服务器 -RemoteRoot /user/chenzk/sts2-lab -SshPort 22
-```
-
-然后启动 Steam 游戏、启用 Mod、保持连接窗口运行，打开 `http://127.0.0.1:8765`，先完成一次稳定战斗状态读取和单步动作。之后再处理原版场景初始化、随机对齐和 60 条参考集。
+第一执行单元仍为 P1-01 → P1-03。只读档案查询显示槽位 1 有数据、2/3 无数据；
+尚未切换槽位或发送动作，后续实验需保护既有存档。版本确认后完成真实战斗状态、
+一张牌执行与结算确认、回合结束，再验收暂停/断线和完整战斗。之后由我们实现
+P1-04 的场景准备和随机性对齐，扩充 60 场参考集，不要求用户手工拼凑 60 场。
+完整安装和端口排障步骤保留在 `README.txt`。Linux 可继续推进 P1-02 边界和
+P1-06 接口证据，但不能因此跳过实机验收。
 
 ## Git 提交规则
 
@@ -456,3 +469,4 @@ git status --short
 | 2026-10-22 | 用户 SSH 详细日志 | 简单远程命令输出 SPIRE2LAB_SSH_OK，Exit status 0 | 确认该次登录和命令执行成功；重试完整接入，文件上传、隧道和原版桥接仍待验证，先前断连根因未定 |
 | 2026-10-22 | 用户上传与服务器实测 | public build 23811903 的三份 DLL 和报告收到，反向监听出现 | 大小/哈希验证及桥接编译通过；Enchantment 元数据检查通过；实际游戏版本、Mod 运行与 60 场参考仍待验证 |
 | 2026-10-22 | 用户安装与启用反馈 | 四个文件安装成功，首次同意加载 Mod 后游戏退出 | 已从本机 DLL 确认同意处理包含保存设置与主动退出；请用户从 Steam 重启，运行/接口/版本尚待验证，未执行游戏动作 |
+| 2026-10-23 | 用户隧道连接后继续验收 | 服务器直接读取原版主菜单并保留证据 | 7 项只读检查与 12 项相关测试通过；发行信息文件待上传；战斗 0/60，尚无游戏动作 |

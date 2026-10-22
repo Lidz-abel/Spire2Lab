@@ -27,7 +27,7 @@
       {
         "id": "P1-01",
         "title": "版本与来源冻结",
-        "status": "runtime_fingerprint_matches_references_from_user_transcript_semantic_release_gate_pending",
+        "status": "live_runtime_fingerprint_matches_references_release_info_evidence_pending",
         "depends_on": []
       },
       {
@@ -39,7 +39,7 @@
       {
         "id": "P1-03",
         "title": "最小实机闭环",
-        "status": "windows_main_menu_http_protocol_and_fingerprint_user_reported_server_tunnel_and_combat_pending",
+        "status": "linux_tunnel_main_menu_protocol_fingerprint_and_stability_verified_combat_pending",
         "depends_on": [
           "P1-01"
         ]
@@ -119,7 +119,7 @@
     "independent_backend_migration": "planned_not_implemented",
     "phase_one_scope": "existing_finite_scope_and_live_game_acceptance_preserved"
   },
-  "status": "windows_main_menu_http_user_reported_awaiting_ssh_tunnel",
+  "status": "live_tunnel_main_menu_verified_release_evidence_and_combat_pending",
   "requirements": {
     "versioned_semantic_protocol": "implemented_v0.2.0",
     "native_linux_simulator": "built_and_smoke_tested",
@@ -132,14 +132,14 @@
     "snapshot_restore_and_branch_isolation": "tested",
     "gymnasium_interface": "tested_combat_entities_v2",
     "process_isolated_vector_sampling": "gym_two_workers_tested_and_semantic_sampling_one_two_four_workers_reproducible",
-    "windows_game_version_and_bridge": "public_build_23811903_hashes_and_user_reported_runtime_fingerprint_match_release_0_107_1_user_reported_independent_semantic_gate_and_combat_pending",
-    "windows_ssh_command": "report_and_three_assemblies_received_previous_tunnel_closed_18526_not_listening_replacement_tunnel_pending",
+    "windows_game_version_and_bridge": "public_build_23811903_runtime_hash_matches_via_live_linux_reads_release_info_file_needed_for_semantic_version_gate",
+    "windows_ssh_command": "report_and_three_assemblies_received_live_gets_verified_through_18526_to_windows_21526",
     "real_game_adapter": "canonical_mapping_async_runtime_and_browser_tested_with_synthetic_transport_not_live",
     "real_game_one_step": "not_verified",
     "real_game_full_battle": "not_verified",
     "cross_backend_step_parity": "not_verified",
     "cross_backend_comparison_tool": "implemented_with_capture_hash_checks_and_candidate_reexecution_no_local_live_evidence",
-    "bridge_source_hooks": "compiled_against_received_assemblies_enchantment_instance_getter_metadata_verified_runtime_pending",
+    "bridge_source_hooks": "compiled_against_received_assemblies_main_menu_protocol_and_fingerprint_verified_combat_hooks_pending",
     "native_atomic_publish": "staged_binary_replacement_exercised",
     "windows_install_script": "successful_four_file_install_and_backup_directory_user_reported_on_windows_failure_and_rollback_paths_mock_tested",
     "pinned_source_integrity": "archive_hash_and_1417_source_files_verified_build_and_first_load_guarded",
@@ -149,8 +149,9 @@
     "reference_candidate_generation": "declared_seed_public_and_private_opening_checks_no_search_no_state_overrides_component_tested_live_pending",
     "scoped_reference_acceptance_gate": "implemented_60_case_matrix_and_boundary_coverage_no_live_cases_available",
     "sampling_scaling_measurement": "nine_rounds_2700_episodes_44100_decisions_equal_public_trajectory_hashes_worker_cleanup_tested",
-    "windows_bridge_listener": "21526_serving_root_and_main_menu_json_user_transcript_protocol_1_reference_fingerprint_matches",
-    "windows_main_menu_state": "user_supplied_live_http_response_protocol_1_and_fingerprint_verified_against_received_references"
+    "windows_bridge_listener": "21526_serving_root_and_main_menu_through_linux_18526_tunnel_protocol_1_reference_fingerprint_matches",
+    "windows_main_menu_state": "direct_linux_bridgeclient_capture_five_samples_same_instance_and_token_final_settled_true",
+    "readonly_bridge_check": "implemented_live_main_menu_passed_synthetic_failure_tests_passed_no_combat_actions"
   },
   "evidence": {
     "local_tests": "artifacts/lab-tests.xml (47 passed, 1 existing dependency deprecation warning; 2026-10-22)",
@@ -162,7 +163,7 @@
     "native_library_sha256": "90f73b83758827c8f8377b35f5ea19f1f59fc8c4a6b72ed01be02b0500f6a65d",
     "bootstrap": "artifacts/bootstrap-check.json",
     "windows_onboarding_package": "artifacts/installers/sts2-lab-windows.zip (scripts only; includes GameBridgePort support and existing-installation migration instructions; latest changes tested with mocked transport, Windows migration not verified)",
-    "acceptance_audit": "artifacts/acceptance/status.json (incomplete; 60 original-game cases missing)",
+    "acceptance_audit": "artifacts/acceptance/status.json (incomplete; semantic release gate unresolved and all 60 original-game reference battles missing)",
     "readme_branding": "artifacts/branding/structure-check.json and readme-render-check.json (3 SVGs, 30 local links/anchors, 4 local theme/viewport previews; not GitHub-hosted rendering)",
     "readme_example": "artifacts/branding/python-example.txt (one real native simulator action, verified 2026-10-22)",
     "sampling_benchmark": "artifacts/sampling-development.json (1/2/4 workers, 3 repeats, 300 episodes per round; source and hardware recorded; simulator only)",
@@ -186,13 +187,18 @@
     "port_migration_attempt": "artifacts/windows/port-migration-blocked.json (user PowerShell transcript: 21526 already listening; supplied script throws before reading, backing up or writing Mod config; PID/process identity and current config unknown)",
     "both_bridge_port_owners": "artifacts/windows/both-ports-owned-by-vscode.json (user Windows transcript: 127.0.0.1 ports 15526 and 21526 both owned by Code.exe PID 44400; user confirms game is closed; exact forwarding entries and release not verified)",
     "windows_ports_released": "artifacts/windows/ports-released-check.json (user reports no output from Windows 15526/21526 listener check; direct Linux check shows dashboard healthy and no 18526 listener; Mod config and live HTTP not yet verified)",
-    "windows_main_menu_http": "artifacts/windows/local-main-menu-user-transcript.json and local-main-menu-check.json (user output: port 21526 config, root status ok, menu/main, lab_protocol 1; runtime hash matches uploaded DLL, report and bridge build; not server-captured or battle evidence)"
+    "windows_main_menu_http": "artifacts/windows/local-main-menu-user-transcript.json and local-main-menu-check.json (user output: port 21526 config, root status ok, menu/main, lab_protocol 1; runtime hash matches uploaded DLL, report and bridge build; not server-captured or battle evidence)",
+    "live_tunnel_main_menu": "artifacts/windows/tunnel-main-menu-20261022T165341.json (direct Linux BridgeClient: root plus five main-menu reads; protocol/fingerprint/stability passed; GET only)",
+    "reusable_bridge_check": "artifacts/windows/bridge-check-20261022T165923467279.json (scripts/check_bridge.py: seven checks passed using live transport; no combat or semantic release certification)",
+    "readonly_bridge_tests": "artifacts/windows/bridge-check-tests.xml (12 passed: bridge transport and diagnostic checks; synthetic HTTP only)",
+    "release_metadata_inspection": "artifacts/windows/release-metadata-inspection.json (read-only PE metadata/call-target inspection: ReleaseInfoManager loads release_info.json; ReleaseInfo defines Version, Commit, Date, Branch and MainAssemblyHash; file not yet received)",
+    "profiles_readonly": "artifacts/windows/profiles-readonly.json (live GET only: current profile 1 has data; slots 2 and 3 report no data; no profile switch or gameplay action)"
   },
-  "next_external_step": "Keep the game at its main menu. Establish the independent Windows SSH tunnel with reverse mapping 127.0.0.1:18526:127.0.0.1:21526 and dashboard forward 8765, keep the terminal open, then notify the assistant to verify Linux GET responses and BridgeClient protocol/fingerprint checks. Windows root and main-menu HTTP have succeeded; do not reinstall or change ports again. No gameplay action yet.",
+  "next_external_step": "Keep the game at its main menu and the working SSH terminal open. Upload the installation-root release_info.json to artifacts/windows/release_info.json for semantic release and assembly linkage verification. Main-menu connection acceptance is complete; do not repeat installation or port migration. No gameplay action has been sent; combat one-step acceptance follows version verification.",
   "completion_rule": "Do not mark complete until original-game behavior and declared supported scenario parity have been verified. Simulator-only tests do not prove local game parity.",
   "limitations": [
-    "User reports main-menu v0.107.1 / 2026.06.18; the live Windows main-menu response now reports a DLL fingerprint matching received references. DLL metadata remains generic 0.1.0.0; the semantic release is not independently measured by this HTTP response, and the acceptance version gate remains unresolved.",
-    "Windows port 21526 configuration and main-menu HTTP success are supported by user terminal responses with protocol/fingerprint checks. Linux tunnel access, combat observation/action/result and original-game parity remain unverified.",
+    "Live Linux BridgeClient reads confirm a runtime DLL fingerprint matching received references. DLL metadata remains generic 0.1.0.0; user-reported v0.107.1 / 2026.06.18 is not independent release evidence. The game loads release_info.json; that file and its assembly linkage still need verification.",
+    "SSH access and stable main-menu GET responses are directly verified. Combat observation/action/result, controlled initialization and original-game parity remain unverified. Main-menu readiness is false by design.",
     "Comparison coverage excludes catalog-derived card values and hidden RNG; a matching finite trace never proves global game parity.",
     "Exact original/simulator initial state and RNG alignment still require implementation and live evidence.",
     "Reference replay checks one declared seed and refuses initial-state mismatches; no automatic original-game staging or RNG import is implemented."
@@ -207,18 +213,20 @@
     "connect_argument": "-GameBridgePort 21526",
     "script_default_game_port": 15526,
     "windows_config_changed": true,
-    "new_tunnel_verified": false,
-    "live_http_verified": false,
-    "migration_attempt": "configuration_and_windows_http_succeeded_user_transcript_new_tunnel_pending",
+    "new_tunnel_verified": true,
+    "live_http_verified": true,
+    "migration_attempt": "21526_configuration_and_tunnel_main_menu_gets_verified",
     "new_port_owner": null,
     "game_closed_user_reported": false,
     "conflicting_forwards_released": true,
     "release_evidence_source": "user_reports_no_output_from_windows_listener_check",
-    "new_port_listener_state": "http_serving_main_menu_user_transcript",
+    "new_port_listener_state": "main_menu_serving_verified_via_linux_tunnel",
     "old_linux_tunnel_listener_present": false,
     "windows_config_evidence_source": "user_supplied_configuration_output",
     "windows_http_verified_user_transcript": true,
-    "linux_http_verified": false,
-    "current_game_state": "menu/main_user_http_transcript"
+    "linux_http_verified": true,
+    "current_game_state": "menu/main_direct_linux_capture_settled_true_action_ready_false",
+    "linux_tunnel_listener_present": true,
+    "verification_scope": "read_only_main_menu_no_combat"
   }
 }
