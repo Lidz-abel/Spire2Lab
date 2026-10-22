@@ -211,7 +211,7 @@ Recompute the original-game gate with `.venv/bin/python scripts/audit_acceptance
 - **Preserve the information boundary.** Policies receive observations, not internal RNG or hidden draw order. `sample_world` is a branching primitive; a full history-conditioned belief model is still future work.
 - **Keep facts separate from rewards.** The current `terminal-win-v1` rule gives +1 for a win, −1 for a loss, and 0 otherwise. State changes remain available independently.
 - **Handle unavailable and unresolved data explicitly.** Unknown action outcomes are not fabricated terminal transitions. Masked invalid Gym actions are marked `training_transition=False` and must be excluded from training data.
-- **Report finite coverage.** The 60-case matrix covers three encounters, ten development seeds, and two baseline policies. It cannot establish correctness for every game mechanic. Controlled original-game initialization and RNG alignment remain unfinished.
+- **Report finite coverage.** The 60-case matrix covers three encounters, ten development seeds, and two baseline policies. It cannot establish correctness for every game mechanic. The [controlled scenario initializer](docs/SCENARIO-STAGING.md) is compiled and contract-tested; original-game initialization and RNG alignment remain unverified.
 
 ## Project structure
 

@@ -8,6 +8,7 @@ from pathlib import Path
 import shutil
 import subprocess
 import sys
+import tempfile
 
 parser = argparse.ArgumentParser()
 parser.add_argument(
@@ -31,7 +32,9 @@ build_dir.mkdir(parents=True, exist_ok=True)
 for path in source.glob("*.cs"):
     shutil.copy2(path, build_dir / path.name)
 shutil.copy2(source / "STS2_MCP.csproj", build_dir / "STS2_MCP.csproj")
-shutil.copy2(ROOT / "bridge/McpMod.Lab.cs", build_dir / "McpMod.Lab.cs")
+extension_sources = sorted((ROOT / "bridge").glob("*.cs"))
+for path in extension_sources:
+    shutil.copy2(path, build_dir / path.name)
 main = build_dir / "McpMod.cs"
 text = main.read_text()
 for old, new in [
@@ -106,6 +109,18 @@ for name in ("sts2.dll", "GodotSharp.dll", "0Harmony.dll"):
 
 sdk = shutil.which("dotnet") or str(ROOT / ".tools/dotnet/dotnet")
 output = ROOT / "artifacts/windows/mod"
+if (output / "build.json").exists():
+    previous = json.loads((output / "build.json").read_text())
+    previous_sha = hashlib.sha256((output / "STS2_MCP.dll").read_bytes()).hexdigest()
+    if previous_sha != previous["mod_sha256"]:
+        raise SystemExit(
+            "Existing bridge differs from its manifest; preserve and inspect before rebuilding"
+        )
+    archive = ROOT / "artifacts/windows/mod-history" / previous_sha
+    if not archive.exists():
+        shutil.copytree(output, archive)
+staging = tempfile.TemporaryDirectory(prefix="bridge-build-", dir=output.parent)
+compiled_output = Path(staging.name)
 subprocess.run(
     [
         sdk,
@@ -114,14 +129,14 @@ subprocess.run(
         "-c",
         "Release",
         "-o",
-        str(output),
+        str(compiled_output),
         f"-p:STS2GameDataDir={references}",
     ],
     check=True,
     env={**os.environ, "DOTNET_CLI_TELEMETRY_OPTOUT": "1"},
 )
-shutil.copy2(source / "mod_manifest.json", output / "mod_manifest.json")
-shutil.copy2(source / "LICENSE", output / "LICENSE.txt")
+shutil.copy2(source / "mod_manifest.json", compiled_output / "mod_manifest.json")
+shutil.copy2(source / "LICENSE", compiled_output / "LICENSE.txt")
 manifest = json.loads((ROOT / "vendor/bridge-manifest.json").read_text())
 manifest.update(
     {
@@ -132,20 +147,31 @@ manifest.update(
         "semantic_game_version_verified": False,
         "game_assembly_sha256": report["assemblies"]["sts2.dll"]["sha256"],
         "mod_sha256": hashlib.sha256(
-            (output / "STS2_MCP.dll").read_bytes()
+            (compiled_output / "STS2_MCP.dll").read_bytes()
         ).hexdigest(),
         "compiled": True,
         "build_script_sha256": hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
         "source_verification": source_proof,
         "in_game_verified": False,
         "manifest_sha256": hashlib.sha256(
-            (output / "mod_manifest.json").read_bytes()
+            (compiled_output / "mod_manifest.json").read_bytes()
         ).hexdigest(),
         "lab_extension_sha256": hashlib.sha256(
             (ROOT / "bridge/McpMod.Lab.cs").read_bytes()
         ).hexdigest(),
         "reference_report_sha256": hashlib.sha256(report_file.read_bytes()).hexdigest(),
+        "extension_sources": {
+            str(path.relative_to(ROOT)): hashlib.sha256(path.read_bytes()).hexdigest()
+            for path in extension_sources
+        },
+        "capabilities": ["scenario_staging_v1"],
     }
 )
-(output / "build.json").write_text(json.dumps(manifest, indent=2) + "\n")
+(compiled_output / "build.json").write_text(json.dumps(manifest, indent=2) + "\n")
+output.mkdir(parents=True, exist_ok=True)
+# Compilation failures leave the existing bundle untouched. Publish the manifest
+# last so concurrent installers reject any transient mismatch instead of trusting it.
+for path in sorted(compiled_output.iterdir(), key=lambda p: p.name == "build.json"):
+    os.replace(path, output / path.name)
+staging.cleanup()
 print(f"Compiled bridge at {output}. Compilation is not a claim of in-game validation.")

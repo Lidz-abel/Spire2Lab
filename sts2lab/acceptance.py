@@ -40,6 +40,7 @@ def source_paths(root=ROOT):
     ]
     paths = [root / name for name in fixed]
     for directory, patterns in [
+        ("bridge", ["*.cs"]),
         ("sts2lab", ["*.py"]),
         ("web", ["*.js", "*.html", "*.css"]),
     ]:
@@ -127,6 +128,15 @@ def verify_windows_bundle(root, track):
         raise ValueError("Bridge extension changed after compilation")
     if track(root / "scripts/build_bridge.py") != build["build_script_sha256"]:
         raise ValueError("Bridge build/patch script changed after compilation")
+    if "extension_sources" in build:
+        current = {str(p.relative_to(root)) for p in (root / "bridge").glob("*.cs")}
+        if set(build["extension_sources"]) != current:
+            raise ValueError("Bridge extension source inventory changed")
+        for relative, expected in build["extension_sources"].items():
+            if track(contained(root, relative)) != expected:
+                raise ValueError(
+                    f"Bridge extension changed after compilation: {relative}"
+                )
     release = verify_release(
         root, report["assemblies"]["sts2.dll"], CONFIG["game_version"], track
     )

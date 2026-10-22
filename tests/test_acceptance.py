@@ -152,6 +152,33 @@ def test_target_label_is_not_actual_version_evidence(tmp_path):
         a.verify_windows_bundle(root, a.sha)
 
 
+@pytest.mark.parametrize("change", ["edit", "add", "remove"])
+def test_bridge_extension_inventory_and_content_are_bound(tmp_path, change):
+    root = project(tmp_path)
+    _, build = windows_stub(root)
+    build["extension_sources"] = {
+        str(p.relative_to(root)): a.sha(p) for p in (root / "bridge").glob("*.cs")
+    }
+    write_json(root / "artifacts/windows/mod/build.json", build)
+    tracked = []
+
+    def track(path):
+        tracked.append(path)
+        return a.sha(path)
+
+    a.verify_windows_bundle(root, track)
+    contract = root / "bridge/ScenarioContract.cs"
+    assert contract in tracked
+    if change == "edit":
+        contract.write_text(contract.read_text() + "\n// changed\n")
+    elif change == "add":
+        (root / "bridge/Unexpected.cs").write_text("// unexpected source")
+    else:
+        contract.unlink()
+    with pytest.raises(ValueError, match="Bridge extension"):
+        a.verify_windows_bundle(root, a.sha)
+
+
 @pytest.mark.parametrize("with_release_info", [False, True])
 def test_complete_matrix_is_cached_only_until_evidence_changes(
     tmp_path, monkeypatch, with_release_info

@@ -21,6 +21,7 @@ public static partial class McpMod
     private static readonly Dictionary<string, (string Fingerprint, Dictionary<string, object?> Result)> LabRequests = new();
     private static readonly Queue<string> LabRequestOrder = new();
     private static string? LabAssemblySha;
+    private static string? LabModSha;
     private static string? LabObservedToken;
     private static long LabObservedAt;
     private static string? LabPendingFrom;
@@ -43,9 +44,14 @@ public static partial class McpMod
     {
         var state = BuildGameState();
         LabAssemblySha ??= Convert.ToHexString(SHA256.HashData(File.ReadAllBytes(typeof(RunManager).Assembly.Location))).ToLowerInvariant();
+        LabModSha ??= Convert.ToHexString(SHA256.HashData(File.ReadAllBytes(typeof(McpMod).Assembly.Location))).ToLowerInvariant();
         state["lab_instance_id"] = LabInstance;
         state["lab_protocol"] = 1;
         state["game_assembly_sha256"] = LabAssemblySha;
+        state["lab_mod_sha256"] = LabModSha;
+        state["lab_capabilities"] = new[] { "scenario_staging_v1" };
+        state["lab_profile_id"] = MegaCrit.Sts2.Core.Saves.SaveManager.Instance.CurrentProfileId;
+        if (LabScenario != null) state["lab_scenario"] = LabScenario;
         string token = LabHash(JsonSerializer.Serialize(state));
         long now = Stopwatch.GetTimestamp();
         if (token != LabObservedToken)
@@ -67,7 +73,7 @@ public static partial class McpMod
             LabPendingFrom = null;
         state["lab_state_token"] = token;
         state["lab_settled"] = settled;
-        state["lab_action_ready"] = actionable && settled && LabPendingFrom == null;
+        state["lab_action_ready"] = actionable && settled && LabPendingFrom == null && !LabSetupBusy;
         // Transport provenance is added AFTER hashing; acknowledging a request must
         // not by itself look like a changed game state.
         state["lab_last_request_id"] = LabLastRequestId;
@@ -76,6 +82,8 @@ public static partial class McpMod
 
     private static Dictionary<string, object?> ExecuteLabAction(string action, Dictionary<string, JsonElement> data)
     {
+        if (action == "lab_prepare") return ExecuteLabPrepare(data);
+        if (LabSetupBusy) return Error("lab_scenario_setup_pending");
         if (action != "play_card" && action != "end_turn")
             return ExecuteAction(action, data);
         if (!data.TryGetValue("lab_request_id", out var requestIdValue) || requestIdValue.ValueKind != JsonValueKind.String

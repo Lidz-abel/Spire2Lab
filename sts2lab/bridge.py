@@ -31,9 +31,15 @@ class OutcomeUnknown(BridgeError):
 
 class BridgeClient:
     def __init__(
-        self, game_sha256: str, *, base_url="http://127.0.0.1:18526", transport=None
+        self,
+        game_sha256: str,
+        *,
+        base_url="http://127.0.0.1:18526",
+        transport=None,
+        mod_sha256: str | None = None,
     ):
         self.expected_game_sha = game_sha256
+        self.expected_mod_sha = mod_sha256
         self.client = httpx.AsyncClient(
             base_url=base_url, timeout=3, trust_env=False, transport=transport
         )
@@ -52,6 +58,13 @@ class BridgeClient:
         if state.get("game_assembly_sha256") != self.expected_game_sha:
             raise BridgeError(
                 "Game DLL changed; re-verify the game version and rebuild the bridge"
+            )
+        if (
+            self.expected_mod_sha is not None
+            and state.get("lab_mod_sha256") != self.expected_mod_sha
+        ):
+            raise BridgeError(
+                "Running Mod differs from the verified bridge build; install the current build"
             )
         if self.instance_id is None:
             self.instance_id = state["lab_instance_id"]

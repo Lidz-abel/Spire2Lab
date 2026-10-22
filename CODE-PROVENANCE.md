@@ -58,6 +58,8 @@ O-02 至 O-04 随实机证据逐步替换；阶段 2 实现搜索/层级核心�
 | `native/LabExports.cs` | 本项目 | 只读观测导出扩展；不新增卡牌效果或敌人规则 |
 | `native/Sts2Lab.csproj` | 本项目构建文件 | 将我们的观测扩展与上游 C# 引擎一起编译 |
 | `bridge/McpMod.Lab.cs` | 本项目适配扩展 | 对 STS2MCP 的状态、请求去重和实验桥接扩展；依赖上游 Mod API |
+| `bridge/ScenarioContract.cs`、`bridge/McpMod.Scenario.cs`、`sts2lab/scenarios.py`、`scripts/prepare_scenario.py` | 本项目受控初始化与验证实现 | 需求先记录于 `docs/SCENARIO-STAGING.md`；接口签名来自收到的本机 DLL 元数据，兼容性参考固定上游 `NativeExports.ResetArena/SeedStreams`、`GameRng`、`EncounterRng`；使用游戏自身启动与 RNG 工厂，不独立实现游戏规则。Mod 已编译，客户端/请求契约/日志恢复的合成测试通过，实机初始化待验收 |
+| `tests/test_scenarios.py`、`tests/test_scenario_contract.py`、`tests/scenario_contract.cs` | 本项目测试 | 合成 HTTP 与临时文件覆盖未知结果、指纹/初态拒绝及中断恢复；独立编译生产 C# 请求解析器并检查 36 组合成输入，不载入游戏程序集，不作为原版运行证据 |
 | `scripts/*.py`、`scripts/*.ps1` | 本项目 | 构建、来源校验、Windows 接入、安装、回放、审计和浏览器检查 |
 | `tests/*.py`、`config/*.json`、`web/*` | 本项目新增实现；部分测试依赖上游素材 | 测试、实验范围、验收规则和面板；`test_original.py` 读取上游 A8 捕获，不属于本机实机证据 |
 | `ARCHITECTURE-PLAN.txt`、`README.md`、`PROJECT-HANDOFF.md` | 本项目 | 研究规划、使用说明和转接记录 |
@@ -103,7 +105,7 @@ O-02 至 O-04 随实机证据逐步替换；阶段 2 实现搜索/层级核心�
 
 `native/Sts2Lab.csproj` 会把 `vendor/sts2/src/Sts2Emulator/**/*.cs` 和我们的 `native/LabExports.cs` 一起编译。生成的 `.so` 因此是上游规则引擎与本项目观测扩展的组合产物。`scripts/build_native.py` 会在构建前校验上游归档和扩展源文件；`sts2lab/source_integrity.py` 会拒绝被修改的上游文件和额外的构建源文件。
 
-同样，`scripts/build_bridge.py` 会准备上游 STS2MCP 文件，并应用 `bridge/McpMod.Lab.cs` 中的本项目扩展。生成的 Windows Mod 仍然包含上游依赖，必须保留上游许可证和实际构建报告。
+同样，`scripts/build_bridge.py` 会准备上游 STS2MCP 文件，并应用 `bridge/*.cs` 中的本项目扩展。当前工作区构建清单记录全部扩展源文件指纹。生成的 Windows Mod 仍然包含上游依赖，必须保留上游许可证和实际构建报告。
 
 2026-10-22 已使用本机收到的 Steam public build `23811903` 引用在 Linux 编译该
 组合 Mod，保留上游 MIT 许可证并记录构建来源。编译成功不改变来源分类，也不证明

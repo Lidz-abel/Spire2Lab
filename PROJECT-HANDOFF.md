@@ -22,6 +22,38 @@ VS Code Git 凭据服务连接被拒绝，GitHub 拒绝匿名写入。远程核�
 本次 Logo 和 README 尚未上传。已请用户在本机 Git 客户端恢复登录，未索取令牌。
 项目目标：**完成第一阶段所有的内容**（用户于本轮重新设为 active；当前未完成）
 
+2026-10-23 场景初始化交付前检查通过：57 项针对性检查及 92 项完整回归测试通过，
+各有 1 项既有 Starlette/httpx 弃用警告；证据为 artifacts/windows/ 下
+scenario-component-tests.xml、scenario-regression-tests.xml。C# 测试独立编译生产
+ScenarioContract.cs，对 36 组合成输入核验，不加载游戏 DLL。Python 覆盖错误 Mod、
+槽位、菜单、种子、初态及来源拒绝，超时/异常回执只读恢复，以及 Ctrl+C 留存报告、
+进程异常退出后从已落盘 JSONL 恢复。OriginalEnvironment 默认接入现校验本地构建
+和运行 Mod 指纹；使用合成 client 的测试仍明确与实机证据区分。
+prepare_scenario.py --help 验证通过；完整 audit_acceptance.py 返回预期退出码 1、
+errors=[]、缺少全部 60 场与 9 类边界，不减少验收范围。
+最新只读实机检查 artifacts/windows/staging-preinstall-20261022T174839985791.json
+确认隧道可读、仍在第 1 层战斗、没有新 Mod 的指纹/能力字段。已通过异步问题给用户
+提供关闭游戏、运行现有 Install-Windows-Mod.ps1、重启到主菜单的具体操作；新编译
+DLL 指纹为 6de822b9db90892337ff0c00f08aae023f2fd4d192b12c8292315e5dd723268c。
+等待用户执行 Windows 安装；未发送 lab_prepare 或任何新的游戏动作。收到安装反馈
+后先只读确认运行 Mod 指纹、专用槽位 2 和主菜单，再执行一个声明种子的场景检查。
+本轮依然是 P1-03/04 进展，不是完整实机闭环或第一阶段完成；GitHub 认证无新进展。
+
+2026-10-23 最新状态核对（优先于下方历史记录）：用户询问当前工作及所处阶段。
+仍在阶段 1，当前推进 P1-03 实机闭环与 P1-04 受控场景；阶段 2/3 尚未开始。
+工作区已新增 bridge/ScenarioContract.cs、bridge/McpMod.Scenario.cs，扩展 lab_prepare
+请求和 Mod 指纹/能力声明。scripts/build_bridge.py 已支持多扩展文件、旧构建归档、
+临时目录构建及清单最后发布；新 Mod 编译成功，0 错误、1 项上游 CS8602 警告。
+证据 artifacts/windows/scenario-build-3.log 与 mod/build.json；前两次失败日志保留。
+旧构建已归档到 artifacts/windows/mod-history/。新构建尚未安装到 Windows，也未
+执行过场景初始化；不能把编译通过写成可重复场景或原版一致性通过。
+Python 的 sts2lab/scenarios.py、scripts/prepare_scenario.py 和 Mod 指纹检查已写入
+工作区，针对本轮新增逻辑的测试及审阅尚未完成，代码尚未提交。下一步先完成这些
+检查，再提供新 Mod 安装操作并开展原版初始化验收。此前真实防御牌探针仍是独立
+诊断，正式原版参考战斗保持 0/60；实时面板与原版完整战斗的对应尚未验收。
+本次只核对本地记录及构建文件，没有向游戏发送动作或要求用户再次上传引用。
+Git 本地 main 领先跟踪的 origin/main 24 个提交；无认证恢复或成功推送的新证据。
+
 2026-10-23 下一实施单元已经启动：发行门与出牌探针提交为 `3832456`；随后新增
 docs/SCENARIO-STAGING.md，先定义专用档案、固定初态、声明种子、幂等设置请求、
 独立失败证据和禁止事后拟合的契约。P1-04 场景准备因首战楼层差异提前成为 P1-03

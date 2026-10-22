@@ -389,9 +389,15 @@ class OriginalEnvironment:
                 raise BridgeError(
                     "Windows DLLs and compiled bridge are missing; run Connect-Windows.ps1 first"
                 )
-            manifest = json.loads(path.read_text())
+            # Local import avoids the acceptance -> parity -> adapter cycle.
+            from .acceptance import verify_windows_bundle, sha
+
+            manifest = verify_windows_bundle(ROOT, sha)
         instance = cls(
-            client or BridgeClient(manifest["game_assembly_sha256"]),
+            client
+            or BridgeClient(
+                manifest["game_assembly_sha256"], mod_sha256=manifest["mod_sha256"]
+            ),
             encounter,
             manifest,
             raw_dir=raw_dir,

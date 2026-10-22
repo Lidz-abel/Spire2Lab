@@ -1,6 +1,7 @@
 # Controlled original-game scenarios
 
-Status: design in progress; no staging endpoint is implemented or game-verified.
+Status: endpoint compiled; client, journal recovery and input-contract checks pass.
+Windows installation and live initialization validation are still pending.
 
 The fixed phase-one benchmark remains Ironclad A0, floor 2, zero completed
 combats, the ten-card starter deck, Burning Blood, no potions, 80/80 HP and
@@ -51,12 +52,59 @@ The current `debug_start_encounter` upstream endpoint can enter an encounter in
 the current run. It does not by itself establish the benchmark's floor, inventory
 or RNG initialization. It therefore cannot certify controlled setup.
 
-Spire2Lab will implement the staging contract and validation. Existing pinned
+Spire2Lab implements the staging contract and validation. Existing pinned
 Mod plumbing remains attributed to `evangambit/STS2MCP`. API signatures and RNG
 compatibility facts must be checked against the received local DLL. Record any
 copied or adapted upstream implementation in `CODE-PROVENANCE.md`; inspection
 alone is not a claim of independently implemented game mechanics.
 
-A new bridge build will require Windows installation and runtime verification.
-Preserve the installed build and its manifest before producing a replacement.
-Compilation and synthetic tests alone cannot establish that staging works.
+The current draft spans `bridge/ScenarioContract.cs`, `bridge/McpMod.Scenario.cs`,
+`sts2lab/scenarios.py` and `scripts/prepare_scenario.py`. It requests a non-saving
+run in profile 2 and records explicit debug setup, including a noncombat history
+anchor when needed and numeric run-stream initialization before entering combat.
+These code paths have not yet been exercised in the original game.
+
+The new bridge build compiled with no errors and one upstream nullable warning;
+the previous build and manifest were archived before replacement. Windows
+installation and runtime verification remain required. Compilation and synthetic
+tests alone cannot establish that staging works.
+
+## Operator workflow
+
+Install the current bridge bundle, restart the game and select experiment profile
+2. Stay at the main menu with no run active. The configured SSH tunnel must reach
+the running game. From the Linux repository root:
+
+```bash
+.venv/bin/python scripts/prepare_scenario.py --encounter nibbits-weak --seed 1
+```
+
+The tool verifies the local bundle and running game/Mod fingerprints, persists a
+request journal, sends one setup request, and waits for its matching settled
+opening. It compares that opening with an independently initialized simulator.
+It does not play cards or finish a battle. This first live path remains unverified;
+a successful compile or contract test is not a promised successful setup.
+
+Every attempt writes a new private `artifacts/windows/scenario-*.json` report and
+`.jsonl` journal. Keep failures. Exit code 0 means only the opening checks matched;
+1 means failed, rejected, unresolved or mismatched; 130 records cancellation.
+Neither successful setup nor opening agreement enters the 60-battle reference set.
+
+If the result is `outcome_unknown`, use its actual report path to resume:
+
+```bash
+.venv/bin/python scripts/prepare_scenario.py --resume artifacts/windows/scenario-<timestamp>.json
+```
+
+Replace `<timestamp>` with the filename reported by the original attempt. If a
+process terminated before writing the report, pass its `.jsonl` journal instead.
+Resume sends GETs only and remains bound to the original process and build. A
+restarted process, changed build or unrelated request cannot certify completion.
+Do not submit another setup request to resolve a missing acknowledgment.
+
+Contract checks use synthetic HTTP, synthetic files and the compiled C# input
+parser without game DLLs. Run them with:
+
+```bash
+.venv/bin/python -m pytest -q tests/test_scenarios.py tests/test_scenario_contract.py tests/test_acceptance.py
+```
