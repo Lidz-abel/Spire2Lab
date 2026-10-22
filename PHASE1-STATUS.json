@@ -27,7 +27,7 @@
       {
         "id": "P1-01",
         "title": "版本与来源冻结",
-        "status": "awaiting_windows_input",
+        "status": "reference_fingerprints_verified_semantic_release_pending",
         "depends_on": []
       },
       {
@@ -39,7 +39,7 @@
       {
         "id": "P1-03",
         "title": "最小实机闭环",
-        "status": "not_live_verified",
+        "status": "bridge_compiled_windows_installation_and_live_control_pending",
         "depends_on": [
           "P1-01"
         ]
@@ -119,7 +119,7 @@
     "independent_backend_migration": "planned_not_implemented",
     "phase_one_scope": "existing_finite_scope_and_live_game_acceptance_preserved"
   },
-  "status": "awaiting_windows_input",
+  "status": "awaiting_windows_mod_installation",
   "requirements": {
     "versioned_semantic_protocol": "implemented_v0.2.0",
     "native_linux_simulator": "built_and_smoke_tested",
@@ -132,14 +132,14 @@
     "snapshot_restore_and_branch_isolation": "tested",
     "gymnasium_interface": "tested_combat_entities_v2",
     "process_isolated_vector_sampling": "gym_two_workers_tested_and_semantic_sampling_one_two_four_workers_reproducible",
-    "windows_game_version_and_bridge": "awaiting_windows_reference_files",
-    "windows_ssh_command": "user_reported_successful_remote_echo_exit_zero_file_transfer_and_tunnels_pending",
+    "windows_game_version_and_bridge": "public_build_23811903_reference_hashes_verified_bridge_compiled_semantic_release_and_live_validation_pending",
+    "windows_ssh_command": "report_and_three_assemblies_received_reverse_listener_present_bridge_http_and_local_forwarding_unverified",
     "real_game_adapter": "canonical_mapping_async_runtime_and_browser_tested_with_synthetic_transport_not_live",
     "real_game_one_step": "not_verified",
     "real_game_full_battle": "not_verified",
     "cross_backend_step_parity": "not_verified",
     "cross_backend_comparison_tool": "implemented_with_capture_hash_checks_and_candidate_reexecution_no_local_live_evidence",
-    "bridge_source_hooks": "prepare_only_verified_not_compiled",
+    "bridge_source_hooks": "compiled_against_received_assemblies_enchantment_instance_getter_metadata_verified_runtime_pending",
     "native_atomic_publish": "staged_binary_replacement_exercised",
     "windows_install_script": "configurable_checkout_hash_refusal_license_and_build_install_rollback_mock_tested_not_executed_on_windows",
     "pinned_source_integrity": "archive_hash_and_1417_source_files_verified_build_and_first_load_guarded",
@@ -159,7 +159,7 @@
     "original_browser_contract": "artifacts/original-dashboard-synthetic/report.json (5 checks, synthetic transport only)",
     "native_library_sha256": "90f73b83758827c8f8377b35f5ea19f1f59fc8c4a6b72ed01be02b0500f6a65d",
     "bootstrap": "artifacts/bootstrap-check.json",
-    "windows_onboarding_package": "artifacts/installers/sts2-lab-windows.zip (scripts only; prior script game detection user-reported on Windows, SSH preflight failed; updated diagnostics not yet run on Windows)",
+    "windows_onboarding_package": "artifacts/installers/sts2-lab-windows.zip (scripts only; earlier revision executed on Windows, report and three DLLs received; latest diagnostic revision and installer not yet Windows-verified)",
     "acceptance_audit": "artifacts/acceptance/status.json (incomplete; 60 original-game cases missing)",
     "readme_branding": "artifacts/branding/structure-check.json and readme-render-check.json (3 SVGs, 30 local links/anchors, 4 local theme/viewport previews; not GitHub-hosted rendering)",
     "readme_example": "artifacts/branding/python-example.txt (one real native simulator action, verified 2026-10-22)",
@@ -169,13 +169,18 @@
     "dashboard_health": "artifacts/dashboard-health.json (loopback 8765 serving, original_game_verified false, checked 2026-10-22)",
     "windows_first_attempt": "User terminal transcript on 2026-10-22: Steam build 23811903 detected; connection closed after SSH password prompt; no version report or assemblies received",
     "ssh_preflight_checks": "artifacts/windows-helper-tests.xml (mocked transport failure classification and local report retention; actual local POSIX shell checkout/directory checks; no live Windows SSH authentication evidence)",
-    "windows_ssh_probe": "User Windows client transcript on 2026-10-22: SPIRE2LAB_SSH_OK, exec request accepted, Exit status 0; proves that login and remote command only, not SCP or forwarding; earlier closure cause unknown"
+    "windows_ssh_probe": "User Windows client transcript on 2026-10-22: SPIRE2LAB_SSH_OK, exec request accepted, Exit status 0; proves that login and remote command only, not SCP or forwarding; earlier closure cause unknown",
+    "windows_references": "artifacts/windows/report.json and reference-verification.json (Steam public build 23811903; three received DLL SHA-256 hashes and sizes match; semantic version unverified)",
+    "bridge_build": "artifacts/windows/bridge-build.log and mod/build.json (SDK 9.0.319; build succeeded with 0 errors and 1 upstream CS8602 warning; compiled does not mean in-game verified)",
+    "bridge_metadata": "artifacts/windows/assembly-metadata-check.json (CardModel.Enchantment public instance getter exists; metadata inspection only, game code not executed)",
+    "bridge_related_tests": "artifacts/windows/bridge-integration-tests.xml (16 passed, 1 existing dependency warning; transport, adapter and installer checks use synthetic or upstream fixtures, not live Windows gameplay)",
+    "bridge_network_probe": "Reverse listener 127.0.0.1:18526 observed on 2026-10-22; read-only bridge HTTP probe timed out before installation, no live state obtained"
   },
-  "next_external_step": "Retry Connect-Windows.ps1 on the Windows Steam PC with the same server, RemoteRoot and SSH port now that a simple SSH command succeeded; verify report and DLL uploads, keep the tunnel open, then inspect the dashboard and build the bridge against received references.",
+  "next_external_step": "Keep Connect-Windows.ps1 running; close the game, run Install-Windows-Mod.ps1 in another Windows terminal with the same server, RemoteRoot and port, enable the Mod and stay at the main menu. Collect the displayed game release and verify bridge HTTP state before any controlled battle.",
   "completion_rule": "Do not mark complete until original-game behavior and declared supported scenario parity have been verified. Simulator-only tests do not prove local game parity.",
   "limitations": [
-    "Windows report and reference assemblies are still absent.",
-    "Bridge source preparation verifies patch hooks only; compilation and reflected Enchantment property still require actual game assemblies and a live run.",
+    "References are received and hash-verified, but DLL assembly/file version 0.1.0.0 does not establish simulator target release 0.107.1; semantic release verification is still required.",
+    "Bridge compilation and Enchantment metadata checks passed; Windows installation, runtime behavior and actual original-game state/action/result are not yet verified.",
     "Comparison coverage excludes catalog-derived card values and hidden RNG; a matching finite trace never proves global game parity.",
     "Exact original/simulator initial state and RNG alignment still require implementation and live evidence.",
     "Reference replay checks one declared seed and refuses initial-state mismatches; no automatic original-game staging or RNG import is implemented."

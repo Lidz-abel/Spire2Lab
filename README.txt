@@ -32,7 +32,8 @@ Windows 接入
      保持脚本窗口打开，即可在 Windows 浏览器访问面板。
   2. Linux 核对实际版本后构建：
      .venv/bin/python scripts/build_bridge.py
-     当前桥接代码尚未用你的 DLL 编译；编译成功也不等于实机行为验证通过。
+     已使用收到的 Steam public build 23811903 引用编译成功；游戏语义版本和实机运行仍待确认。
+     DLL 文件版本 0.1.0.0 不能当作 v0.107.1 的证明；编译成功也不等于实机行为验证通过。
   3. 将 scripts/Install-Windows-Mod.ps1 复制到 Windows，关闭游戏后执行：
      powershell -ExecutionPolicy Bypass -File .\Install-Windows-Mod.ps1 -Server 用户@服务器 -RemoteRoot /user/chenzk/sts2-lab -SshPort 22
      安装器会校验本机游戏指纹，备份已有同名 Mod，安装 DLL、manifest、LICENSE.txt 和 build.json，再通过 Steam 启动游戏。

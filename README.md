@@ -171,7 +171,7 @@ The original-game workflow is separate from the simulator quick start:
 3. Close the game and run [`Install-Windows-Mod.ps1`](scripts/Install-Windows-Mod.ps1) with the same server, path and port, then launch through Steam and enable the Mod.
 4. Start the Linux dashboard and verify one settled state/action/result before attempting a full reference battle.
 
-The helpers require an absolute remote path using letters, digits, `_`, `.`, `/`, and `-`; spaces are currently unsupported. Connection setup checks the remote checkout before uploading. The installer verifies fingerprints, preserves license/build records, and backs up managed files for rollback. These behaviors have mocked PowerShell tests; the bridge has not yet been compiled or run against the local Windows game. Detailed operator steps are in [README.txt](README.txt).
+The helpers require an absolute remote path using letters, digits, `_`, `.`, `/`, and `-`; spaces are currently unsupported. Connection setup checks the remote checkout before uploading. The installer verifies fingerprints, preserves license/build records, and backs up managed files for rollback. These behaviors have mocked PowerShell tests. References from Steam public build `23811903` have been received and hash-verified, and the bridge compiles against them. The semantic game release and in-game behavior remain unverified; compilation does not establish simulator parity. Detailed operator steps are in [README.txt](README.txt).
 
 ## Validation
 

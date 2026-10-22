@@ -125,6 +125,11 @@ shutil.copy2(source / "LICENSE", output / "LICENSE.txt")
 manifest = json.loads((ROOT / "vendor/bridge-manifest.json").read_text())
 manifest.update(
     {
+        "status": "compiled_requires_in_game_validation",
+        "steam_build_id": report.get("steam_build_id"),
+        "steam_beta_key": report.get("beta_key"),
+        "configured_target_game_version": report.get("target_game_version"),
+        "semantic_game_version_verified": False,
         "game_assembly_sha256": report["assemblies"]["sts2.dll"]["sha256"],
         "mod_sha256": hashlib.sha256(
             (output / "STS2_MCP.dll").read_bytes()
