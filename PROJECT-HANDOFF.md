@@ -22,6 +22,18 @@ VS Code Git 凭据服务连接被拒绝，GitHub 拒绝匿名写入。远程核�
 本次 Logo 和 README 尚未上传。已请用户在本机 Git 客户端恢复登录，未索取令牌。
 项目目标：**完成第一阶段所有的内容**（用户于本轮重新设为 active；当前未完成）
 
+2026-10-23 本轮交付与阻塞核对：实现已提交为 9ac68a2，本地 main 此时领先跟踪远程
+30 个提交。独立安装目录保留原先下载的依赖及新构建，源码从 2c25a99 升级至
+9ac68a2 后重跑全套：122 项通过、1 项可选 PowerShell 跳过；tracked source 未变化。
+证据 artifacts/interface-fresh-regression.json 和同名前缀日志/XML。此检查是源码升级
+后的独立构建回归，不是对 9ac68a2 再做一次冷安装。
+最终只读检查 artifacts/windows/interface-final-readiness.json 仍是同一个旧 Mod
+进程，lab_mod_sha256/能力字段缺失；新构建未加载。该条件已在连续多轮目标推进中
+重复确认，用户尚未反馈安装结果。本轮可独立进行的分支/训练边界、回归和文档
+工作已完成；后续实机初始化、RNG 对齐、面板完整战斗及 60 场/9 类覆盖均依赖此步。
+目标应保持未完成并按 blocked 等待 Windows 操作；GitHub 写入认证另行阻塞远程
+同步。保留现有服务和隧道，不重发游戏动作，不重复上传引用或重编译同一 Mod。
+
 2026-10-23 接口验收补齐（本段优先于下方历史记录）：新增不可变 BranchProvenance，
 记录分支 ID、父分支、父决策和 root/snapshot/sample_world/restore 操作；reset
 生成新根，restore 以检查点为父生成新编号。环境协议和实验头暴露来源，Observation

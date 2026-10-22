@@ -120,7 +120,7 @@
     "independent_backend_migration": "planned_not_implemented",
     "phase_one_scope": "existing_finite_scope_and_live_game_acceptance_preserved"
   },
-  "status": "release_verified_live_floor1_probe_passed_staging_draft_compiled_not_installed_or_live_verified",
+  "status": "awaiting_windows_new_mod_installation_local_interfaces_tested_original_acceptance_incomplete",
   "requirements": {
     "versioned_semantic_protocol": "implemented_v0.3.0_public_card_ids_semantic_only",
     "native_linux_simulator": "built_and_smoke_tested",
@@ -224,12 +224,13 @@
     "protocol_03_service": "artifacts/protocol-migration-restart-20261022T181009567473.json (old native session archived before restart; PID 127906 serves the new protocol; no Windows actions)",
     "protocol_03_sampling": "artifacts/sampling-protocol03-development.json (commit 2c25a99, clean source at measurement; 1/2/4 workers, 3 repeats, 300 cases per round; 2700 episodes and 44100 decisions; all public trajectory hashes match)",
     "protocol_03_cold_install": "artifacts/repro-2c25a99-bootstrap-resumed.log and repro-2c25a99-bootstrap-resumed-result.json (exit 0 after network recovery; fresh venv, independent caches, downloaded SDK and native build; no copied runtime dependencies; 113 passed, 1 optional PowerShell skip, 1 existing dependency warning). Two earlier TLS failure logs/results preserved under artifacts/repro-2c25a99-bootstrap*",
-    "latest_windows_install_check": "artifacts/windows/interface-readiness-20261022T183957492035.json (live GET only; floor-1 battle, new Mod fingerprint and capability fields absent; no game actions sent)",
+    "latest_windows_install_check": "artifacts/windows/interface-final-readiness.json (live GET only; same old game process without new Mod SHA or capabilities; matches_current_mod false; no game actions sent)",
     "protocol_03_fresh_build_comparison": "artifacts/repro-2c25a99-comparison.json (same host; 300 simulator runs, 60 unique cases, 4900 decisions; per-case records match excluding only library_sha256; native binaries differ, no bitwise reproducibility claim; tracked source unchanged, report dirty flag reflects untracked .repro-cache/)",
     "interface_boundary_tests": "artifacts/interface-boundary-tests.xml (30 passed, 1 existing dependency warning; native lineage, Gym transition boundary, stored policy versions and synthetic original transport)",
     "interface_boundary_regression": "artifacts/interface-boundary-regression-tests.xml (123 passed, 1 existing Starlette/httpx deprecation warning; no live-game battle validation)",
     "interface_boundary_acceptance": "artifacts/acceptance/interface-boundary-status.json (expected exit 1; errors empty; all 60 original battles and all 9 coverage types missing)",
-    "interface_service": "artifacts/interface-service-restart.json (old finished simulator session closed on server shutdown; new PID 165874/session 73014 serves paused simulator root with provenance; no Windows actions, health remains unverified; checker event-name correction retained)"
+    "interface_service": "artifacts/interface-service-restart.json (old finished simulator session closed on server shutdown; new PID 165874/session 73014 serves paused simulator root with provenance; no Windows actions, health remains unverified; checker event-name correction retained)",
+    "interface_fresh_regression": "artifacts/interface-fresh-regression.json and matching log/XML (independently installed 2c25a99 environment upgraded to source 9ac68a2; 122 passed, 1 optional PowerShell skip; native build unchanged from fresh bootstrap; not another cold install)"
   },
   "next_external_step": "Installer instructions sent: close Windows game, keep SSH tunnel, run existing Install-Windows-Mod.ps1, restart through Steam and stay at main menu. After installation verify running Mod SHA-256 and experiment profile 2, then run one controlled floor-2 setup. No additional reference upload needed. Last observed floor-1 Defend probe remains excluded from the reference matrix.",
   "completion_rule": "Do not mark complete until original-game behavior and declared supported scenario parity have been verified. Simulator-only tests do not prove local game parity.",
@@ -266,5 +267,28 @@
     "linux_tunnel_listener_present": true,
     "verification_scope": "main_menu_and_single_floor1_card_probe_not_benchmark_parity",
     "experiment_profile_id": 2
-  }
+  },
+  "blocking_conditions": [
+    {
+      "id": "windows_new_mod_installation",
+      "state": "waiting_for_external_action",
+      "evidence": "artifacts/windows/interface-final-readiness.json",
+      "required_action": "Close the Windows game, run the existing Install-Windows-Mod.ps1 against the current checkout, restart through Steam and stay at the main menu with the SSH tunnel open. Verify runtime Mod fingerprint before staging.",
+      "blocks": [
+        "P1-03",
+        "P1-04",
+        "P1-05 live acceptance",
+        "P1-07",
+        "P1-08"
+      ]
+    },
+    {
+      "id": "github_write_authentication",
+      "state": "no_recovery_evidence",
+      "required_action": "Restore GitHub write authentication on the checkout host; keep tokens out of chat and repository files.",
+      "blocks": [
+        "P1-08 remote synchronization"
+      ]
+    }
+  ]
 }
