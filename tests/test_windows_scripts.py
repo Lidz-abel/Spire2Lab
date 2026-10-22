@@ -35,3 +35,26 @@ def test_windows_helpers_with_mocked_transport_and_synthetic_files(tmp_path):
     )
     assert result.returncode == 0, result.stdout + result.stderr
     assert "PASS: relocated checkout" in result.stdout
+
+    # Exercise the actual command sent by PowerShell against a local POSIX shell.
+    # Only SSH authentication/transport are mocked; checkout failures are real.
+    shell = shutil.which("sh") if os.name == "posix" else None
+    if shell:
+        checkout = tmp_path / "checkout"
+        command = (tmp_path / "remote-check.txt").read_text(encoding="utf-8-sig")
+        command = command.replace("/srv/relocated/Spire2Lab", checkout.as_posix())
+
+        def run_check():
+            return subprocess.run(
+                [shell, "-c", command], capture_output=True, text=True, timeout=5
+            ).returncode
+
+        assert run_check() == 20  # Missing checkout.
+        (checkout / "scripts").mkdir(parents=True)
+        (checkout / "pyproject.toml").touch()
+        (checkout / "scripts/build_bridge.py").touch()
+        (checkout / "artifacts").touch()  # A file prevents directory creation.
+        assert run_check() == 21
+        (checkout / "artifacts").unlink()
+        assert run_check() == 0
+        assert (checkout / "artifacts/windows/assemblies").is_dir()

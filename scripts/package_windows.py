@@ -35,6 +35,15 @@ files["START-HERE.txt"] = """STS2 Lab Windows 接入包
 5. Linux 启动 bash scripts/start.sh 后，在 Windows 浏览器打开 http://127.0.0.1:8765。
    原版接入和参考战斗仍需在桥接成功运行后验收。
 
+SSH 连接失败时：
+   ssh -vvv -E .\\spire2lab-ssh.log -T -p 端口 用户@服务器 "echo SPIRE2LAB_SSH_OK"
+   Get-Content .\\spire2lab-ssh.log -Tail 70
+   使用与接入脚本相同的 SSH 目标与端口。密码由 OpenSSH 交互读取，不写入命令。
+   没有出现 SPIRE2LAB_SSH_OK 时，先检查日志中的认证和会话错误。
+   出现该标记表示本次 SSH 命令成功，不代表文件传输或端口转发已经可用。
+   exit 255 是 SSH 失败；exit 20 是远程项目文件缺失；exit 21 是远程目录创建失败。
+   本地版本报告保存在 $env:TEMP\\sts2-lab-windows-report.json，失败时仍保留。
+
 完整说明：README.txt；验收状态：PHASE1-STATUS.json。
 两个脚本必须使用同一个服务器、项目绝对路径与端口。SSH 隧道只监听两台电脑的 loopback 地址。
 """.encode("utf-8-sig")

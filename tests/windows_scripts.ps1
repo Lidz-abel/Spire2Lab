@@ -17,20 +17,25 @@ foreach ($Name in @('sts2.dll','GodotSharp.dll','0Harmony.dll')) {
 }
 Set-Content -Path (Join-Path $Sandbox 'steamapps/appmanifest_2868840.acf') -Value '"buildid" "123456"'
 $global:SpireTestCalls = [System.Collections.Generic.List[object]]::new()
-$global:SpireTestFailSetup = $false
+$global:SpireTestSetupExit = 0
 $global:SpireTestFailNextCopy = $false
 
 function Assert-True($Condition, $Message) {
     if (-not $Condition) { throw $Message }
 }
-function Assert-Throws([scriptblock]$Action) {
+function Assert-Throws([scriptblock]$Action, [string]$MessagePart = '') {
     $Failed = $false
-    try { & $Action } catch { $Failed = $true }
+    try { & $Action } catch {
+        $Failed = $true
+        if ($MessagePart) {
+            Assert-True ($_.Exception.Message.Contains($MessagePart)) "Wrong error: $($_.Exception.Message)"
+        }
+    }
     Assert-True $Failed 'Expected operation to fail.'
 }
 function global:ssh {
     $global:SpireTestCalls.Add(@{tool='ssh'; arguments=@($args)})
-    $global:LASTEXITCODE = if ($global:SpireTestFailSetup) { 1 } else { 0 }
+    $global:LASTEXITCODE = $global:SpireTestSetupExit
 }
 function global:scp {
     $global:SpireTestCalls.Add(@{tool='scp'; arguments=@($args)})
@@ -62,17 +67,26 @@ Assert-True ($Report.steam_build_id -eq '123456') 'Steam build missing from repo
 Assert-True ($Report.assemblies.'sts2.dll'.sha256 -eq (Get-FileHash (Join-Path $DataDir 'sts2.dll')).Hash.ToLower()) 'Wrong reference hash'
 Assert-True ($global:SpireTestCalls.Count -eq 6) 'Wrong number of connection operations'
 Assert-True ($global:SpireTestCalls[0].arguments[-1].Contains("test -f '/srv/relocated/Spire2Lab/pyproject.toml'")) 'Remote checkout not checked'
+$global:SpireTestCalls[0].arguments[-1] | Set-Content -Encoding UTF8 (Join-Path $Sandbox 'remote-check.txt')
 foreach ($Call in @($global:SpireTestCalls | Where-Object tool -eq 'scp')) {
     Assert-True ($Call.arguments[-1].StartsWith('tester@host:/srv/relocated/Spire2Lab/artifacts/windows/')) 'Upload ignored RemoteRoot'
     Assert-True ($Call.arguments[1] -eq 2222) 'Upload ignored port'
 }
 Assert-True ($global:SpireTestCalls[-1].arguments -contains '127.0.0.1:18526:127.0.0.1:15526') 'Reverse tunnel must stay loopback only'
 
-$global:SpireTestCalls.Clear()
-$global:SpireTestFailSetup = $true
-Assert-Throws { & $Connect @Options }
-Assert-True ($global:SpireTestCalls.Count -eq 1) 'Failed preflight must not upload or open a tunnel'
-$global:SpireTestFailSetup = $false
+foreach ($Failure in @(
+    @{code=255; message='SSH failed (exit 255)'},
+    @{code=20; message='Remote checkout files are missing (exit 20)'},
+    @{code=21; message='Remote reference directory could not be created (exit 21)'},
+    @{code=1; message='Remote preflight failed (exit 1)'}
+)) {
+    $global:SpireTestCalls.Clear()
+    $global:SpireTestSetupExit = $Failure.code
+    Assert-Throws { & $Connect @Options } $Failure.message
+    Assert-True ($global:SpireTestCalls.Count -eq 1) 'Failed preflight must not upload or open a tunnel'
+    Assert-True (Test-Path (Join-Path $env:TEMP 'sts2-lab-windows-report.json')) 'SSH failure lost the local report'
+}
+$global:SpireTestSetupExit = 0
 $global:SpireTestCalls.Clear()
 $Bad = $Options.Clone()
 $Bad.RemoteRoot = '/srv/repo;unexpected-command'
@@ -118,4 +132,4 @@ foreach ($Name in $Before.Keys) {
     Assert-True ((Get-FileHash (Join-Path $Target $Name)).Hash -eq $Before[$Name]) "Rollback did not restore $Name"
 }
 Assert-True (@($global:SpireTestCalls | Where-Object tool -eq 'start').Count -eq 1) 'Failed installation launched Steam'
-Write-Output 'PASS: relocated checkout, SSH preflight failure, unsafe path, hash refusal, install provenance, rollback'
+Write-Output 'PASS: relocated checkout, SSH failure classification and local report retention, unsafe path, hash refusal, install provenance, rollback'

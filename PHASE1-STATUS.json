@@ -158,16 +158,18 @@
     "original_browser_contract": "artifacts/original-dashboard-synthetic/report.json (5 checks, synthetic transport only)",
     "native_library_sha256": "90f73b83758827c8f8377b35f5ea19f1f59fc8c4a6b72ed01be02b0500f6a65d",
     "bootstrap": "artifacts/bootstrap-check.json",
-    "windows_onboarding_package": "artifacts/installers/sts2-lab-windows.zip (scripts only, not executed on Windows)",
+    "windows_onboarding_package": "artifacts/installers/sts2-lab-windows.zip (scripts only; prior script game detection user-reported on Windows, SSH preflight failed; updated diagnostics not yet run on Windows)",
     "acceptance_audit": "artifacts/acceptance/status.json (incomplete; 60 original-game cases missing)",
     "readme_branding": "artifacts/branding/structure-check.json and readme-render-check.json (3 SVGs, 30 local links/anchors, 4 local theme/viewport previews; not GitHub-hosted rendering)",
     "readme_example": "artifacts/branding/python-example.txt (one real native simulator action, verified 2026-10-22)",
     "sampling_benchmark": "artifacts/sampling-development.json (1/2/4 workers, 3 repeats, 300 episodes per round; source and hardware recorded; simulator only)",
     "windows_script_checks": "tests/windows_scripts.ps1 via tests/test_windows_scripts.py (PowerShell 7.6.6 on Linux; synthetic files and mocked SSH/SCP/Steam; not Windows execution)",
     "fresh_checkout": "artifacts/repro-check.json and artifacts/repro-bootstrap.log (commit a2c29eb; 46 passed, 1 optional PowerShell skip; 60 public trajectories match original build; same host only)",
-    "dashboard_health": "artifacts/dashboard-health.json (loopback 8765 serving, original_game_verified false, checked 2026-10-22)"
+    "dashboard_health": "artifacts/dashboard-health.json (loopback 8765 serving, original_game_verified false, checked 2026-10-22)",
+    "windows_first_attempt": "User terminal transcript on 2026-10-22: Steam build 23811903 detected; connection closed after SSH password prompt; no version report or assemblies received",
+    "ssh_preflight_checks": "artifacts/windows-helper-tests.xml (mocked transport failure classification and local report retention; actual local POSIX shell checkout/directory checks; no live Windows SSH authentication evidence)"
   },
-  "next_external_step": "Run scripts/Connect-Windows.ps1 on the Windows Steam PC with -Server, -RemoteRoot (actual Linux checkout path), and -SshPort; transfer version evidence and reference DLLs and keep the SSH tunnel open.",
+  "next_external_step": "Collect Windows ssh -vvv diagnostics for the same server and port using a simple remote echo command; identify and resolve the connection closure, then retry Connect-Windows.ps1 to transfer version evidence and reference DLLs and keep the tunnel open.",
   "completion_rule": "Do not mark complete until original-game behavior and declared supported scenario parity have been verified. Simulator-only tests do not prove local game parity.",
   "limitations": [
     "Windows report and reference assemblies are still absent.",

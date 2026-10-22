@@ -67,9 +67,24 @@ $Report = @{ captured_at=[DateTime]::UtcNow.ToString('o'); game_dir=$GameDir; st
 $ReportFile = Join-Path $env:TEMP 'sts2-lab-windows-report.json'
 $Report | ConvertTo-Json -Depth 6 | Set-Content -Encoding UTF8 $ReportFile
 Write-Host "Game installation: $GameDir"
-Write-Host "Steam build: $BuildId; sending reference hashes to your server."
-& ssh -p $SshPort $Server "test -f '$RemoteRoot/pyproject.toml' && test -f '$RemoteRoot/scripts/build_bridge.py' && mkdir -p '$RemoteRoot/artifacts/windows/assemblies'"
-if ($LASTEXITCODE -ne 0) { throw 'SSH setup failed. Check the server, port, and -RemoteRoot checkout path.' }
+Write-Host "Steam build: $BuildId; local version report: $ReportFile"
+Write-Host 'Checking SSH access and the remote checkout before uploading files.'
+$RemoteCheck = "if ! test -f '$RemoteRoot/pyproject.toml' || ! test -f '$RemoteRoot/scripts/build_bridge.py'; then echo 'Spire2Lab checkout files are missing.' >&2; exit 20; fi; if ! mkdir -p '$RemoteRoot/artifacts/windows/assemblies'; then echo 'Spire2Lab reference directory could not be created.' >&2; exit 21; fi"
+& ssh -T -p $SshPort $Server $RemoteCheck
+$SetupExit = $LASTEXITCODE
+if ($SetupExit -eq 255) {
+    throw "SSH failed (exit 255); no files were uploaded. The local report is preserved at $ReportFile. Diagnose the connection with: ssh -vvv -E spire2lab-ssh.log -T -p $SshPort $Server 'echo SPIRE2LAB_SSH_OK'"
+}
+if ($SetupExit -eq 20) {
+    throw "Remote checkout files are missing (exit 20). Check -RemoteRoot '$RemoteRoot'; it must contain pyproject.toml and scripts/build_bridge.py. No files were uploaded."
+}
+if ($SetupExit -eq 21) {
+    throw "Remote reference directory could not be created (exit 21). Check write access under '$RemoteRoot/artifacts/windows'. No files were uploaded."
+}
+if ($SetupExit -ne 0) {
+    throw "Remote preflight failed (exit $SetupExit). Inspect the SSH output above; no files were uploaded. Local report: $ReportFile"
+}
+Write-Host 'Remote checkout ready; uploading version evidence.'
 & scp -P $SshPort $ReportFile "${Server}:$RemoteRoot/artifacts/windows/report.json"
 if ($LASTEXITCODE -ne 0) { throw 'Diagnostic upload failed.' }
 if (-not $SkipAssemblyCopy) {
