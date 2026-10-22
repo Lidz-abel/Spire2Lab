@@ -224,6 +224,11 @@ def test_complete_matrix_is_cached_only_until_evidence_changes(
     status = root / "status.json"
     write_json(status, report)
     assert a.read_acceptance_status(status, root=root)["verified"] is True
+    vocabulary = root / "config/content-v1.json"
+    original_vocabulary = vocabulary.read_bytes()
+    vocabulary.write_bytes(original_vocabulary + b"\n")
+    assert a.read_acceptance_status(status, root=root)["status"] == "stale_evidence"
+    vocabulary.write_bytes(original_vocabulary)
     if with_release_info:
         release_path = root / "artifacts/windows/release_info.json"
         previous = release_path.read_bytes()

@@ -130,8 +130,11 @@ Windows 桥接超时：检查端口拥有者（以下为默认 15526，换端口
   当前上游 CardInstance 没有持久实例 UUID，因此不伪称已支持跨洗牌追踪同名实例。
   native Turn 从 0 开始，面板从 1 开始显示回合。
 
-主要接口（语义协议 0.2.0；训练编码 combat-entities-v2）
-  sts2lab.simulator.Simulator：observe / step / snapshot / restore / sample_world / close。
+主要接口（语义协议 0.3.0；训练编码 combat-entities-v3）
+  sts2lab.simulator.Simulator：observe / step / reset / snapshot / restore / sample_world / close。
+  公开观测与初始配置使用语义名称；后端数字 ID 留在适配器。训练 token 由
+  config/content-v1.json 固定，0 为 padding、未知内容报错，词表版本/指纹随实验记录。
+  旧协议轨迹保留原文件；当前语义回放要求显式迁移，不能直接改版本号冒充新数据。
   snapshot 是精确的进程内检查点，须 close 释放；仅用于校验和恢复。
   sample_world(search_seed) 强制重采样未知牌序及随机流，供后续搜索使用。
   持久复现通过带版本的初始配置、动作和逐步轨迹完成，不把内存句柄当跨进程存档。

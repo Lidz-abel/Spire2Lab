@@ -45,9 +45,10 @@ O-02 至 O-04 随实机证据逐步替换；阶段 2 实现搜索/层级核心�
 | 路径或内容 | 来源 | 可以怎样描述 |
 | --- | --- | --- |
 | `sts2lab/contracts.py` | 本项目 | 我们定义的版本化语义协议、观测/动作模型和比较投影 |
-| `sts2lab/environment.py`、`docs/ENVIRONMENT-CONTRACT.md`、`tests/test_environment_contract.py` | 本项目 | 后端调用协议、可选能力显式拒绝及生命周期契约；模拟器增加真实 reset，控制器统一同步/异步 step 调用。原版不支持能力的测试确认零 HTTP 请求；仍待移除 Card.native_id 和 Gym 名称表对上游数字编码的耦合 |
+| `sts2lab/environment.py`、`docs/ENVIRONMENT-CONTRACT.md`、`tests/test_environment_contract.py` | 本项目 | 后端调用协议、可选能力显式拒绝及生命周期契约；模拟器增加真实 reset，控制器统一同步/异步 step 调用。原版不支持能力的测试确认零 HTTP 请求 |
 | `sts2lab/simulator.py` | 本项目封装 + 上游引擎 | 我们编写生命周期、快照、分支和 Python 适配；战斗规则由固定上游 C# 引擎执行 |
-| `sts2lab/gym_env.py` | 本项目 | Gymnasium 封装、动作掩码和 `combat-entities-v2` 编码 |
+| `sts2lab/gym_env.py` | 本项目 | Gymnasium 封装、动作掩码和 `combat-entities-v3` 编码；只从公开观测与项目词表编码，不读取后端名称表 |
+| `sts2lab/vocabulary.py`、`config/content-v1.json`、`tests/test_vocabulary.py` | 本项目词表实现和数字 token 分配；语义名称为游戏内容事实 | 按预先定义的公开边界、padding 与未知内容拒绝契约实现；名称来自现有适配器、固定上游内容表及既定种子的模拟器观测，不宣称名称或游戏规则由本项目原创。token 不采用上游 enum 数字，版本和 SHA-256 随实验记录 |
 | `sts2lab/sampling.py`、`scripts/benchmark_sampling.py` | 本项目 | 固定任务的进程隔离采样测量、轨迹一致性校验、资源回收与硬件/延迟/RSS 报告；规则仍由当前上游引擎执行 |
 | `sts2lab/policies.py` | 本项目 | 随机策略和可解释启发式策略 |
 | `sts2lab/runtime.py`、`server.py` | 本项目 | 实验控制、异步执行、确认状态和 FastAPI 面板服务 |

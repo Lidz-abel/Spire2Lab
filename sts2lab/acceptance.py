@@ -30,6 +30,8 @@ def source_paths(root=ROOT):
     fixed = [
         "config/phase1.json",
         "config/acceptance.json",
+        "config/content-v1.json",
+        "ENCODING.json",
         "native/LabExports.cs",
         "native/Sts2Lab.csproj",
         "bridge/McpMod.Lab.cs",

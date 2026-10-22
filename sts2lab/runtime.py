@@ -14,6 +14,7 @@ from .original import OriginalEnvironment
 from .policies import Policy
 from .simulator import Simulator, CONFIG, ROOT
 from .traces import TraceWriter
+from .vocabulary import vocabulary
 
 
 async def await_if_needed(result):
@@ -101,6 +102,7 @@ class Lab:
                 "policy_seed": policy_seed,
                 "build": new_env.manifest,
                 "capabilities": new_env.capabilities,
+                "content_vocabulary": vocabulary().metadata(),
             }
             if backend == "original_game":
                 self.metadata["raw_capture_id"] = new_env.epoch

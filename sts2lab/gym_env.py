@@ -9,9 +9,10 @@ from gymnasium import spaces
 import numpy as np
 
 from .simulator import Simulator, CONFIG
+from .vocabulary import vocabulary
 
 MAX_ACTIONS = 64
-ENCODING_VERSION = "combat-entities-v2"
+ENCODING_VERSION = "combat-entities-v3"
 
 
 class CombatEnv(gym.Env):
@@ -22,6 +23,7 @@ class CombatEnv(gym.Env):
         self.sim = None
         self.attempts = 0
         self.done = False
+        self.vocabulary = vocabulary()
         self.action_space = spaces.Discrete(MAX_ACTIONS)
         shapes = {
             "player": (8,),
@@ -70,7 +72,7 @@ class CombatEnv(gym.Env):
                 raise RuntimeError("Card encoding capacity exceeded")
             for i, c in enumerate(items):
                 destination[i] = [
-                    c.native_id,
+                    self.vocabulary.token("cards", c.type_id),
                     int(c.upgraded),
                     c.cost,
                     c.printed_damage,
@@ -84,29 +86,20 @@ class CombatEnv(gym.Env):
             cards(getattr(o, key), result["piles"][i])
         for i, key in enumerate(("known_top", "known_bottom")):
             cards(getattr(o, key), result["known_order"][i])
-        enemy_types = {v: k for k, v in self.sim.names.enemies().items()}
-        buff_types = {v: k for k, v in self.sim.names.buffs().items()}
-        relic_types = {v: k for k, v in self.sim.names.relics().items()}
         if len(o.enemies) > 6 or len(o.relics) > 8:
             raise RuntimeError("Entity encoding capacity exceeded")
         for i, e in enumerate(o.enemies):
             result["enemies"][i, :4] = [
-                enemy_types[e.type_id],
+                self.vocabulary.token("enemies", e.type_id),
                 e.hp,
                 e.max_hp,
                 e.block,
             ]
             if len(e.intents) > 2:
                 raise RuntimeError("Intent encoding capacity exceeded")
-            intent_ids = {
-                name: value + 1 for value, name in self.sim.names.intents().items()
-            }
-            # Canonical distinction absent from the upstream five-kind enum.
-            # Slime status-card counts are displayed by the real game.
-            intent_ids["StatusCard"] = 6
             for j, intent in enumerate(e.intents):
                 result["enemies"][i, 4 + j * 4 : 8 + j * 4] = [
-                    intent_ids[intent.type],
+                    self.vocabulary.token("intents", intent.type),
                     intent.magnitude or 0,
                     intent.hits or 0,
                     int(intent.deals_damage),
@@ -116,14 +109,20 @@ class CombatEnv(gym.Env):
             if len(buffs) > 16:
                 raise RuntimeError("Power encoding capacity exceeded")
             for i, b in enumerate(buffs):
-                result["powers"][row, i] = [buff_types[b.type_id], b.amount]
+                result["powers"][row, i] = [
+                    self.vocabulary.token("powers", b.type_id),
+                    b.amount,
+                ]
         for i, r in enumerate(o.relics):
-            result["relics"][i] = [relic_types[r.type_id], r.counter]
+            result["relics"][i] = [
+                self.vocabulary.token("relics", r.type_id),
+                r.counter,
+            ]
         hand_refs = {c.ref: i for i, c in enumerate(o.hand)}
         enemy_refs = {e.ref: i for i, e in enumerate(o.enemies)}
         for i, a in enumerate(self.actions):
             result["actions"][i] = [
-                1 if a.kind == "play_card" else 2,
+                self.vocabulary.token("actions", a.kind),
                 hand_refs.get(a.card_ref, -1),
                 enemy_refs.get(a.target_ref, -1),
             ]
@@ -140,7 +139,10 @@ class CombatEnv(gym.Env):
         self.sim = Simulator(
             (options or {}).get("encounter", self.encounter), actual_seed
         )
-        return self._encode(), {"encoding_version": ENCODING_VERSION}
+        return self._encode(), {
+            "encoding_version": ENCODING_VERSION,
+            "content_vocabulary": self.vocabulary.metadata(),
+        }
 
     def step(self, action):
         if self.sim is None:

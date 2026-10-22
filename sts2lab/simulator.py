@@ -107,6 +107,15 @@ class Simulator:
         with LOCK:
             self.native, self.names, self.manifest = load_native()
             from sts2_gym.env import ENCOUNTER_IDS
+            from .catalog import catalog
+
+            # Keep native IDs at this adapter boundary; config is semantic.
+            deck_ids = [catalog()["cards"][entry].card_id for entry in CONFIG["deck"]]
+            relic_ids = {
+                name: native_id for native_id, name in self.names.relics().items()
+            }
+            if CONFIG["potions"]:
+                raise ValueError("Potions are outside the starter benchmark")
 
             self.encounter = encounter
             self.seed = seed
@@ -121,10 +130,10 @@ class Simulator:
             self.truncated = False
             self.native.reset_arena(
                 self.handle,
-                CONFIG["deck"],
+                deck_ids,
                 self.buf,
                 encounter_id=ENCOUNTER_IDS[encounter],
-                relic_ids=CONFIG["relics"],
+                relic_ids=[relic_ids[name] for name in CONFIG["relics"]],
                 potion_ids=CONFIG["potions"],
                 player_hp=CONFIG["hp"],
                 player_max_hp=CONFIG["max_hp"],
@@ -153,6 +162,16 @@ class Simulator:
     def observe(self):
         with LOCK:
             raw = self._raw()
+            for pile in (
+                "hand",
+                "draw_pile",
+                "discard_pile",
+                "exhaust_pile",
+                "known_top",
+                "known_bottom",
+            ):
+                for card in raw[pile]:
+                    card.pop("native_id")
             raw["player"]["powers"].sort(key=lambda p: p["type_id"])
             for enemy in raw["enemies"]:
                 enemy["powers"].sort(key=lambda p: p["type_id"])

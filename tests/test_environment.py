@@ -19,7 +19,12 @@ def test_initial_conditions_and_hidden_information_boundary():
         assert obs.player.hp == 80
         assert len(obs.hand) + len(obs.draw_pile) == 10
         assert [r.type_id for r in obs.relics] == ["BurningBlood"]
-        assert all(c.native_id != 10001 for c in obs.hand + obs.draw_pile)
+        assert {c.type_id for c in obs.hand + obs.draw_pile} == {
+            "STRIKE_IRONCLAD",
+            "DEFEND_IRONCLAD",
+            "BASH",
+        }
+        assert "native_id" not in obs.model_dump_json()
         assert len({c.ref for c in obs.hand}) == len(obs.hand)
         assert "debug_seed" not in obs.model_dump_json()
         assert "debug_draw_order" not in obs.model_dump_json()
@@ -63,7 +68,11 @@ def test_slime_visible_status_intent_survives_semantic_and_training_encoding():
     env = CombatEnv("slimes-weak")
     try:
         obs, _ = env.reset(seed=1)
-        row = next(row for row in obs["enemies"] if row[4] == 6)
+        row = next(
+            row
+            for row in obs["enemies"]
+            if row[4] == env.vocabulary.token("intents", "StatusCard")
+        )
         assert list(row[5:8]) == [2, 0, 0]
     finally:
         env.close()

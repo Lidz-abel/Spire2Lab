@@ -129,7 +129,6 @@ def read_card(raw, ref=""):
     cost = integral(required(raw, "cost"), "card.cost")
     return Card(
         ref=ref,
-        native_id=definition.card_id,
         type_id=entry,
         name=definition.name,
         card_type=definition.card_type,

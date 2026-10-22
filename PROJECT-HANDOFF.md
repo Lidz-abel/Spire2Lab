@@ -22,6 +22,26 @@ VS Code Git 凭据服务连接被拒绝，GitHub 拒绝匿名写入。远程核�
 本次 Logo 和 README 尚未上传。已请用户在本机 Git 客户端恢复登录，未索取令牌。
 项目目标：**完成第一阶段所有的内容**（用户于本轮重新设为 active；当前未完成）
 
+2026-10-23 内容边界迁移已实现并验证：上一生命周期提交为 5856de0。先在
+docs/ENVIRONMENT-CONTRACT.md 定义迁移契约，再新增项目 token 词表与加载校验。
+协议升为 0.3.0，公开 Card 移除 native_id；config/phase1.json 的牌组/遗物改为语义
+名称，benchmark_version 升为 ironclad-starter-v2，仅标记配置表示变化。第 2 层、
+牌组、HP、种子、三遭遇和 60 原版场次要求完全保留。native ID 仍在适配器内部转换。
+Gym 编码升为 combat-entities-v3，使用 config/content-v1.json 中项目分配的 token，
+0 为 padding、未知内容显式拒绝；训练入口和实验头记录词表版本/指纹，验收缓存跟踪
+该 JSON 与 ENCODING.json。旧协议轨迹完整保留，当前语义重放在解析字段前要求迁移。
+原版 Mod / C# 扩展没有改变，已通知用户安装的构建指纹仍然有效。
+私有 artifacts/vocabulary_migration_check.py 在代码修改前后分别执行固定开发及
+保留种子、3 遭遇、2 策略：120 场、2,180 决策完全一致（只排除协议版本/删除的数字
+ID），证据 vocabulary-migration-before.json 与 -after.json；这不是原版对照。
+针对性 58 项与完整回归 114 项通过，各 1 个既有依赖警告。浏览器原生路径 6 项、
+合成原版路径 5 项通过，均无 JS 错误；旧浏览器产物已归档。当前面板新进程
+PID 127906 / exec session 8562，已加载协议 0.3，浏览器 QA 后是模拟器完成态。
+完整实机审计仍 errors=[]、0/60、缺全部 9 类边界。最新只读记录
+artifacts/windows/staging-install-check-20261022T180129896726.json 仍是旧 Mod 的
+第 1 层战斗；尚未收到 Windows 安装反馈，也未发送 lab_prepare。可继续独立做
+当前提交的全新检出复现检查；实机初始化须等待运行 Mod 指纹匹配。
+
 2026-10-23 后端接口继续推进：场景初始化里程碑已提交为 650f3a4（仍未推送）。
 等待 Windows 安装期间新增 docs/ENVIRONMENT-CONTRACT.md，定义本项目 Environment
 协议、统一同步/异步 step 调用及可选能力拒绝。模拟器 reset 成功创建新状态后才释放

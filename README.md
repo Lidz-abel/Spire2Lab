@@ -16,7 +16,7 @@ Semantic actions · Live decision inspection · Simulator-to-game validation
 <p>
   <a href="#roadmap"><img src="https://img.shields.io/badge/stage-1%20%C2%B7%20environment-B08438?style=flat-square&amp;labelColor=172B38" alt="Stage 1: environment"></a>
   <a href="pyproject.toml"><img src="https://img.shields.io/badge/python-3.12%2B-35606C?style=flat-square&amp;labelColor=172B38" alt="Python 3.12 or newer"></a>
-  <a href="sts2lab/contracts.py"><img src="https://img.shields.io/badge/protocol-0.2.0-35606C?style=flat-square&amp;labelColor=172B38" alt="Semantic protocol 0.2.0"></a>
+  <a href="sts2lab/contracts.py"><img src="https://img.shields.io/badge/protocol-0.3.0-35606C?style=flat-square&amp;labelColor=172B38" alt="Semantic protocol 0.3.0"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-35606C?style=flat-square&amp;labelColor=172B38" alt="MIT license"></a>
 </p>
 
@@ -39,7 +39,7 @@ The immediate goal is a trustworthy environment for later work on search, hierar
 | **Semantic environment** | Typed observations, decision-scoped card/enemy references, legal actions, and versioned step results. A shared [backend contract](docs/ENVIRONMENT-CONTRACT.md) defines supported operations and explicit refusals. |
 | **Live decision inspection** | Single-step and automatic execution, pause, manual overrides, candidate scores with their meaning, and recorded trajectory replay. The current dashboard is in Chinese. |
 | **Simulator branching** | Exact snapshot/restore and independently sampled hidden worlds. Exact hidden-state snapshots are for debugging and regression; they must not become a policy oracle. |
-| **Learning interface** | Gymnasium wrapper, entity encoding, action masks, termination/truncation handling, and process-isolated vector sampling tests. No training pipeline is included yet. |
+| **Learning interface** | Gymnasium wrapper with a versioned [content vocabulary](config/content-v1.json), entity encoding, action masks, termination/truncation handling, and process-isolated vector sampling tests. No training pipeline is included yet. |
 | **Execution accounting** | Request IDs, stale-decision rejection, confirmation after uncertain responses, and explicit archival of unresolved original-game actions. |
 | **Trace validation** | Hash-chain records, semantic re-execution, capture fingerprints, and a finite original-game acceptance matrix. Missing evidence keeps the gate incomplete. |
 
@@ -182,6 +182,7 @@ The current evidence is **engineering validation**, not a learned-agent performa
 | --- | --- | --- |
 | [Environment tests](tests/test_environment.py) | Starter conditions, information boundaries, snapshot isolation, legal battles, Gym contract and vector sampling | Simulator scope |
 | [Sampling tests](tests/test_sampling.py) | Trajectory consistency across worker layouts, failure handling and timeout cleanup | Simulator scope |
+| [Vocabulary tests](tests/test_vocabulary.py) | Public observations encode without backend ID tables; unknown content and incompatible traces are rejected | Protocol 0.3 / encoding v3; finite simulator regression |
 | [Windows helper tests](tests/test_windows_scripts.py) | Configurable paths, preflight refusal, fingerprint checks and install rollback | Mocked PowerShell; requires `pwsh` or `SPIRE2LAB_PWSH`, not a Steam installation |
 | [Dashboard checks](scripts/check_dashboard.py) | Step, override, run/pause, replay and mobile layout | Native simulator UI |
 | [Original adapter tests](tests/test_original.py) | Mapping and control contracts | Synthetic transport and upstream fixtures, not a local Steam capture |
@@ -208,6 +209,7 @@ Recompute the original-game gate with `.venv/bin/python scripts/audit_acceptance
 ## Reproducibility and limits
 
 - **Version the complete experiment.** Record the game build, simulator and Mod sources, native binary, protocol, encoding, configuration, policy, seeds, and reward rule. Relevant changes invalidate previous parity evidence.
+- **Keep encoding migrations explicit.** Protocol 0.3 removes backend numeric card IDs. Encoding v3 uses project-assigned tokens and records the vocabulary fingerprint; v2 tensors and protocol 0.2 traces require a declared migration, not relabeling.
 - **Preserve the information boundary.** Policies receive observations, not internal RNG or hidden draw order. `sample_world` is a branching primitive; a full history-conditioned belief model is still future work.
 - **Keep facts separate from rewards.** The current `terminal-win-v1` rule gives +1 for a win, −1 for a loss, and 0 otherwise. State changes remain available independently.
 - **Handle unavailable and unresolved data explicitly.** Unknown action outcomes are not fabricated terminal transitions. Masked invalid Gym actions are marked `training_transition=False` and must be excluded from training data.

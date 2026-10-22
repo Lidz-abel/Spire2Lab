@@ -49,12 +49,47 @@ the game. Native snapshots and debug exports must not become a policy oracle;
 `sample_world` is not yet a full history-conditioned belief model.
 
 The controller's backend factory still selects the native simulator or original
-adapter. Native ABI calls are confined to `simulator.py`, but content coupling
-remains: `Card.native_id` exposes an upstream numeric ID, and `gym_env.py` reads
-the simulator's upstream name tables to encode entities. A project-owned content
-vocabulary and a versioned observation/encoding migration are still needed to
-finish this boundary. Independent bindings, game rules and Mod replacement are
-separate migration work, not capabilities established by this interface.
+adapter. Native ABI calls and numeric-ID translation are confined to adapters.
+Protocol 0.3 removes `Card.native_id`; Gym encoding reads the public observation
+and the project vocabulary without consulting native name tables. Content facts
+and the mechanics engine still have upstream sources. Independent bindings, game
+rules and Mod replacement remain separate migration work.
+
+## Content vocabulary migration contract
+
+The current semantic protocol is `0.3.0`; its `Card` records retain game-facing
+`type_id` strings and remove `native_id`. The benchmark's deck and relics use
+semantic identifiers too. Its version changes to `ironclad-starter-v2` solely
+for that representation change: character, inventory, floor, seeds, encounter
+scope and combat conditions must remain identical.
+
+Training encoding `combat-entities-v3` uses explicit project-assigned categorical
+tokens from `config/content-v1.json`. Tokens are scoped by category; 0 is padding,
+positive tokens are fixed, and unknown content raises an error. Never derive a
+token from an upstream enum or silently map unknown content to padding. Freeze
+the vocabulary version and SHA-256 with Gym observations and experiment metadata.
+Adding content requires reviewed appended tokens and a declared version change.
+
+Native IDs are still used privately inside adapters to call the existing engine.
+This migration changes ownership of the public interface and tensor vocabulary,
+not ownership of the underlying game mechanics or content facts. The initial
+vocabulary is limited to the current starter scenarios and includes their status
+cards, enemies, powers, relic and intent/action types.
+
+Validation compares independently executed pre/post-migration simulator
+trajectories on the existing development and held-out seed lists, excluding only
+the removed ID and protocol-version fields. Do not search seeds or modify game
+rules to obtain agreement. Preserve old traces and encodings as old-version data:
+they remain readable as raw records but are refused by current semantic replay
+until explicitly migrated. Never relabel old training tensors as version 3.
+
+The local migration check matched 120 fixed simulator battles and 2,180 decisions
+across the existing development and held-out seed lists, three encounters and two
+baseline policies. It compared public observations (excluding only protocol version
+and removed card IDs), selected actions, rewards and termination flags. Private
+evidence is in `artifacts/vocabulary-migration-before.json` and `-after.json`.
+This is finite simulator regression evidence; it does not establish original-game
+parity, improve a learned policy or replace the 60 original reference battles.
 
 ## Evidence and limits
 

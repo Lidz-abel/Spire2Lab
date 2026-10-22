@@ -1,0 +1,40 @@
+{
+  "version": "starter-content-v1",
+  "padding_token": 0,
+  "categories": {
+    "cards": {
+      "BASH": 1,
+      "DEFEND_IRONCLAD": 2,
+      "SLIMED": 3,
+      "STRIKE_IRONCLAD": 4
+    },
+    "enemies": {
+      "LeafSlimeM": 1,
+      "LeafSlimeS": 2,
+      "Nibbit": 3,
+      "SludgeSpinner": 4,
+      "TwigSlimeM": 5,
+      "TwigSlimeS": 6
+    },
+    "powers": {
+      "Strength": 1,
+      "Vulnerable": 2,
+      "Weak": 3
+    },
+    "relics": {
+      "BurningBlood": 1
+    },
+    "intents": {
+      "Attack": 1,
+      "Buff": 2,
+      "Debuff": 3,
+      "Defend": 4,
+      "StatusCard": 5,
+      "Unknown": 6
+    },
+    "actions": {
+      "play_card": 1,
+      "end_turn": 2
+    }
+  }
+}

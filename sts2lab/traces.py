@@ -52,13 +52,18 @@ def read_trace(path):
 
 
 def load_semantic_trace(path, backend):
+    def observation(data):
+        if data.get("protocol_version") != PROTOCOL_VERSION:
+            raise ValueError("Protocol migration required before comparing this trace")
+        return Observation.model_validate(data)
+
     events = read_trace(path)
     if not events or events[0]["kind"] != "session_started":
         raise ValueError("Missing session header")
     header = events[0]["data"]
     if header["metadata"]["backend"] != backend:
         raise ValueError(f"Expected a {backend} trace")
-    observations = [Observation.model_validate(header["observation"])]
+    observations = [observation(header["observation"])]
     transitions = []
     pending = None
     ended = False
@@ -89,7 +94,7 @@ def load_semantic_trace(path, backend):
                 raise ValueError(
                     "Recorded transition action is not the submitted legal action"
                 )
-            obs = Observation.model_validate(data["observation"])
+            obs = observation(data["observation"])
             observations.append(obs)
             transitions.append(data)
             ended = data["terminated"] or data["truncated"]

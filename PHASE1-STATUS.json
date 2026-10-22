@@ -33,7 +33,7 @@
       {
         "id": "P1-02",
         "title": "自主平台核心与可替换环境接口",
-        "status": "shared_lifecycle_contract_tested_upstream_numeric_content_encoding_boundary_pending",
+        "status": "shared_lifecycle_and_semantic_content_boundary_implemented_tested_live_validation_pending",
         "depends_on": []
       },
       {
@@ -122,7 +122,7 @@
   },
   "status": "release_verified_live_floor1_probe_passed_staging_draft_compiled_not_installed_or_live_verified",
   "requirements": {
-    "versioned_semantic_protocol": "implemented_v0.2.0",
+    "versioned_semantic_protocol": "implemented_v0.3.0_public_card_ids_semantic_only",
     "native_linux_simulator": "built_and_smoke_tested",
     "explicit_starter_deck_and_relic": "tested",
     "random_and_heuristic_policies": "tested",
@@ -131,7 +131,7 @@
     "trace_integrity_and_reexecution": "tested",
     "hidden_information_boundary": "starter_scope_tested",
     "snapshot_restore_and_branch_isolation": "tested",
-    "gymnasium_interface": "tested_combat_entities_v2",
+    "gymnasium_interface": "tested_combat_entities_v3_project_content_vocabulary",
     "process_isolated_vector_sampling": "gym_two_workers_tested_and_semantic_sampling_one_two_four_workers_reproducible",
     "windows_game_version_and_bridge": "public_build_23811903_release_v0_107_1_commit_and_assembly_hash_verified_runtime_sha256_matches",
     "windows_ssh_command": "report_and_three_assemblies_received_live_gets_verified_through_18526_to_windows_21526",
@@ -156,7 +156,7 @@
     "original_release_binding": "release_info_exact_version_commit_prefix_sha1_int32_compatibility_hash_and_full_dll_sha256_verified",
     "controlled_scenario_staging": "mod_compiled_client_contract_and_journal_recovery_synthetic_tests_passed_windows_installation_and_live_validation_pending",
     "shared_environment_contract": "observe_step_close_and_optional_operations_declared_native_reset_and_no_io_original_refusals_tested",
-    "content_encoding_boundary": "upstream_card_native_id_and_gym_name_table_coupling_identified_versioned_vocabulary_migration_pending"
+    "content_encoding_boundary": "native_id_removed_from_public_observations_semantic_benchmark_config_and_project_tokens_tested_old_versions_explicitly_refused"
   },
   "evidence": {
     "local_tests": "artifacts/lab-tests.xml (47 passed, 1 existing dependency deprecation warning; 2026-10-22)",
@@ -213,7 +213,12 @@
     "environment_contract_tests": "artifacts/environment-contract-tests.xml (33 passed, 1 existing dependency warning; real native reset/branch preservation and synthetic no-I/O original capability refusal)",
     "environment_contract_regression": "artifacts/environment-contract-regression-tests.xml (100 passed, 1 existing dependency warning; no new live gameplay evidence)",
     "dashboard_service_reload": "artifacts/windows/dashboard-restart-20261022T175710789348.json (healthy paused simulator after restart; previous native session archived without game action; this service loaded commit 650f3a4 before later lifecycle edits)",
-    "staging_install_recheck": "artifacts/windows/staging-install-check-20261022T175804953650.json (live GET still reports old Mod and existing battle; no lab_prepare sent)"
+    "staging_install_recheck": "artifacts/windows/staging-install-check-20261022T180129896726.json (live GET still reports old Mod and existing battle; no lab_prepare sent)",
+    "vocabulary_component_tests": "artifacts/vocabulary-component-tests.xml (58 passed, 1 existing dependency warning)",
+    "vocabulary_regression_tests": "artifacts/vocabulary-regression-tests.xml (114 passed, 1 existing dependency warning)",
+    "vocabulary_migration": "artifacts/vocabulary-migration-before.json and vocabulary-migration-after.json (120 fixed simulator battles, 2180 decisions; public trajectories/actions/rewards/termination match after excluding only removed IDs and protocol version; no original-game evidence)",
+    "protocol_03_browser": "artifacts/browser-checks.json (6 passed, no JS errors) and artifacts/original-dashboard-synthetic/report.json (5 passed, no JS errors, synthetic transport); previous reports archived under artifacts/browser-history/20261022T181009567473",
+    "protocol_03_service": "artifacts/protocol-migration-restart-20261022T181009567473.json (old native session archived before restart; PID 127906 serves the new protocol; no Windows actions)"
   },
   "next_external_step": "Installer instructions sent: close Windows game, keep SSH tunnel, run existing Install-Windows-Mod.ps1, restart through Steam and stay at main menu. After installation verify running Mod SHA-256 and experiment profile 2, then run one controlled floor-2 setup. No additional reference upload needed. Last observed floor-1 Defend probe remains excluded from the reference matrix.",
   "completion_rule": "Do not mark complete until original-game behavior and declared supported scenario parity have been verified. Simulator-only tests do not prove local game parity.",

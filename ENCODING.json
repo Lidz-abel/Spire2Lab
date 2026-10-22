@@ -1,5 +1,8 @@
 {
-  "version": "combat-entities-v2",
+  "version": "combat-entities-v3",
+  "semantic_protocol": "0.3.0",
+  "content_vocabulary": "config/content-v1.json",
+  "vocabulary_version": "starter-content-v1",
   "scope": "phase1 ironclad starter scenarios only",
   "ids": "categorical; use embeddings, never infer numerical ordering",
   "player": [
@@ -13,7 +16,7 @@
     "hand_count"
   ],
   "card_rows": [
-    "native_card_type_id",
+    "card_token",
     "upgraded",
     "current_cost",
     "printed_damage",
@@ -22,43 +25,44 @@
     "enchant_amount"
   ],
   "enemy_rows": [
-    "native_enemy_type_id",
+    "enemy_token",
     "hp",
     "max_hp",
     "block",
-    "intent_1_type_plus_one",
+    "intent_1_token",
     "intent_1_magnitude",
     "intent_1_hits",
     "intent_1_deals_damage",
-    "intent_2_type_plus_one",
+    "intent_2_token",
     "intent_2_magnitude",
     "intent_2_hits",
     "intent_2_deals_damage",
     "present"
   ],
-  "powers": "player followed by up to six living enemies; each row contains native buff type ID and amount",
+  "powers": "player followed by up to six living enemies; each row contains a project vocabulary power token and amount",
   "relic_rows": [
-    "native_relic_type_id",
+    "relic_token",
     "counter"
   ],
   "actions": [
-    "kind: 1=play_card 2=end_turn",
+    "action_token: 1=play_card 2=end_turn",
     "hand_index_or_minus_one",
     "living_enemy_index_or_minus_one"
   ],
   "piles": "draw, discard, exhaust; unordered compositions, never hidden order",
   "known_order": "known top, known bottom; top-to-bottom within each section",
-  "padding": "zero card/enemy/relic IDs indicate padding; legal actions use explicit mask",
+  "padding": "token 0 indicates padding in every categorical column; unknown content raises an error; legal actions use explicit mask",
   "bounds": "10 hand cards, 64 cards per pile, 6 enemies, 16 powers per creature, 8 relics, 64 actions; overflow fails explicitly",
   "extension_rule": "Enchantment identities, additional resources and selection screens need a versioned encoding extension before enabling corresponding content.",
   "intent_visibility": "Attacks expose displayed total damage and hit count. StatusCard exposes the displayed card count with zero hits. Other non-damage intents expose type only; zero magnitude/hits are unavailable placeholders.",
   "intent_ids": {
     "padding": 0,
     "Attack": 1,
-    "Defend": 2,
-    "Buff": 3,
-    "Debuff": 4,
-    "Unknown": 5,
-    "StatusCard": 6
-  }
+    "Buff": 2,
+    "Debuff": 3,
+    "Defend": 4,
+    "StatusCard": 5,
+    "Unknown": 6
+  },
+  "migration": "v2 used upstream numeric IDs; v3 uses project-assigned tokens. Shapes are unchanged but values are incompatible. Never relabel v2 tensors as v3. Keep original records and regenerate datasets from a declared compatible semantic protocol."
 }
