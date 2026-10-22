@@ -17,6 +17,9 @@ VS Code Git 凭据服务连接被拒绝，GitHub 返回 `No anonymous write acce
 三阶段规划已提交为 `5e7f24b`；提交后重试 `git push origin main`，仍因同一凭据服务
 故障及 GitHub 认证失败退出（128）。格式、JSON、三个阶段/八个任务及 14 个本地链接
 检查通过。远程尚未收到本次规划，后续认证恢复后应推送并核对远程 HEAD。
+最新品牌与 README 提交：`9cc73a7`。提交后执行 `git push origin main` 仍退出 128：
+VS Code Git 凭据服务连接被拒绝，GitHub 拒绝匿名写入。远程核对仍为 `0a5c869`；
+本次 Logo 和 README 尚未上传。已请用户在本机 Git 客户端恢复登录，未索取令牌。
 项目目标：**完成第一阶段**
 
 当前路线：`three-stage-v1`。三个阶段依次为可信实验平台、搜索与分层决策、
