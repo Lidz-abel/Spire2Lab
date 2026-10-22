@@ -22,6 +22,19 @@ VS Code Git 凭据服务连接被拒绝，GitHub 拒绝匿名写入。远程核�
 本次 Logo 和 README 尚未上传。已请用户在本机 Git 客户端恢复登录，未索取令牌。
 项目目标：**完成第一阶段**
 
+2026-10-23 端口释放进展：用户按上一轮 Windows 15526/21526 监听检查反馈
+“现在没有输出了”，记录为游戏关闭期间两端口无监听的用户报告；此前 Code.exe
+占用已解除到可以继续配置的程度，但尚未验证游戏启动后的 HTTP 服务。
+服务器本轮只读复查：8765 监听且 /api/health 返回 ok、original_game_verified=false；
+18526 无监听，旧反向隧道已不占用服务器入口。证据
+artifacts/windows/ports-released-check.json 区分用户报告与服务器直接检查。
+下一步保持游戏关闭，备份 STS2_MCP.conf 并设置整数 port=21526，再从 Steam
+启动至主菜单，验证本机根路径和单人状态。成功后使用独立 SSH 命令重建
+Linux 18526 -> Windows 21526 及面板 8765 转发；旧 Windows 接入脚本默认仍指向
+15526，不能用于本次新端口连接。无需重传引用、重编译或重新安装 Mod。
+本轮只同步状态/证据；JSON、git diff --check 校验通过，不重复运行代码测试。
+配置写入、游戏 HTTP、隧道映射均尚待用户执行；原版参考集仍为 0/60。
+
 2026-10-23 用户补充确认：游戏已关闭；Windows 127.0.0.1:15526 和
 127.0.0.1:21526 均由同一 PID 44400 / Code.exe 监听。证据汇总在
 artifacts/windows/both-ports-owned-by-vscode.json，来源为用户 PowerShell 输出和

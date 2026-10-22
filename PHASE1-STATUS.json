@@ -39,7 +39,7 @@
       {
         "id": "P1-03",
         "title": "最小实机闭环",
-        "status": "game_closed_both_bridge_ports_owned_by_vscode_release_and_migration_pending",
+        "status": "windows_ports_released_user_reported_mod_configuration_restart_and_http_pending",
         "depends_on": [
           "P1-01"
         ]
@@ -119,7 +119,7 @@
     "independent_backend_migration": "planned_not_implemented",
     "phase_one_scope": "existing_finite_scope_and_live_game_acceptance_preserved"
   },
-  "status": "awaiting_windows_vscode_forward_release",
+  "status": "awaiting_windows_mod_port_configuration_and_restart",
   "requirements": {
     "versioned_semantic_protocol": "implemented_v0.2.0",
     "native_linux_simulator": "built_and_smoke_tested",
@@ -133,7 +133,7 @@
     "gymnasium_interface": "tested_combat_entities_v2",
     "process_isolated_vector_sampling": "gym_two_workers_tested_and_semantic_sampling_one_two_four_workers_reproducible",
     "windows_game_version_and_bridge": "public_build_23811903_reference_hashes_verified_target_0_107_1_user_reported_runtime_fingerprint_and_live_validation_pending",
-    "windows_ssh_command": "report_and_three_assemblies_received_reverse_listener_present_bridge_http_and_local_forwarding_unverified",
+    "windows_ssh_command": "report_and_three_assemblies_received_previous_tunnel_closed_18526_not_listening_replacement_tunnel_pending",
     "real_game_adapter": "canonical_mapping_async_runtime_and_browser_tested_with_synthetic_transport_not_live",
     "real_game_one_step": "not_verified",
     "real_game_full_battle": "not_verified",
@@ -149,7 +149,7 @@
     "reference_candidate_generation": "declared_seed_public_and_private_opening_checks_no_search_no_state_overrides_component_tested_live_pending",
     "scoped_reference_acceptance_gate": "implemented_60_case_matrix_and_boundary_coverage_no_live_cases_available",
     "sampling_scaling_measurement": "nine_rounds_2700_episodes_44100_decisions_equal_public_trajectory_hashes_worker_cleanup_tested",
-    "windows_bridge_listener": "15526_and_21526_both_owned_by_code_exe_pid_44400_user_reported_game_closed_port_release_pending"
+    "windows_bridge_listener": "15526_and_21526_no_listeners_user_reported_game_closed_mod_21526_startup_pending"
   },
   "evidence": {
     "local_tests": "artifacts/lab-tests.xml (47 passed, 1 existing dependency deprecation warning; 2026-10-22)",
@@ -183,13 +183,14 @@
     "windows_port_conflict": "artifacts/windows/port-owner-conflict.json (user transcript: listener PID 44400 is Code.exe; Mod settings injection and game main menu logged, no HTTP startup line supplied; exact VS Code forwarding entry and bind error unverified)",
     "port_migration_tests": "artifacts/windows/port-migration-tests.xml (1 pytest harness passed; PowerShell 7.6.6 on Linux, mocked SSH/SCP/Steam; default/custom tunnel mappings, invalid/conflicting port rejection, installer and rollback preserve port config; not live Windows evidence)",
     "port_migration_attempt": "artifacts/windows/port-migration-blocked.json (user PowerShell transcript: 21526 already listening; supplied script throws before reading, backing up or writing Mod config; PID/process identity and current config unknown)",
-    "both_bridge_port_owners": "artifacts/windows/both-ports-owned-by-vscode.json (user Windows transcript: 127.0.0.1 ports 15526 and 21526 both owned by Code.exe PID 44400; user confirms game is closed; exact forwarding entries and release not verified)"
+    "both_bridge_port_owners": "artifacts/windows/both-ports-owned-by-vscode.json (user Windows transcript: 127.0.0.1 ports 15526 and 21526 both owned by Code.exe PID 44400; user confirms game is closed; exact forwarding entries and release not verified)",
+    "windows_ports_released": "artifacts/windows/ports-released-check.json (user reports no output from Windows 15526/21526 listener check; direct Linux check shows dashboard healthy and no 18526 listener; Mod config and live HTTP not yet verified)"
   },
-  "next_external_step": "In the actual remote VS Code window workspace settings, disable remote.autoForwardPorts, remote.restoreForwardedPorts and remote.forwardOnOpen. In Ports view stop only entries whose local forwarded addresses use 15526 and 21526; check other remote windows if missing. Keep the game closed and verify Windows 21526 is free. Existing forwards are not deleted by settings and extensions can still explicitly forward. Then back up/update the Mod config and reconnect the independent SSH tunnel for 18526 -> 21526; config contents and live HTTP are still pending.",
+  "next_external_step": "With the game closed, back up STS2_MCP.conf and set its integer port to 21526 while preserving other properties. Relaunch through Steam to the main menu, test Windows GET / and /api/v1/singleplayer on 21526 without a proxy, then reconnect an independent SSH tunnel mapping Linux 18526 to Windows 21526 and dashboard 8765. Use the direct SSH command because the installed older Connect script still targets 15526. Report local HTTP results and tunnel readiness; no game actions yet.",
   "completion_rule": "Do not mark complete until original-game behavior and declared supported scenario parity have been verified. Simulator-only tests do not prove local game parity.",
   "limitations": [
     "User reports main-menu v0.107.1 / 2026.06.18, matching the target; DLL metadata remains 0.1.0.0 and no runtime fingerprint-bound version capture has been obtained. Acceptance currently rejects the generic DLL version.",
-    "Bridge compilation, metadata checks and mocked port-migration tests passed; installation and partial Mod initialization are user-reported. User confirms the game is closed and both 15526/21526 listeners belong to Code.exe PID 44400. Exact forwarding entries, port release, current Mod config, replacement tunnel and original-game state/action/result remain unverified.",
+    "Bridge compilation, metadata checks and mocked port-migration tests passed; installation and partial Mod initialization are user-reported. User now reports no Windows listeners on 15526/21526 while the game is closed. Config migration, startup on 21526, replacement tunnel and original-game state/action/result remain unverified.",
     "Comparison coverage excludes catalog-derived card values and hidden RNG; a matching finite trace never proves global game parity.",
     "Exact original/simulator initial state and RNG alignment still require implementation and live evidence.",
     "Reference replay checks one declared seed and refuses initial-state mismatches; no automatic original-game staging or RNG import is implemented."
@@ -207,8 +208,11 @@
     "new_tunnel_verified": false,
     "live_http_verified": false,
     "migration_attempt": "aborted_before_config_read_backup_or_write_due_to_21526_listener",
-    "new_port_owner": "Code.exe PID 44400 (user transcript)",
+    "new_port_owner": null,
     "game_closed_user_reported": true,
-    "conflicting_forwards_released": false
+    "conflicting_forwards_released": true,
+    "release_evidence_source": "user_reports_no_output_from_windows_listener_check",
+    "new_port_listener_state": "none_user_reported_before_game_restart",
+    "old_linux_tunnel_listener_present": false
   }
 }
