@@ -176,7 +176,7 @@
     "bridge_related_tests": "artifacts/windows/bridge-integration-tests.xml (16 passed, 1 existing dependency warning; transport, adapter and installer checks use synthetic or upstream fixtures, not live Windows gameplay)",
     "bridge_network_probe": "Reverse listener 127.0.0.1:18526 observed on 2026-10-22; read-only bridge HTTP probe timed out before installation, no live state obtained"
   },
-  "next_external_step": "Keep Connect-Windows.ps1 running; close the game, run Install-Windows-Mod.ps1 in another Windows terminal with the same server, RemoteRoot and port, enable the Mod and stay at the main menu. Collect the displayed game release and verify bridge HTTP state before any controlled battle.",
+  "next_external_step": "Keep Connect-Windows.ps1 running; close the game. In the existing second PowerShell session, set execution policy for Process and invoke .\\Install-Windows-Mod.ps1 directly with the same server, RemoteRoot and port; the nested powershell launcher was not found, so the installer has not run. Enable the Mod and stay at the main menu, collect the displayed release and verify bridge HTTP state before any controlled battle.",
   "completion_rule": "Do not mark complete until original-game behavior and declared supported scenario parity have been verified. Simulator-only tests do not prove local game parity.",
   "limitations": [
     "References are received and hash-verified, but DLL assembly/file version 0.1.0.0 does not establish simulator target release 0.107.1; semantic release verification is still required.",

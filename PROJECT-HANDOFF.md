@@ -22,6 +22,12 @@ VS Code Git 凭据服务连接被拒绝，GitHub 拒绝匿名写入。远程核�
 本次 Logo 和 README 尚未上传。已请用户在本机 Git 客户端恢复登录，未索取令牌。
 项目目标：**完成第一阶段**
 
+2026-10-22 安装命令反馈：用户已在 Windows PowerShell 中，但调用 `powershell`
+启动命令时得到 CommandNotFoundException，安装脚本尚未执行。操作说明已改成在
+当前会话执行 `Set-ExecutionPolicy -Scope Process Bypass -Force` 后直接调用
+`.\Install-Windows-Mod.ps1`，另一个接入窗口保持打开。无需修改 PATH 或重装 shell。
+同步修改接入包说明及运维命令；服务器 Mod 产物不变，Windows 安装仍待用户执行。
+
 2026-10-22 最新实机接入进展：已实际收到 Windows `report.json` 和三份 DLL，
 Steam build `23811903`、分支 `public`；所有文件大小与 SHA-256 匹配报告。
 `sts2.dll` SHA-256 为 `a1f9e653f1e28e4076558fee1e60d218619cb7e057b887c6417f62c62c6d7a52`。
@@ -220,7 +226,8 @@ cd /user/chenzk/sts2-lab
 手工拼凑 60 场。Linux 侧可同时推进 P1-02 的适配器边界和 P1-06 的复现/接口证据。
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File .\Connect-Windows.ps1 `
+Set-ExecutionPolicy -Scope Process Bypass -Force
+.\Connect-Windows.ps1 `
   -Server 用户@服务器 -RemoteRoot /user/chenzk/sts2-lab -SshPort 22
 ```
 
@@ -241,7 +248,8 @@ cd /user/chenzk/sts2-lab
 构建成功后，在 Windows 关闭游戏并执行：
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File .\Install-Windows-Mod.ps1 `
+Set-ExecutionPolicy -Scope Process Bypass -Force
+.\Install-Windows-Mod.ps1 `
   -Server 用户@服务器 -RemoteRoot /user/chenzk/sts2-lab -SshPort 22
 ```
 

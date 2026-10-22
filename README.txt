@@ -22,7 +22,8 @@ Spire2Lab — 第一阶段实验环境
 
 Windows 接入
   1. 将 scripts/Connect-Windows.ps1 复制到 Windows。
-     powershell -ExecutionPolicy Bypass -File .\Connect-Windows.ps1 -Server 用户@服务器 -RemoteRoot /user/chenzk/sts2-lab -SshPort 22
+     Set-ExecutionPolicy -Scope Process Bypass -Force
+     .\Connect-Windows.ps1 -Server 用户@服务器 -RemoteRoot /user/chenzk/sts2-lab -SshPort 22
      RemoteRoot 必须为实际项目绝对路径（在 Linux 项目目录执行 pwd 查看）；换目录后需修改。
      当前支持字母、数字、下划线、点、斜线和短横线，不支持空格。两个脚本使用相同路径。
      自动查找 Steam 游戏，记录构建 ID 和 DLL 哈希，将三个编译引用 DLL 发送到你的服务器。
@@ -35,7 +36,9 @@ Windows 接入
      已使用收到的 Steam public build 23811903 引用编译成功；游戏语义版本和实机运行仍待确认。
      DLL 文件版本 0.1.0.0 不能当作 v0.107.1 的证明；编译成功也不等于实机行为验证通过。
   3. 将 scripts/Install-Windows-Mod.ps1 复制到 Windows，关闭游戏后执行：
-     powershell -ExecutionPolicy Bypass -File .\Install-Windows-Mod.ps1 -Server 用户@服务器 -RemoteRoot /user/chenzk/sts2-lab -SshPort 22
+     在另一个 PowerShell 窗口进入脚本目录，直接执行，无需再次调用 powershell 启动命令：
+     Set-ExecutionPolicy -Scope Process Bypass -Force
+     .\Install-Windows-Mod.ps1 -Server 用户@服务器 -RemoteRoot /user/chenzk/sts2-lab -SshPort 22
      安装器会校验本机游戏指纹，备份已有同名 Mod，安装 DLL、manifest、LICENSE.txt 和 build.json，再通过 Steam 启动游戏。
      游戏首次加载 Mod 可能要求你在界面中启用。
   4. 在面板选择“Windows 原版游戏”，连接符合范围的首回合战斗。
