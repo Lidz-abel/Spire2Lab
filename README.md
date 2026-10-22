@@ -92,7 +92,7 @@ python3 scripts/bootstrap.py
 bash scripts/start.sh
 ```
 
-Bootstrap creates `.venv/`, downloads and verifies pinned upstream sources, installs a local .NET SDK when needed, builds the native library, and runs the project tests. A first build can take longer than five minutes. A fresh checkout with fresh dependencies and a new native build has been verified on the same Linux host; independent-machine installation remains unverified. Evidence is recorded in [PHASE1-STATUS.json](PHASE1-STATUS.json).
+Bootstrap creates `.venv/`, downloads and verifies pinned upstream sources, installs a local .NET SDK when needed, builds the native library, and runs the project tests. A first build can take longer than five minutes. A prior revision passed a fresh-checkout installation on the same Linux host. The protocol 0.3 checkout's cold-install check is currently blocked by a PyPI TLS connection failure; its current-workspace tests pass. Independent-machine installation remains unverified. Versioned evidence is recorded in [PHASE1-STATUS.json](PHASE1-STATUS.json).
 
 Open **http://127.0.0.1:8765** on the Linux host. For a remote server, forward port `8765` through SSH and open that address locally. API documentation is at `/docs`.
 

@@ -22,6 +22,25 @@ VS Code Git 凭据服务连接被拒绝，GitHub 拒绝匿名写入。远程核�
 本次 Logo 和 README 尚未上传。已请用户在本机 Git 客户端恢复登录，未索取令牌。
 项目目标：**完成第一阶段所有的内容**（用户于本轮重新设为 active；当前未完成）
 
+2026-10-23 当前代码检查点 2c25a99：内容边界迁移已提交，main 领先跟踪远程 27 个
+提交，仍无 GitHub 认证恢复证据。为 P1-06 更新协议 0.3 采样报告：1/2/4 workers、
+3 repeats、每轮 300 场，共 2,700 场/44,100 决策；轨迹一致、worker 清理通过。
+报告 artifacts/sampling-protocol03-development.json 记录 git_commit=2c25a99 与
+working_tree_dirty=false，包含硬件/延迟/RSS 与计时定义；未覆盖旧采样报告，也不
+计入原版参考集。
+已创建 .tools/repro-phase1-2c25a99 独立检出，使用新 venv 和独立 UV/PIP/NuGet/
+DOTNET_CLI_HOME 缓存，不复制运行依赖。bootstrap 初次及一次重试均已终止（退出 1），
+停在 uv pip sync 的 PyPI TLS handshake EOF，尚未进行原生构建或测试。curl 对同一
+PyPI 地址也在已建立代理连接后 TLS 超时；没有关闭证书验证或修改代理配置。失败
+日志及结果保存在 artifacts/repro-2c25a99-bootstrap*；检出 tracked source 未改变。
+旧 a2c29eb 的成功复现仍作为历史证据保留，不用它宣称当前版本冷安装通过。
+最新 Windows 只读检查 artifacts/windows/staging-install-check-20261022T182139974246.json
+仍是旧 Mod 的战斗状态，无新指纹；安装问题已向用户提出，尚未收到执行反馈。
+当前没有进行中的 bootstrap/采样任务：相关 exec session 均返回终止结果；面板服务
+PID 127906 / exec session 8562 保持运行，浏览器验证后为已结束的模拟器实验。
+下一步：Windows 新构建加载后验证一个固定种子原版初态；联网恢复后从现有独立
+检出继续 bootstrap 并保存新日志。完整原版验收仍 0/60，第一阶段未完成。
+
 2026-10-23 内容边界迁移已实现并验证：上一生命周期提交为 5856de0。先在
 docs/ENVIRONMENT-CONTRACT.md 定义迁移契约，再新增项目 token 词表与加载校验。
 协议升为 0.3.0，公开 Card 移除 native_id；config/phase1.json 的牌组/遗物改为语义
