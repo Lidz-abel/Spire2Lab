@@ -20,7 +20,22 @@ VS Code Git 凭据服务连接被拒绝，GitHub 返回 `No anonymous write acce
 最新品牌与 README 提交：`9cc73a7`。提交后执行 `git push origin main` 仍退出 128：
 VS Code Git 凭据服务连接被拒绝，GitHub 拒绝匿名写入。远程核对仍为 `0a5c869`；
 本次 Logo 和 README 尚未上传。已请用户在本机 Git 客户端恢复登录，未索取令牌。
-项目目标：**完成第一阶段**
+项目目标：**完成第一阶段所有的内容**（用户于本轮重新设为 active；当前未完成）
+
+2026-10-23 下一实施单元已经启动：发行门与出牌探针提交为 `3832456`；随后新增
+docs/SCENARIO-STAGING.md，先定义专用档案、固定初态、声明种子、幂等设置请求、
+独立失败证据和禁止事后拟合的契约。P1-04 场景准备因首战楼层差异提前成为 P1-03
+范围内面板闭环的前置条件。尚未新增 staging 端点、编译新 Mod 或再次安装。
+已只读提取本机 API 元数据到 artifacts/windows/scenario-api.json、scenario-api-extra.json；
+工具源码在 artifacts/windows/scenario-api-inspection/，不执行游戏程序集。关键签名：
+RunState.CreateForNewRun、RunManager.SetUpNewSingleplayer(runState, shouldSave, dailyTime)、
+RunManager.EnterMapCoordDebug、CombatRoom(encounter, runState)、RunRngSet(string seed)、
+PlayerRngSet(uint seed)。下一步继续核对 NGame 启动与 SeedHelper 转换，不凭签名猜测
+执行顺序。已阅读固定上游 NativeExports.ResetArena / SeedStreams、GameRng 与
+EncounterRng，确认模拟器使用分路 seed 名称且 Slimes 组成依赖楼层。后续实现如引用
+这些兼容事实须记录来源，不能改 vendor 或用搜索种子/覆写未来状态拟合输出。
+当前游戏仍停在槽位 2、第 1 层防御牌之后；未继续游戏。Windows 更换 Mod 需要用户
+安装，必须先完成可审阅的构建与校验再提供操作命令；既有编译产物先归档。
 
 2026-10-23 发行版本与首次真实出牌探针通过：用户上传了游戏安装目录的
 release_info.json。版本 v0.107.1、日期 2026-06-18T15:43:56-07:00、提交 59260271，

@@ -1,5 +1,5 @@
 {
-  "goal": "完成第一阶段",
+  "goal": "完成第一阶段所有的内容",
   "project_name": "Spire2Lab",
   "repository_slug": "Spire2Lab",
   "roadmap": {
@@ -47,10 +47,11 @@
       {
         "id": "P1-04",
         "title": "可重复场景与随机性对齐",
-        "status": "not_implemented",
+        "status": "contract_defined_local_game_api_inspection_in_progress_endpoint_not_implemented",
         "depends_on": [
           "P1-03"
-        ]
+        ],
+        "preparation_precedes": "P1-03 scoped dashboard battle acceptance"
       },
       {
         "id": "P1-05",
@@ -199,7 +200,8 @@
     "release_gate_tests": "artifacts/windows/release-gate-tests.xml (16 passed, 1 existing dependency warning; synthetic release files/assemblies only; incorrect version, commit, checksum, date, branch and stale cache refused)",
     "experiment_profile": "artifacts/windows/navigation-20261022T171304286536.json (live UI switch to previously empty profile 2; profile 1 not used for the test run)",
     "live_opening_scope_refusal": "artifacts/windows/navigation-20261022T171541715347.json (Ironclad A0, starter deck/relic, 80 HP, 99 gold, Nibbit; floor 1 differs from required floor 2; normal adapter refuses benchmark attachment)",
-    "live_one_step_probe": "artifacts/windows/one-step-probe-20261022T171722625580.json (nine checks passed: one Defend, energy 3 to 2, block 0 to 5, HP unchanged, hand/discard changes, settled state and matching request acknowledgment; explicit benchmark_eligible false)"
+    "live_one_step_probe": "artifacts/windows/one-step-probe-20261022T171722625580.json (nine checks passed: one Defend, energy 3 to 2, block 0 to 5, HP unchanged, hand/discard changes, settled state and matching request acknowledgment; explicit benchmark_eligible false)",
+    "scenario_staging_design": "docs/SCENARIO-STAGING.md; local API signature evidence in artifacts/windows/scenario-api.json and scenario-api-extra.json; no staging endpoint yet"
   },
   "next_external_step": "No additional upload needed. Keep the SSH tunnel and game open at the current profile-2 battle; one Defend has been played, no end-turn sent. Next engineering work is controlled floor-2 scenario staging, then original adapter/dashboard and full battle validation. The floor-1 probe is excluded from the reference matrix.",
   "completion_rule": "Do not mark complete until original-game behavior and declared supported scenario parity have been verified. Simulator-only tests do not prove local game parity.",
