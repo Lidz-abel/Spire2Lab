@@ -13,6 +13,7 @@ import re
 from .contracts import canonical_json, digest
 from .parity import compare_traces
 from .policies import Policy
+from .release import verify_release
 from .simulator import CONFIG, ROOT, Simulator
 from .traces import load_semantic_trace
 
@@ -126,18 +127,14 @@ def verify_windows_bundle(root, track):
         raise ValueError("Bridge extension changed after compilation")
     if track(root / "scripts/build_bridge.py") != build["build_script_sha256"]:
         raise ValueError("Bridge build/patch script changed after compilation")
-    # The target label in the report is not proof. Require actual DLL version metadata.
-    version = CONFIG["game_version"]
-    actual = report["assemblies"]["sts2.dll"]
-    pattern = r"^v?" + re.escape(version) + r"(?:[.+-]|$)"
-    if not any(
-        re.match(pattern, str(actual.get(k, "")))
-        for k in ("file_version", "product_version")
-    ):
-        raise ValueError(
-            "Actual game DLL version does not establish target release; inspect the Windows build before acceptance"
-        )
-    return build
+    release = verify_release(
+        root, report["assemblies"]["sts2.dll"], CONFIG["game_version"], track
+    )
+    return {
+        **build,
+        "semantic_game_version_verified": True,
+        "release_verification": release,
+    }
 
 
 def _validate_case(entry, expected, root, build, track):
@@ -279,6 +276,7 @@ def audit_acceptance(index_path=DEFAULT_INDEX, *, root=ROOT):
         if len(expected) != suite["minimum_complete_cases"]:
             raise ValueError("Suite count differs from the fixed benchmark matrix")
         build = verify_windows_bundle(root, track)
+        report["windows_release"] = build["release_verification"]
         native = json.loads((root / ".tools/native/build.json").read_text())
         track(root / ".tools/native/build.json")
         if track(root / ".tools/native/Sts2Emulator.so") != native["library_sha256"]:
@@ -390,6 +388,11 @@ def read_acceptance_status(path=DEFAULT_STATUS, *, root=ROOT):
             ".tools/native/build.json",
             ".tools/native/Sts2Emulator.so",
         }
+        if (
+            report.get("windows_release", {}).get("source")
+            == "release_info_with_assembly_binding"
+        ):
+            mandatory.add("artifacts/windows/release_info.json")
         if set(
             report.get("source_files", [])
         ) != current_sources or not current_sources | mandatory <= set(dependencies):

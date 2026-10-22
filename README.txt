@@ -1,7 +1,7 @@
 Spire2Lab — 第一阶段实验环境
 
 项目目录：/user/chenzk/sts2-lab（GitHub：Lidz-abel/Spire2Lab）
-当前状态：Linux 战斗环境与面板可运行；服务器经 SSH 隧道直读 Windows 主菜单通过，协议、DLL 指纹和状态稳定性匹配。发行版本核验、实机战斗动作与逐步一致性尚未通过。
+当前状态：Linux 战斗环境与面板可运行；SSH 主菜单读取、v0.107.1 发行信息与 DLL 关联核验、一次原版防御牌动作探针通过。探针位于第 1 层，不属于第 2 层固定基准；面板实机闭环与逐步一致性尚未通过。
 完整验收清单见 PHASE1-STATUS.json。不得将模拟器自测视为本机原版一致性证明。
 整体架构、第一阶段建设顺序与后续路线见 ARCHITECTURE-PLAN.txt。
 当前采用 three-stage-v1：可信实验平台 → 搜索与分层决策 → 高效训练与原版评测。
@@ -35,7 +35,7 @@ Windows 接入
      保持脚本窗口打开，即可在 Windows 浏览器访问面板。
   2. Linux 核对实际版本后构建：
      .venv/bin/python scripts/build_bridge.py
-     已使用收到的 Steam public build 23811903 引用编译成功；主菜单接口已实测，游戏语义版本和战斗行为仍待确认。
+     已使用收到的 Steam public build 23811903 引用编译成功；主菜单、v0.107.1 发行信息及一次动作探针已实测，固定基准战斗仍待验收。
      DLL 文件版本 0.1.0.0 不能当作 v0.107.1 的证明；编译成功也不等于实机行为验证通过。
   3. 将 scripts/Install-Windows-Mod.ps1 复制到 Windows，关闭游戏后执行：
      在另一个 PowerShell 窗口进入脚本目录，直接执行，无需再次调用 powershell 启动命令：
@@ -52,8 +52,11 @@ Windows 接入
      artifacts/windows/bridge-check-*.json，不覆盖旧证据。测试传输明确标记 synthetic_transport。
      主菜单 lab_action_ready=false 是正常的；本检查不证明战斗或发行版本通过。
      当前收到的 DLL 元数据是通用版本 0.1.0.0，已从元数据确认游戏读取 release_info.json。
-     需从 Windows 游戏安装根目录补充该文件到 artifacts/windows/release_info.json 后核对
-     版本及其与 DLL 的关联；不能修改原始 report.json 或目标标签来绕过验收。
+     从 Windows 游戏安装根目录单独复制该文件到 artifacts/windows/release_info.json；
+     当前 Connect 脚本尚不自动上传它。验收器核对精确版本、提交号、程序集兼容校验值
+     和 DLL SHA-256，原始报告和构建记录保持不变。若没有发行文件，只有 DLL 自带
+     目标版本元数据才允许通过；已提供但不匹配的发行文件不能被静默忽略。
+     本机上传的文件已通过核验；其中 32 位兼容校验值不是安全哈希或发行方签名。
   5. 版本门通过后，在面板选择“Windows 原版游戏”，连接符合范围的首回合战斗。
      此操作读取当前对局，不会替你创建或重置游戏。环境种子不会伪装成原版实际种子。
      原版必须是铁甲战士 A0、初始牌组/遗物、未附魔、无药水、80/80 HP、99 金币、
@@ -66,7 +69,9 @@ Windows 接入
 
 桥接构建采用固定上游的 mods/STS2_MCP/STS2_MCP.dll 与 mod_manifest.json 布局。
 安装器会备份已有文件并在复制失败时尝试恢复。用户已回传 Windows 安装成功输出；
-服务器随后经隧道直接读取主菜单，lab_protocol=1、运行时指纹和连续状态核验通过；战斗接口仍待验证。
+服务器随后经隧道直接读取主菜单，lab_protocol=1、运行时指纹和连续状态核验通过。
+一次第 1 层防御牌探针确认能量 3->2、格挡 0->5 和请求回执；独立保存在 artifacts/windows/，
+不计入第 2 层的 60 场参考集。当前测试使用原本空白的 Mod 存档槽位 2，未在槽位 1 开局。
 失败回滚目前仅有模拟测试证据。
 
 现有 Windows 安装改用 21526

@@ -52,6 +52,7 @@ O-02 至 O-04 随实机证据逐步替换；阶段 2 实现搜索/层级核心�
 | `sts2lab/runtime.py`、`server.py` | 本项目 | 实验控制、异步执行、确认状态和 FastAPI 面板服务 |
 | `sts2lab/bridge.py`、`original.py` | 本项目 | 原版状态映射、动作提交、去重、重协调和未知结果处理 |
 | `sts2lab/bridge_check.py`、`scripts/check_bridge.py`、`tests/test_bridge_check.py` | 本项目 | 基于现有 BridgeClient 的只读主菜单验收；输入引用指纹，输出逐次 GET 证据与检查结果；合成测试覆盖版本/实例/状态变化与超时，不能替代原版战斗证据 |
+| `sts2lab/release.py` | 本项目校验实现；兼容格式来自本机程序集元数据 | 将发行 JSON 的精确版本、提交号和兼容校验值关联到收到的 DLL；只读检查确认 AssemblyHasher 使用 SHA-1 的前 4 字节按有符号小端整数读取，使用标准库重算；另保留完整 SHA-256 绑定，不复制或执行游戏方法 |
 | `sts2lab/traces.py`、`parity.py`、`reference_replay.py`、`acceptance.py` | 本项目 | 轨迹哈希链、重执行、原版对照和有限验收门 |
 | `sts2lab/catalog.py` | 本项目代码 + 上游数据表 | 加载和转换上游名称/定义；名称和卡牌定义的事实来源是上游 |
 | `native/LabExports.cs` | 本项目 | 只读观测导出扩展；不新增卡牌效果或敌人规则 |

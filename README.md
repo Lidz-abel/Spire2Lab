@@ -30,7 +30,7 @@ Spire2Lab is an experimental foundation for researchers studying sequential deci
 
 The immediate goal is a trustworthy environment for later work on search, hierarchical decisions, and reinforcement learning. The platform separates player-visible information from hidden simulator state and keeps original-game evidence distinct from simulator tests. This makes it possible to investigate both **what an agent decided** and **whether the environment behaved as expected**.
 
-> **Development status — phase 1.** The local simulator and dashboard are usable. The compiled bridge has passed read-only main-menu checks from Linux through the Windows SSH tunnel, including protocol, game DLL fingerprint, and stable-state checks. Semantic release verification, controlled original-game battles, repeatable initialization, and real-game parity are still pending. Search algorithms, hierarchical policies, RL training, and original-game imagery are planned capabilities.
+> **Development status — phase 1.** The local simulator and dashboard are usable. The Windows bridge has passed main-menu checks, installed-release verification, and one acknowledged card-play probe through the SSH tunnel. That probe used a first-floor battle, outside the fixed second-floor benchmark. Controlled reference battles, live dashboard validation, repeatable initialization, and real-game parity remain pending. Search, hierarchical policies, RL training, and original-game imagery are planned capabilities.
 
 ## Key features
 
@@ -172,7 +172,7 @@ The original-game workflow is separate from the simulator quick start:
 4. Keep the game at its main menu and the tunnel open. On Linux, run `.venv/bin/python scripts/check_bridge.py`. It uses GET requests only and saves a separate report under `artifacts/windows/`.
 5. Resolve the version gate, then use the Linux dashboard to verify one settled battle state/action/result before attempting a full reference battle. A passing main-menu check does not certify combat.
 
-The helpers require an absolute remote path using letters, digits, `_`, `.`, `/`, and `-`; spaces are currently unsupported. Connection setup checks the remote checkout before uploading. The installer verifies fingerprints, preserves license/build records, and backs up managed files for rollback. These behaviors have mocked PowerShell tests. References from Steam public build `23811903` have been received and hash-verified, and the bridge compiles against them. Direct Linux reads through the tunnel now confirm a stable main-menu state and matching runtime DLL fingerprint. The DLL exposes a generic version; verification against the game's `release_info.json` remains pending. Combat behavior is unverified. Detailed operator steps, including custom game ports and VS Code forwarding conflicts, are in [README.txt](README.txt).
+The helpers require an absolute remote path using letters, digits, `_`, `.`, `/`, and `-`; spaces are currently unsupported. Connection setup checks the remote checkout before uploading. The installer verifies fingerprints, preserves license/build records, and backs up managed files for rollback. These behaviors have mocked PowerShell tests. Steam public build `23811903` is verified as `v0.107.1`: its installation's `release_info.json` matches the received DLL's commit and assembly checksum, with full SHA-256 binding to the Windows report and runtime bridge. For DLLs exposing a generic version, copy that file separately into `artifacts/windows/`; the current connection helper does not upload it. Original reports remain unchanged. Detailed operator steps are in [README.txt](README.txt).
 
 ## Validation
 
@@ -186,6 +186,8 @@ The current evidence is **engineering validation**, not a learned-agent performa
 | [Dashboard checks](scripts/check_dashboard.py) | Step, override, run/pause, replay and mobile layout | Native simulator UI |
 | [Original adapter tests](tests/test_original.py) | Mapping and control contracts | Synthetic transport and upstream fixtures, not a local Steam capture |
 | [Main-menu bridge check](scripts/check_bridge.py) | HTTP access, protocol, reference fingerprint, process and state stability | Live read-only check passed; no semantic release or combat validation |
+| [Release verification](sts2lab/release.py) | Release version, commit and assembly checksum bound to the received DLL | Local installation consistency, not a publisher signature |
+| Live card-play probe | Request acknowledgment, energy, block and pile changes after one Defend | First-floor diagnostic only; no benchmark or dashboard validation |
 | [Acceptance gate](config/acceptance.json) | 60 independent original reference battles plus required boundary coverage | **Incomplete: no local live-game cases** |
 
 Run the project tests after installation:

@@ -27,7 +27,7 @@
       {
         "id": "P1-01",
         "title": "版本与来源冻结",
-        "status": "live_runtime_fingerprint_matches_references_release_info_evidence_pending",
+        "status": "installed_release_commit_assembly_binding_and_pinned_sources_verified",
         "depends_on": []
       },
       {
@@ -39,7 +39,7 @@
       {
         "id": "P1-03",
         "title": "最小实机闭环",
-        "status": "linux_tunnel_main_menu_protocol_fingerprint_and_stability_verified_combat_pending",
+        "status": "live_bridge_defend_probe_passed_floor1_scoped_adapter_dashboard_and_full_battle_pending",
         "depends_on": [
           "P1-01"
         ]
@@ -119,7 +119,7 @@
     "independent_backend_migration": "planned_not_implemented",
     "phase_one_scope": "existing_finite_scope_and_live_game_acceptance_preserved"
   },
-  "status": "live_tunnel_main_menu_verified_release_evidence_and_combat_pending",
+  "status": "release_verified_live_floor1_card_probe_passed_benchmark_staging_pending",
   "requirements": {
     "versioned_semantic_protocol": "implemented_v0.2.0",
     "native_linux_simulator": "built_and_smoke_tested",
@@ -132,14 +132,14 @@
     "snapshot_restore_and_branch_isolation": "tested",
     "gymnasium_interface": "tested_combat_entities_v2",
     "process_isolated_vector_sampling": "gym_two_workers_tested_and_semantic_sampling_one_two_four_workers_reproducible",
-    "windows_game_version_and_bridge": "public_build_23811903_runtime_hash_matches_via_live_linux_reads_release_info_file_needed_for_semantic_version_gate",
+    "windows_game_version_and_bridge": "public_build_23811903_release_v0_107_1_commit_and_assembly_hash_verified_runtime_sha256_matches",
     "windows_ssh_command": "report_and_three_assemblies_received_live_gets_verified_through_18526_to_windows_21526",
     "real_game_adapter": "canonical_mapping_async_runtime_and_browser_tested_with_synthetic_transport_not_live",
-    "real_game_one_step": "not_verified",
+    "real_game_one_step": "live_bridge_defend_acknowledged_floor1_probe_only_fixed_benchmark_and_dashboard_pending",
     "real_game_full_battle": "not_verified",
     "cross_backend_step_parity": "not_verified",
     "cross_backend_comparison_tool": "implemented_with_capture_hash_checks_and_candidate_reexecution_no_local_live_evidence",
-    "bridge_source_hooks": "compiled_against_received_assemblies_main_menu_protocol_and_fingerprint_verified_combat_hooks_pending",
+    "bridge_source_hooks": "compiled_main_menu_and_card_request_acknowledgment_verified_end_turn_and_disconnect_pending",
     "native_atomic_publish": "staged_binary_replacement_exercised",
     "windows_install_script": "successful_four_file_install_and_backup_directory_user_reported_on_windows_failure_and_rollback_paths_mock_tested",
     "pinned_source_integrity": "archive_hash_and_1417_source_files_verified_build_and_first_load_guarded",
@@ -150,8 +150,9 @@
     "scoped_reference_acceptance_gate": "implemented_60_case_matrix_and_boundary_coverage_no_live_cases_available",
     "sampling_scaling_measurement": "nine_rounds_2700_episodes_44100_decisions_equal_public_trajectory_hashes_worker_cleanup_tested",
     "windows_bridge_listener": "21526_serving_root_and_main_menu_through_linux_18526_tunnel_protocol_1_reference_fingerprint_matches",
-    "windows_main_menu_state": "direct_linux_bridgeclient_capture_five_samples_same_instance_and_token_final_settled_true",
-    "readonly_bridge_check": "implemented_live_main_menu_passed_synthetic_failure_tests_passed_no_combat_actions"
+    "windows_main_menu_state": "verified_then_progressed_to_profile2_floor1_combat_with_one_defend_action",
+    "readonly_bridge_check": "implemented_live_main_menu_passed_synthetic_failure_tests_passed_no_combat_actions",
+    "original_release_binding": "release_info_exact_version_commit_prefix_sha1_int32_compatibility_hash_and_full_dll_sha256_verified"
   },
   "evidence": {
     "local_tests": "artifacts/lab-tests.xml (47 passed, 1 existing dependency deprecation warning; 2026-10-22)",
@@ -163,7 +164,7 @@
     "native_library_sha256": "90f73b83758827c8f8377b35f5ea19f1f59fc8c4a6b72ed01be02b0500f6a65d",
     "bootstrap": "artifacts/bootstrap-check.json",
     "windows_onboarding_package": "artifacts/installers/sts2-lab-windows.zip (scripts only; includes GameBridgePort support and existing-installation migration instructions; latest changes tested with mocked transport, Windows migration not verified)",
-    "acceptance_audit": "artifacts/acceptance/status.json (incomplete; semantic release gate unresolved and all 60 original-game reference battles missing)",
+    "acceptance_audit": "artifacts/acceptance/status.json (release gate passes; empty cases index; all 60 reference battles and boundary coverage missing)",
     "readme_branding": "artifacts/branding/structure-check.json and readme-render-check.json (3 SVGs, 30 local links/anchors, 4 local theme/viewport previews; not GitHub-hosted rendering)",
     "readme_example": "artifacts/branding/python-example.txt (one real native simulator action, verified 2026-10-22)",
     "sampling_benchmark": "artifacts/sampling-development.json (1/2/4 workers, 3 repeats, 300 episodes per round; source and hardware recorded; simulator only)",
@@ -192,13 +193,19 @@
     "reusable_bridge_check": "artifacts/windows/bridge-check-20261022T165923467279.json (scripts/check_bridge.py: seven checks passed using live transport; no combat or semantic release certification)",
     "readonly_bridge_tests": "artifacts/windows/bridge-check-tests.xml (12 passed: bridge transport and diagnostic checks; synthetic HTTP only)",
     "release_metadata_inspection": "artifacts/windows/release-metadata-inspection.json (read-only PE metadata/call-target inspection: ReleaseInfoManager loads release_info.json; ReleaseInfo defines Version, Commit, Date, Branch and MainAssemblyHash; file not yet received)",
-    "profiles_readonly": "artifacts/windows/profiles-readonly.json (live GET only: current profile 1 has data; slots 2 and 3 report no data; no profile switch or gameplay action)"
+    "profiles_readonly": "artifacts/windows/profiles-readonly.json (live GET only: current profile 1 has data; slots 2 and 3 report no data; no profile switch or gameplay action)",
+    "installed_release": "artifacts/windows/release_info.json and release-verification.json (v0.107.1; commit 59260271 matches DLL product commit; main_assembly_hash -1555940892 recomputed; SHA-256 linked to original Windows report and Mod references)",
+    "assembly_hash_format": "artifacts/windows/assembly-hasher-inspection.json (read-only metadata: SHA1.HashData followed by BinaryPrimitives.ReadInt32LittleEndian; game code not executed)",
+    "release_gate_tests": "artifacts/windows/release-gate-tests.xml (16 passed, 1 existing dependency warning; synthetic release files/assemblies only; incorrect version, commit, checksum, date, branch and stale cache refused)",
+    "experiment_profile": "artifacts/windows/navigation-20261022T171304286536.json (live UI switch to previously empty profile 2; profile 1 not used for the test run)",
+    "live_opening_scope_refusal": "artifacts/windows/navigation-20261022T171541715347.json (Ironclad A0, starter deck/relic, 80 HP, 99 gold, Nibbit; floor 1 differs from required floor 2; normal adapter refuses benchmark attachment)",
+    "live_one_step_probe": "artifacts/windows/one-step-probe-20261022T171722625580.json (nine checks passed: one Defend, energy 3 to 2, block 0 to 5, HP unchanged, hand/discard changes, settled state and matching request acknowledgment; explicit benchmark_eligible false)"
   },
-  "next_external_step": "Keep the game at its main menu and the working SSH terminal open. Upload the installation-root release_info.json to artifacts/windows/release_info.json for semantic release and assembly linkage verification. Main-menu connection acceptance is complete; do not repeat installation or port migration. No gameplay action has been sent; combat one-step acceptance follows version verification.",
+  "next_external_step": "No additional upload needed. Keep the SSH tunnel and game open at the current profile-2 battle; one Defend has been played, no end-turn sent. Next engineering work is controlled floor-2 scenario staging, then original adapter/dashboard and full battle validation. The floor-1 probe is excluded from the reference matrix.",
   "completion_rule": "Do not mark complete until original-game behavior and declared supported scenario parity have been verified. Simulator-only tests do not prove local game parity.",
   "limitations": [
-    "Live Linux BridgeClient reads confirm a runtime DLL fingerprint matching received references. DLL metadata remains generic 0.1.0.0; user-reported v0.107.1 / 2026.06.18 is not independent release evidence. The game loads release_info.json; that file and its assembly linkage still need verification.",
-    "SSH access and stable main-menu GET responses are directly verified. Combat observation/action/result, controlled initialization and original-game parity remain unverified. Main-menu readiness is false by design.",
+    "Installed release v0.107.1 is bound to the received DLL through release_info commit and compatibility checksum plus full SHA-256 references/runtime match. This checks local file consistency, not a publisher signature.",
+    "One live floor-1 Defend probe passed through BridgeClient. Fixed benchmark requires floor 2; normal adapter attachment, live dashboard behavior, end-turn/reconnection, full battle and original/simulator parity remain unverified.",
     "Comparison coverage excludes catalog-derived card values and hidden RNG; a matching finite trace never proves global game parity.",
     "Exact original/simulator initial state and RNG alignment still require implementation and live evidence.",
     "Reference replay checks one declared seed and refuses initial-state mismatches; no automatic original-game staging or RNG import is implemented."
@@ -225,8 +232,9 @@
     "windows_config_evidence_source": "user_supplied_configuration_output",
     "windows_http_verified_user_transcript": true,
     "linux_http_verified": true,
-    "current_game_state": "menu/main_direct_linux_capture_settled_true_action_ready_false",
+    "current_game_state": "profile2_floor1_round1_after_one_defend_energy2_block5_hp80",
     "linux_tunnel_listener_present": true,
-    "verification_scope": "read_only_main_menu_no_combat"
+    "verification_scope": "main_menu_and_single_floor1_card_probe_not_benchmark_parity",
+    "experiment_profile_id": 2
   }
 }
