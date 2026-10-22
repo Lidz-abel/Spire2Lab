@@ -133,6 +133,7 @@
     "gymnasium_interface": "tested_combat_entities_v2",
     "process_isolated_vector_sampling": "gym_two_workers_tested_and_semantic_sampling_one_two_four_workers_reproducible",
     "windows_game_version_and_bridge": "awaiting_windows_reference_files",
+    "windows_ssh_command": "user_reported_successful_remote_echo_exit_zero_file_transfer_and_tunnels_pending",
     "real_game_adapter": "canonical_mapping_async_runtime_and_browser_tested_with_synthetic_transport_not_live",
     "real_game_one_step": "not_verified",
     "real_game_full_battle": "not_verified",
@@ -167,9 +168,10 @@
     "fresh_checkout": "artifacts/repro-check.json and artifacts/repro-bootstrap.log (commit a2c29eb; 46 passed, 1 optional PowerShell skip; 60 public trajectories match original build; same host only)",
     "dashboard_health": "artifacts/dashboard-health.json (loopback 8765 serving, original_game_verified false, checked 2026-10-22)",
     "windows_first_attempt": "User terminal transcript on 2026-10-22: Steam build 23811903 detected; connection closed after SSH password prompt; no version report or assemblies received",
-    "ssh_preflight_checks": "artifacts/windows-helper-tests.xml (mocked transport failure classification and local report retention; actual local POSIX shell checkout/directory checks; no live Windows SSH authentication evidence)"
+    "ssh_preflight_checks": "artifacts/windows-helper-tests.xml (mocked transport failure classification and local report retention; actual local POSIX shell checkout/directory checks; no live Windows SSH authentication evidence)",
+    "windows_ssh_probe": "User Windows client transcript on 2026-10-22: SPIRE2LAB_SSH_OK, exec request accepted, Exit status 0; proves that login and remote command only, not SCP or forwarding; earlier closure cause unknown"
   },
-  "next_external_step": "Collect Windows ssh -vvv diagnostics for the same server and port using a simple remote echo command; identify and resolve the connection closure, then retry Connect-Windows.ps1 to transfer version evidence and reference DLLs and keep the tunnel open.",
+  "next_external_step": "Retry Connect-Windows.ps1 on the Windows Steam PC with the same server, RemoteRoot and SSH port now that a simple SSH command succeeded; verify report and DLL uploads, keep the tunnel open, then inspect the dashboard and build the bridge against received references.",
   "completion_rule": "Do not mark complete until original-game behavior and declared supported scenario parity have been verified. Simulator-only tests do not prove local game parity.",
   "limitations": [
     "Windows report and reference assemblies are still absent.",
