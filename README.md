@@ -31,6 +31,15 @@ The long term research direction is a single agent stack with:
 
 The repository currently focuses on the first requirement: a trustworthy, observable experimental environment. The original-game parity gate is intentionally visible in the status records and is not inferred from simulator-only tests.
 
+## Implementation direction
+
+Spire2Lab prioritizes project-authored architecture and implementations for experiment control,
+search, hierarchical decisions, learning orchestration, evaluation, and visualization. Open-source
+projects serve as references and comparison baselines; general-purpose libraries remain dependencies.
+The current runtime uses upstream simulator mechanics, Python bindings, content tables, and Mod
+code. Independent replacements will be introduced module by module after behavioral validation.
+Their implementation status and reference sources are tracked in [CODE-PROVENANCE.md](CODE-PROVENANCE.md).
+
 ## Research position
 
 Spire2Lab treats an interactive card game as a partially observable decision process. The agent receives player-visible state and legal actions. Internal draw order, random streams, and other unavailable fields stay outside the policy observation. A trace records what the agent saw, what it proposed, what was executed, and what the environment confirmed.

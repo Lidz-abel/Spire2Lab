@@ -1,6 +1,6 @@
 # Spire2Lab 项目转接文档
 
-更新时间：2026-10-20
+更新时间：2026-10-22
 
 项目地址：<https://github.com/Lidz-abel/Spire2Lab>
 
@@ -8,14 +8,14 @@
 
 当前 Git 检查点：本地 `main` 已包含 README、转接文档和远程 LICENSE 的合并提交。
 
-远程已知检查点：`origin/main` 为 `4f24e17`（仅远程初始 LICENSE）。本地内容已经提交，待网络恢复后执行 `git push -u origin main`。
+上次已确认推送检查点：`0a5c869`（包含平台代码、README、转接文档和来源说明）。历史 TLS 故障之后已成功推送；每次接手仍须核对远程实际状态。
 项目目标：**完成第一阶段**
 
 ## 新会话启动指令
 
 把下面这段连同本文件一起交给新的会话：
 
-> 你正在继续开发 Spire2Lab。先阅读仓库根目录的 `PROJECT-HANDOFF.md`、`PHASE1-STATUS.json`、`ARCHITECTURE-PLAN.txt` 和 `README.md`，再检查当前 `git status`、测试结果和 `artifacts`。保留第一阶段的完整目标：建立可实时观察、可复现、可训练、能与 Windows Steam 原版逐步对照的强化学习环境。不要把模拟器测试或合成 HTTP 测试当作原版一致性证据。优先完成当前文档中列出的下一项实机接入任务；每次实质进展都更新本文件和 `PHASE1-STATUS.json`，运行相关检查，并创建一个说明清楚的 commit。
+> 你正在继续开发 Spire2Lab。先阅读仓库根目录的 `AGENTS.md`、`PROJECT-HANDOFF.md`、`CODE-PROVENANCE.md`、`PHASE1-STATUS.json`、`ARCHITECTURE-PLAN.txt` 和 `README.md`，再检查当前 `git status`、测试结果和 `artifacts`。用户要求平台尽可能原创、允许参考开源实现：优先自行实现平台与研究核心，按来源文档逐步替换绑定、Mod 和有限战斗引擎；当前运行路径仍有上游依赖。保留第一阶段的完整目标：建立可实时观察、可复现、可训练、能与 Windows Steam 原版逐步对照的强化学习环境。不要把模拟器测试或合成 HTTP 测试当作原版一致性证据。每次新增要求或实质进展都更新本文件，按需同步状态、来源和 README，并创建一个说明清楚的 commit。
 
 ## 项目定位
 
@@ -31,6 +31,7 @@ Spire2Lab 面向《杀戮尖塔 2》的自主强化学习研究，目标是支�
 
 ## 已确认的不可变要求
 
+- 原创优先：平台尽可能自行设计和实现，开源项目可以参考。具体来源与迁移顺序见 `CODE-PROVENANCE.md` 的 O-01 至 O-05；当前依赖仍是上游实现，不追溯改称原创。
 - 第一阶段必须包含真实原版游戏接入，不得用模拟器自测替代。
 - 面板要能实时显示智能体看到的状态、候选动作、选中动作和执行结果。
 - 后续加入原版画面时，画面必须能通过 `run_id`、`decision_id` 和帧信息与决策记录对应。
@@ -135,7 +136,7 @@ powershell -ExecutionPolicy Bypass -File .\Install-Windows-Mod.ps1 `
 
 远程仓库：`https://github.com/Lidz-abel/Spire2Lab.git`
 
-最近一次推送尝试在服务器侧 HTTPS TLS 握手阶段失败；本地提交没有丢失，也没有远程写入。网络恢复后先运行 `git fetch origin main`，确认远程没有新增提交，再执行 `git push -u origin main`。
+历史推送曾遇到 TLS 错误，后来已成功推送至 `0a5c869`。下一次提交前读取当前远程状态；推送结果需要核实，不根据缓存或旧日志推断成功。
 
 每个 commit 只表达一个可核查进度，推荐顺序：
 
@@ -146,13 +147,14 @@ powershell -ExecutionPolicy Bypass -File .\Install-Windows-Mod.ps1 `
 5. `test: add finite original reference cases`
 6. `feat: complete phase-one acceptance gate`
 
-每个提交前至少执行：
+每个提交前检查格式与工作区：
 
 ```bash
 git diff --check
-.venv/bin/python -m pytest -q
 git status --short
 ```
+
+文档变更检查链接和 JSON 等结构化文件；代码变更运行相关测试，涉及跨模块行为时执行 `.venv/bin/python -m pytest -q`。
 
 提交正文要说明：改动、验证命令、证据路径、仍然缺少的证据。不要把 `artifacts/windows/assemblies`、游戏 DLL、存档或原版原始捕获放进 Git。
 
@@ -160,6 +162,7 @@ git status --short
 
 - [`README.md`](README.md)：GitHub 首页，面向研究者和开发者；
 - [`CODE-PROVENANCE.md`](CODE-PROVENANCE.md)：本项目代码、上游代码和许可证边界；
+- [`AGENTS.md`](AGENTS.md)：原创优先与持续记录的执行约定；
 - [`README.txt`](README.txt)：详细 Linux/Windows 运维步骤；
 - [`ARCHITECTURE-PLAN.txt`](ARCHITECTURE-PLAN.txt)：总体架构和后续路线；
 - [`PHASE1-STATUS.json`](PHASE1-STATUS.json)：机器可读的状态与证据；
@@ -178,3 +181,11 @@ git status --short
 4. commit message 和测试/证据路径。
 
 不要删除失败记录。失败的编译、首个差异、未决动作和版本变化都是复现所需的信息。
+
+## 决策与进度记录
+
+| 日期 | 来源 | 要求或变化 | 当前落实情况 |
+| --- | --- | --- | --- |
+| 2026-10-20 | 用户 | 新仓库 `Lidz-abel/Spire2Lab`，科研风格 README，按进度 commit | README、转接文档和许可证已提交，见历史 |
+| 2026-10-21 | 用户询问与来源检查 | 明确新增代码和上游模拟器/Mod 的边界 | `CODE-PROVENANCE.md`；已推送 `0a5c869` |
+| 2026-10-22 | 用户明确要求 | 平台尽可能原创，允许参考开源实现 | 本轮记录原创原则、O-01 至 O-05 迁移计划及 `AGENTS.md`；独立引擎/Mod 尚未实现；第一阶段仍待 Windows 实机输入 |
