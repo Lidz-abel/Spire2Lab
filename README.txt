@@ -57,6 +57,26 @@ Windows 接入
 安装器会备份已有文件并在复制失败时尝试恢复。用户已回传 Windows 安装成功输出；
 实机 Mod 加载与状态接口仍待确认，失败回滚目前仅有模拟测试证据。
 
+Windows 桥接超时：检查端口拥有者
+  Windows 15526 应供游戏桥接使用；Linux 18526 由 Connect-Windows.ps1 反向转发到它。
+  在 Windows PowerShell 检查监听者：
+    Get-NetTCPConnection -LocalPort 15526 -State Listen -ErrorAction SilentlyContinue | Select-Object LocalAddress,LocalPort,OwningProcess
+  将返回的 PID 代入（不要假定某个历史 PID 仍是同一进程）：
+    Get-CimInstance Win32_Process -Filter "ProcessId = 返回的PID" | Select-Object ProcessId,Name,ExecutablePath
+  若拥有者是 Code.exe，先保留启动日志中的桥接信息，再正常退出游戏：
+    Select-String -Path "$env:APPDATA\SlayTheSpire2\logs\godot.log" -Pattern '\[STS2 MCP\]|HttpListener|15526' -Context 2,4 | Select-Object -Last 20
+  在 VS Code 底部“端口 / Ports”面板，按“转发地址”查找本地 127.0.0.1:15526，停止该项转发。
+  注意远程端口和本地转发地址可能不同；若当前窗口没有该项，再检查其他 VS Code 远程窗口。
+  保留 Connect-Windows.ps1 的独立 SSH 窗口。再次检查 Windows 15526，确认已无监听者后，
+  从 Steam 启动游戏并停留主菜单，重新读取当前启动日志及 HTTP 根路径和单人状态。
+  不要把 Linux 18526 再转发到 Windows 15526；这会指回原来的桥接目的端口。
+  Mod 的设置项出现，只说明部分初始化执行；须看到 HTTP 响应才算接口连通。
+  若仍有其他进程占用，或没有找到对应转发，保留进程信息和日志继续定位，不直接终止整个编辑器。
+  .vscode/settings.json 对 15526/18526 设置 onAutoForward=ignore，仅在以本项目为工作区时应用。
+  它不会关闭已有、手动或恢复的转发，也不修改全局设置；当前冲突仍须按上面的步骤解除。
+  VS Code 官方端口转发说明：https://code.visualstudio.com/docs/remote/ssh#_forwarding-a-port-creating-ssh-tunnel
+  设置定义：https://github.com/microsoft/vscode/blob/main/src/vs/workbench/contrib/remote/common/remote.contribution.ts
+
 实验范围
   config/phase1.json 定义 A0 铁甲战士、10 张初始牌、燃烧之血、初始 80/80 HP。
   三种普通遭遇、开发与保留评测种子分别固定。原版对齐前场景标为未验证。

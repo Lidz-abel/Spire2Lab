@@ -49,6 +49,17 @@ SSH 连接失败时：
    exit 255 是 SSH 失败；exit 20 是远程项目文件缺失；exit 21 是远程目录创建失败。
    本地版本报告保存在 $env:TEMP\\sts2-lab-windows-report.json，失败时仍保留。
 
+本机桥接 15526 超时且监听者为 Code.exe 时：
+   Windows 15526 供游戏桥接使用；Linux 18526 通过独立 SSH 隧道指向它。
+   在退出游戏前保留 godot.log 中的 [STS2 MCP] 启动成功/失败信息。
+   日志位于 $env:APPDATA\\SlayTheSpire2\\logs\\godot.log，启动信息可能不在文件末尾。
+   正常退出游戏，在 VS Code 的“端口 / Ports”面板停止本地转发地址为 127.0.0.1:15526 的条目。
+   注意远程端口列可能是另一个号码；其他远程窗口也可能持有该转发。
+   保留 Connect-Windows.ps1 窗口；确认 Windows 15526 已释放后，从 Steam 再启动游戏。
+   不要将 Linux 18526 再转发到 Windows 15526。无需终止整个 VS Code 或反复重装 Mod。
+   若没有找到对应转发，保留进程拥有者和启动日志继续定位。
+   仓库 .vscode/settings.json 仅排除桥接端口的自动转发，不关闭已有/恢复的转发。
+
 完整说明：README.txt；验收状态：PHASE1-STATUS.json。
 两个脚本必须使用同一个服务器、项目绝对路径与端口。SSH 隧道只监听两台电脑的 loopback 地址。
 """.encode("utf-8-sig")

@@ -22,6 +22,26 @@ VS Code Git 凭据服务连接被拒绝，GitHub 拒绝匿名写入。远程核�
 本次 Logo 和 README 尚未上传。已请用户在本机 Git 客户端恢复登录，未索取令牌。
 项目目标：**完成第一阶段**
 
+2026-10-22 端口拥有者已确认：用户回传 Win32_Process 显示 PID 44400 为 Code.exe，
+与此前 Windows 127.0.0.1:15526 的监听 PID 一致；这是当前明确的端口冲突。
+用户日志显示 [STS2 MCP] Instant Mode checkbox injected into settings，游戏已到主菜单；
+只证明部分 Mod 初始化执行，不能证明 HTTP 服务已启动。日志末尾的手柄 InputMap
+报错与超时尚无已证实的因果联系。证据汇总在 artifacts/windows/port-owner-conflict.json。
+固定上游的 Initialize 在 HttpListener.Start 失败时打印 [STS2 MCP] Failed to start；
+本轮请求用户从完整日志筛选桥接信息，以补足启动时错误。Code.exe 很可能来自端口
+转发，但具体 VS Code 条目、远程/本地映射及是否导致本次绑定失败仍待确认。
+下一步：保存筛选日志，正常退出游戏，在 VS Code Ports 中按本地转发地址停止
+127.0.0.1:15526 对应条目；保留独立 SSH 接入窗口。确认 Windows 15526 已无监听者
+后从 Steam 重启，先验证本机根路径和单人状态，再验证 Linux 18526；不发送游戏动作。
+本轮增加项目级 .vscode/settings.json，排除 15526/18526 自动转发，更新 README.txt
+与接入包说明。设置只在本项目作为工作区时应用，不关闭已有、手动或恢复的转发，
+不修改用户全局配置；当前 Windows 冲突尚未解除验证。未改 Mod 或游戏输入配置，
+未重编译、杀进程或修改防火墙。原版状态/单步/完整战斗仍未取得，参考集仍为 0/60。
+验证：JSON、项目级设置范围、接入包生成脚本语法和 ZIP 文件集合/清单哈希均通过，
+两个 PowerShell 脚本与源文件逐字节一致，git diff --check 通过；未重复运行完整测试。
+这些检查仅验证本轮配置与说明，不能替代用户解除占用后的 Windows HTTP 验证。
+GitHub 认证阻塞尚未收到恢复证据，保留本地提交，不重复触发已失败的凭据服务。
+
 2026-10-22 本机端口诊断后续：用户回传 `127.0.0.1:15526` 处于 Listen，拥有者
 PID 为 `44400`；显式设置 `HttpWebRequest.Proxy = null` 后根路径请求仍在 5 秒超时。
 记录于 `artifacts/windows/local-listener-timeout.json`，来源明确为用户终端输出。
