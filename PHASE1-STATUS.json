@@ -27,7 +27,7 @@
       {
         "id": "P1-01",
         "title": "版本与来源冻结",
-        "status": "reference_fingerprints_verified_semantic_release_pending",
+        "status": "reference_fingerprints_verified_target_release_user_reported_runtime_binding_pending",
         "depends_on": []
       },
       {
@@ -39,7 +39,7 @@
       {
         "id": "P1-03",
         "title": "最小实机闭环",
-        "status": "bridge_compiled_installation_user_reported_game_restart_and_live_control_pending",
+        "status": "bridge_compiled_installed_user_reported_local_http_timeouts_diagnosis_pending",
         "depends_on": [
           "P1-01"
         ]
@@ -119,7 +119,7 @@
     "independent_backend_migration": "planned_not_implemented",
     "phase_one_scope": "existing_finite_scope_and_live_game_acceptance_preserved"
   },
-  "status": "awaiting_game_restart_after_mod_consent",
+  "status": "awaiting_windows_bridge_diagnostics",
   "requirements": {
     "versioned_semantic_protocol": "implemented_v0.2.0",
     "native_linux_simulator": "built_and_smoke_tested",
@@ -132,7 +132,7 @@
     "snapshot_restore_and_branch_isolation": "tested",
     "gymnasium_interface": "tested_combat_entities_v2",
     "process_isolated_vector_sampling": "gym_two_workers_tested_and_semantic_sampling_one_two_four_workers_reproducible",
-    "windows_game_version_and_bridge": "public_build_23811903_reference_hashes_verified_bridge_compiled_semantic_release_and_live_validation_pending",
+    "windows_game_version_and_bridge": "public_build_23811903_reference_hashes_verified_target_0_107_1_user_reported_runtime_fingerprint_and_live_validation_pending",
     "windows_ssh_command": "report_and_three_assemblies_received_reverse_listener_present_bridge_http_and_local_forwarding_unverified",
     "real_game_adapter": "canonical_mapping_async_runtime_and_browser_tested_with_synthetic_transport_not_live",
     "real_game_one_step": "not_verified",
@@ -176,12 +176,14 @@
     "bridge_related_tests": "artifacts/windows/bridge-integration-tests.xml (16 passed, 1 existing dependency warning; transport, adapter and installer checks use synthetic or upstream fixtures, not live Windows gameplay)",
     "bridge_network_probe": "Reverse listener 127.0.0.1:18526 present; post-install-probe.json and post-install-greeting-probe.json record GET timeouts while game was not running, no live state obtained",
     "windows_installation": "User Windows transcript on 2026-10-22: STS2_MCP.dll, mod_manifest.json, LICENSE.txt and build.json downloaded; installation succeeded and backup directory created; no runtime validation yet",
-    "mod_consent_exit": "artifacts/windows/mod-startup-calls.json: read-only IL call-target inspection shows NConfirmModLoadingPopup.OnYesButtonPressed saves consent settings then calls NGame.Quit; user-reported first-enable exit matches this flow, next startup pending"
+    "mod_consent_exit": "artifacts/windows/mod-startup-calls.json: read-only IL call-target inspection shows NConfirmModLoadingPopup.OnYesButtonPressed saves consent settings then calls NGame.Quit; first-enable exit matches this flow",
+    "reported_release": "artifacts/windows/user-reported-release.json (user main-menu text v0.107.1 and 2026.06.18; matches configured target, no runtime fingerprint or machine-verified release capture)",
+    "post_restart_diagnostics": "artifacts/windows/restart-probe.json (both tunneled GETs timed out); user also reported both Windows-local Invoke-RestMethod calls timed out; port ownership and explicit proxy bypass results pending"
   },
-  "next_external_step": "Installation succeeded. Keep the SSH tunnel open and relaunch the game through Steam after the first Mod-consent exit. Stay at the main menu, report the displayed release, then verify local Windows and tunneled bridge HTTP reads before any gameplay action. If relaunch exits again, inspect startup logs before changing files.",
+  "next_external_step": "Keep the game at its main menu and the SSH tunnel open. Collect Windows listener ownership for port 15526 and a WebRequest with Proxy=null; inspect startup logs if needed to distinguish Mod loading, HTTP listener and proxy issues. Verify local and tunneled bridge responses before gameplay actions.",
   "completion_rule": "Do not mark complete until original-game behavior and declared supported scenario parity have been verified. Simulator-only tests do not prove local game parity.",
   "limitations": [
-    "References are received and hash-verified, but DLL assembly/file version 0.1.0.0 does not establish simulator target release 0.107.1; semantic release verification is still required.",
+    "User reports main-menu v0.107.1 / 2026.06.18, matching the target; DLL metadata remains 0.1.0.0 and no runtime fingerprint-bound version capture has been obtained. Acceptance currently rejects the generic DLL version.",
     "Bridge compilation and Enchantment metadata checks passed and installation success is user-reported; runtime loading and actual original-game state/action/result are not yet verified.",
     "Comparison coverage excludes catalog-derived card values and hidden RNG; a matching finite trace never proves global game parity.",
     "Exact original/simulator initial state and RNG alignment still require implementation and live evidence.",
