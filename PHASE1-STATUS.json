@@ -178,9 +178,9 @@
     "windows_installation": "User Windows transcript on 2026-10-22: STS2_MCP.dll, mod_manifest.json, LICENSE.txt and build.json downloaded; installation succeeded and backup directory created; no runtime validation yet",
     "mod_consent_exit": "artifacts/windows/mod-startup-calls.json: read-only IL call-target inspection shows NConfirmModLoadingPopup.OnYesButtonPressed saves consent settings then calls NGame.Quit; first-enable exit matches this flow",
     "reported_release": "artifacts/windows/user-reported-release.json (user main-menu text v0.107.1 and 2026.06.18; matches configured target, no runtime fingerprint or machine-verified release capture)",
-    "post_restart_diagnostics": "artifacts/windows/restart-probe.json (both tunneled GETs timed out); user also reported both Windows-local Invoke-RestMethod calls timed out; port ownership and explicit proxy bypass results pending"
+    "post_restart_diagnostics": "artifacts/windows/restart-probe.json (both tunneled GETs timed out); user reported local requests timed out too; local-listener-timeout.json records listener 127.0.0.1:15526 owned by PID 44400 and explicit Proxy=null GET timeout; process identity and startup logs pending"
   },
-  "next_external_step": "Keep the game at its main menu and the SSH tunnel open. Collect Windows listener ownership for port 15526 and a WebRequest with Proxy=null; inspect startup logs if needed to distinguish Mod loading, HTTP listener and proxy issues. Verify local and tunneled bridge responses before gameplay actions.",
+  "next_external_step": "Keep the game and tunnel running. Collect Win32_Process name/path for Windows listener PID 44400 and the last 150 lines of the current godot.log to identify the listener and any Mod startup error. Explicit local Proxy=null requests already time out; do not infer the owning process is the game or change network configuration without evidence.",
   "completion_rule": "Do not mark complete until original-game behavior and declared supported scenario parity have been verified. Simulator-only tests do not prove local game parity.",
   "limitations": [
     "User reports main-menu v0.107.1 / 2026.06.18, matching the target; DLL metadata remains 0.1.0.0 and no runtime fingerprint-bound version capture has been obtained. Acceptance currently rejects the generic DLL version.",
