@@ -35,6 +35,8 @@ files["START-HERE.txt"] = """STS2 Lab Windows 接入包
    .\\Install-Windows-Mod.ps1 -Server 用户@服务器 -RemoteRoot /srv/Spire2Lab -SshPort 端口
    直接使用当前 PowerShell 会话，无需再次调用 powershell 启动命令。
    安装前关闭游戏。脚本会检查文件指纹、备份旧文件并通过 Steam 启动游戏。
+   若首次同意加载 Mod 后游戏退出，从 Steam 再启动一次，先停留主菜单核对版本和接口。
+   若再次退出，保留启动日志供诊断，无需反复重装。
 5. Linux 启动 bash scripts/start.sh 后，在 Windows 浏览器打开 http://127.0.0.1:8765。
    原版接入和参考战斗仍需在桥接成功运行后验收。
 

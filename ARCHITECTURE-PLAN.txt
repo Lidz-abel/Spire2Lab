@@ -194,9 +194,10 @@ P1-08 第一阶段交付（依赖前述验收通过）
 Windows 接入脚本的目录参数、指纹拒绝、来源文件与回滚经过 Linux PowerShell 模拟测试。
 Windows public build 23811903 的报告和三份 DLL 已收到并通过大小/哈希验证，桥接
 已编译（0 错误、1 项上游空值警告）；Enchantment 公开实例 getter 经元数据检查存在。
-未完成：游戏语义版本确认、Mod 安装与实机运行、可重复原版初始化/RNG 对齐、
+用户已回传 Windows 安装成功输出，首次 Mod 同意后退出符合本机 DLL 的保存/退出流程。
+未完成：游戏语义版本确认、Mod 重启加载与实机运行、可重复原版初始化/RNG 对齐、
 实际原版逐步参考集，以及原版截图/视频采集。
 artifacts/acceptance/status.json 当前未通过，60 条实机参考均缺失。
-下一项操作是保持隧道并在 Windows 安装桥接；脚本包 artifacts/installers/sts2-lab-windows.zip
+下一项操作是保持隧道并从 Steam 再启动游戏，先核对主菜单和接口；接入包 artifacts/installers/sts2-lab-windows.zip
 包含 Connect-Windows.ps1、Install-Windows-Mod.ps1 和 START-HERE.txt。
 执行命令和实际接入顺序见 README.txt。接入前不能将第一阶段标为完成。

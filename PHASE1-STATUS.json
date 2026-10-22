@@ -39,7 +39,7 @@
       {
         "id": "P1-03",
         "title": "最小实机闭环",
-        "status": "bridge_compiled_windows_installation_and_live_control_pending",
+        "status": "bridge_compiled_installation_user_reported_game_restart_and_live_control_pending",
         "depends_on": [
           "P1-01"
         ]
@@ -119,7 +119,7 @@
     "independent_backend_migration": "planned_not_implemented",
     "phase_one_scope": "existing_finite_scope_and_live_game_acceptance_preserved"
   },
-  "status": "awaiting_windows_mod_installation",
+  "status": "awaiting_game_restart_after_mod_consent",
   "requirements": {
     "versioned_semantic_protocol": "implemented_v0.2.0",
     "native_linux_simulator": "built_and_smoke_tested",
@@ -141,7 +141,7 @@
     "cross_backend_comparison_tool": "implemented_with_capture_hash_checks_and_candidate_reexecution_no_local_live_evidence",
     "bridge_source_hooks": "compiled_against_received_assemblies_enchantment_instance_getter_metadata_verified_runtime_pending",
     "native_atomic_publish": "staged_binary_replacement_exercised",
-    "windows_install_script": "configurable_checkout_hash_refusal_license_and_build_install_rollback_mock_tested_not_executed_on_windows",
+    "windows_install_script": "successful_four_file_install_and_backup_directory_user_reported_on_windows_failure_and_rollback_paths_mock_tested",
     "pinned_source_integrity": "archive_hash_and_1417_source_files_verified_build_and_first_load_guarded",
     "bootstrap": "fresh_checkout_fresh_dependencies_and_native_build_verified_on_same_linux_host_independent_machine_pending",
     "native_build_history": "previous_binary_and_manifest_archive_verified",
@@ -159,7 +159,7 @@
     "original_browser_contract": "artifacts/original-dashboard-synthetic/report.json (5 checks, synthetic transport only)",
     "native_library_sha256": "90f73b83758827c8f8377b35f5ea19f1f59fc8c4a6b72ed01be02b0500f6a65d",
     "bootstrap": "artifacts/bootstrap-check.json",
-    "windows_onboarding_package": "artifacts/installers/sts2-lab-windows.zip (scripts only; earlier revision executed on Windows, report and three DLLs received; latest diagnostic revision and installer not yet Windows-verified)",
+    "windows_onboarding_package": "artifacts/installers/sts2-lab-windows.zip (scripts only; report and DLL transfer verified, installer success user-reported; latest connection diagnostics not Windows-tested, game startup pending)",
     "acceptance_audit": "artifacts/acceptance/status.json (incomplete; 60 original-game cases missing)",
     "readme_branding": "artifacts/branding/structure-check.json and readme-render-check.json (3 SVGs, 30 local links/anchors, 4 local theme/viewport previews; not GitHub-hosted rendering)",
     "readme_example": "artifacts/branding/python-example.txt (one real native simulator action, verified 2026-10-22)",
@@ -174,13 +174,15 @@
     "bridge_build": "artifacts/windows/bridge-build.log and mod/build.json (SDK 9.0.319; build succeeded with 0 errors and 1 upstream CS8602 warning; compiled does not mean in-game verified)",
     "bridge_metadata": "artifacts/windows/assembly-metadata-check.json (CardModel.Enchantment public instance getter exists; metadata inspection only, game code not executed)",
     "bridge_related_tests": "artifacts/windows/bridge-integration-tests.xml (16 passed, 1 existing dependency warning; transport, adapter and installer checks use synthetic or upstream fixtures, not live Windows gameplay)",
-    "bridge_network_probe": "Reverse listener 127.0.0.1:18526 observed on 2026-10-22; read-only bridge HTTP probe timed out before installation, no live state obtained"
+    "bridge_network_probe": "Reverse listener 127.0.0.1:18526 present; post-install-probe.json and post-install-greeting-probe.json record GET timeouts while game was not running, no live state obtained",
+    "windows_installation": "User Windows transcript on 2026-10-22: STS2_MCP.dll, mod_manifest.json, LICENSE.txt and build.json downloaded; installation succeeded and backup directory created; no runtime validation yet",
+    "mod_consent_exit": "artifacts/windows/mod-startup-calls.json: read-only IL call-target inspection shows NConfirmModLoadingPopup.OnYesButtonPressed saves consent settings then calls NGame.Quit; user-reported first-enable exit matches this flow, next startup pending"
   },
-  "next_external_step": "Keep Connect-Windows.ps1 running; close the game. In the existing second PowerShell session, set execution policy for Process and invoke .\\Install-Windows-Mod.ps1 directly with the same server, RemoteRoot and port; the nested powershell launcher was not found, so the installer has not run. Enable the Mod and stay at the main menu, collect the displayed release and verify bridge HTTP state before any controlled battle.",
+  "next_external_step": "Installation succeeded. Keep the SSH tunnel open and relaunch the game through Steam after the first Mod-consent exit. Stay at the main menu, report the displayed release, then verify local Windows and tunneled bridge HTTP reads before any gameplay action. If relaunch exits again, inspect startup logs before changing files.",
   "completion_rule": "Do not mark complete until original-game behavior and declared supported scenario parity have been verified. Simulator-only tests do not prove local game parity.",
   "limitations": [
     "References are received and hash-verified, but DLL assembly/file version 0.1.0.0 does not establish simulator target release 0.107.1; semantic release verification is still required.",
-    "Bridge compilation and Enchantment metadata checks passed; Windows installation, runtime behavior and actual original-game state/action/result are not yet verified.",
+    "Bridge compilation and Enchantment metadata checks passed and installation success is user-reported; runtime loading and actual original-game state/action/result are not yet verified.",
     "Comparison coverage excludes catalog-derived card values and hidden RNG; a matching finite trace never proves global game parity.",
     "Exact original/simulator initial state and RNG alignment still require implementation and live evidence.",
     "Reference replay checks one declared seed and refuses initial-state mismatches; no automatic original-game staging or RNG import is implemented."
