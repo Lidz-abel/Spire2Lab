@@ -9,6 +9,11 @@
 当前 Git 检查点：本地 `main` 已包含 README、转接文档和远程 LICENSE 的合并提交。
 
 上次已确认推送检查点：`0a5c869`（包含平台代码、README、转接文档和来源说明）。历史 TLS 故障之后已成功推送；每次接手仍须核对远程实际状态。
+
+2026-10-22 本地进度提交：`6629068`（原创优先原则与依赖迁移规划）。本轮推送失败：
+VS Code Git 凭据服务连接被拒绝，GitHub 返回 `No anonymous write access` / `Authentication failed`。
+文件与提交均在本地保留；本轮只读远程核对仍为 `0a5c869`。恢复本机 GitHub 认证后再推送，
+不在聊天或仓库中保存令牌。此项阻塞远程同步，独立于 Windows 实机接入阻塞。
 项目目标：**完成第一阶段**
 
 ## 新会话启动指令
@@ -137,6 +142,7 @@ powershell -ExecutionPolicy Bypass -File .\Install-Windows-Mod.ps1 `
 远程仓库：`https://github.com/Lidz-abel/Spire2Lab.git`
 
 历史推送曾遇到 TLS 错误，后来已成功推送至 `0a5c869`。下一次提交前读取当前远程状态；推送结果需要核实，不根据缓存或旧日志推断成功。
+最近一次推送为 2026-10-22 的认证失败，具体情况见本文开头的 Git 检查点。
 
 每个 commit 只表达一个可核查进度，推荐顺序：
 
