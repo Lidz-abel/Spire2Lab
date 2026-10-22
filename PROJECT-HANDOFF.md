@@ -14,6 +14,9 @@
 VS Code Git 凭据服务连接被拒绝，GitHub 返回 `No anonymous write access` / `Authentication failed`。
 文件与提交均在本地保留；三阶段规划时只读远程核对仍为 `0a5c869`。恢复本机 GitHub 认证后再推送，
 不在聊天或仓库中保存令牌。此项阻塞远程同步，独立于 Windows 实机接入阻塞。
+三阶段规划已提交为 `5e7f24b`；提交后重试 `git push origin main`，仍因同一凭据服务
+故障及 GitHub 认证失败退出（128）。格式、JSON、三个阶段/八个任务及 14 个本地链接
+检查通过。远程尚未收到本次规划，后续认证恢复后应推送并核对远程 HEAD。
 项目目标：**完成第一阶段**
 
 当前路线：`three-stage-v1`。三个阶段依次为可信实验平台、搜索与分层决策、
