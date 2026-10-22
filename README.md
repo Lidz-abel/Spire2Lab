@@ -38,7 +38,7 @@ The immediate goal is a trustworthy environment for later work on search, hierar
 | --- | --- |
 | **Semantic environment** | Typed observations, decision-scoped card/enemy references, legal actions, and versioned step results. A shared [backend contract](docs/ENVIRONMENT-CONTRACT.md) defines supported operations and explicit refusals. |
 | **Live decision inspection** | Single-step and automatic execution, pause, manual overrides, candidate scores with their meaning, and recorded trajectory replay. The current dashboard is in Chinese. |
-| **Simulator branching** | Exact snapshot/restore and independently sampled hidden worlds. Exact hidden-state snapshots are for debugging and regression; they must not become a policy oracle. |
+| **Simulator branching** | Exact snapshot/restore and independently sampled hidden worlds, with branch IDs and parent-decision provenance. Exact hidden-state snapshots are for debugging and regression; they must not become a policy oracle. |
 | **Learning interface** | Gymnasium wrapper with a versioned [content vocabulary](config/content-v1.json), entity encoding, action masks, termination/truncation handling, and process-isolated vector sampling tests. No training pipeline is included yet. |
 | **Execution accounting** | Request IDs, stale-decision rejection, confirmation after uncertain responses, and explicit archival of unresolved original-game actions. |
 | **Trace validation** | Hash-chain records, semantic re-execution, capture fingerprints, and a finite original-game acceptance matrix. Missing evidence keeps the gate incomplete. |
@@ -92,7 +92,7 @@ python3 scripts/bootstrap.py
 bash scripts/start.sh
 ```
 
-Bootstrap creates `.venv/`, downloads and verifies pinned upstream sources, installs a local .NET SDK when needed, builds the native library, and runs the project tests. A first build can take longer than five minutes. A prior revision passed a fresh-checkout installation on the same Linux host. The protocol 0.3 checkout's cold-install check is currently blocked by a PyPI TLS connection failure; its current-workspace tests pass. Independent-machine installation remains unverified. Versioned evidence is recorded in [PHASE1-STATUS.json](PHASE1-STATUS.json).
+Bootstrap creates `.venv/`, downloads and verifies pinned upstream sources, installs a local .NET SDK when needed, builds the native library, and runs the project tests. A first build can take longer than five minutes. Protocol 0.3 at commit `2c25a99` passed a fresh-checkout installation on the same Linux host after transient download failures. The rebuilt simulator matched the previous build's public trajectories on 60 fixed cases repeated five times; the binaries were not byte-identical. Independent-machine installation remains unverified. Versioned evidence is recorded in [PHASE1-STATUS.json](PHASE1-STATUS.json).
 
 Open **http://127.0.0.1:8765** on the Linux host. For a remote server, forward port `8765` through SSH and open that address locally. API documentation is at `/docs`.
 
@@ -181,6 +181,8 @@ The current evidence is **engineering validation**, not a learned-agent performa
 | Check | What it establishes | Boundary |
 | --- | --- | --- |
 | [Environment tests](tests/test_environment.py) | Starter conditions, information boundaries, snapshot isolation, legal battles, Gym contract and vector sampling | Simulator scope |
+| [Lifecycle contract tests](tests/test_environment_contract.py) | Reset, immutable branch ancestry, checkpoint restore and explicit original-game capability refusals | Native simulator and no-I/O refusal checks |
+| [Training boundary tests](tests/test_training_boundary.py) | Invalid-action filtering, attempt-limit truncation and natural terminal precedence | Real simulator transitions; no RL training |
 | [Sampling tests](tests/test_sampling.py) | Trajectory consistency across worker layouts, failure handling and timeout cleanup | Simulator scope |
 | [Vocabulary tests](tests/test_vocabulary.py) | Public observations encode without backend ID tables; unknown content and incompatible traces are rejected | Protocol 0.3 / encoding v3; finite simulator regression |
 | [Windows helper tests](tests/test_windows_scripts.py) | Configurable paths, preflight refusal, fingerprint checks and install rollback | Mocked PowerShell; requires `pwsh` or `SPIRE2LAB_PWSH`, not a Steam installation |

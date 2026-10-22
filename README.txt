@@ -137,6 +137,8 @@ Windows 桥接超时：检查端口拥有者（以下为默认 15526，换端口
   旧协议轨迹保留原文件；当前语义回放要求显式迁移，不能直接改版本号冒充新数据。
   snapshot 是精确的进程内检查点，须 close 释放；仅用于校验和恢复。
   sample_world(search_seed) 强制重采样未知牌序及随机流，供后续搜索使用。
+  branch_provenance 记录独立分支、父分支、创建时父决策及操作类型；恢复以检查点
+  为父分支生成新编号。该信息属于实验元数据，不进入策略观测；原版后端为 None。
   持久复现通过带版本的初始配置、动作和逐步轨迹完成，不把内存句柄当跨进程存档。
   sts2lab.policies.Policy：只接收 Observation，无法访问真实隐藏状态。
   sts2lab.gym_env.CombatEnv：标准 reset/step 和 action_masks，详见 ENCODING.json。

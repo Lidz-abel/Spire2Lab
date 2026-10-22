@@ -22,6 +22,26 @@ VS Code Git 凭据服务连接被拒绝，GitHub 拒绝匿名写入。远程核�
 本次 Logo 和 README 尚未上传。已请用户在本机 Git 客户端恢复登录，未索取令牌。
 项目目标：**完成第一阶段所有的内容**（用户于本轮重新设为 active；当前未完成）
 
+2026-10-23 接口验收补齐（本段优先于下方历史记录）：新增不可变 BranchProvenance，
+记录分支 ID、父分支、父决策和 root/snapshot/sample_world/restore 操作；reset
+生成新根，restore 以检查点为父生成新编号。环境协议和实验头暴露来源，Observation
+和训练张量不携带这些元数据。原版后端为 None，仍显式拒绝克隆/恢复，不发 HTTP。
+此前怀疑“策略版本缺失”经源码复核不成立：Decision.policy 已是 heuristic-v1 /
+random-v1；本轮新增保存轨迹检查，未更改策略算法、协议 0.3 或编码 v3。
+30 项针对性、123 项完整回归通过，各 1 项既有依赖弃用警告；报告在 artifacts/
+interface-boundary-tests.xml 和 interface-boundary-regression-tests.xml。新增真实
+模拟器检查覆盖非法动作无操作/过滤、wrapper 与 simulator 截断以及限步末端胜负
+优先级。受控 Mod 源码和构建未变化，已给用户的安装指纹仍有效。
+完整原版审计 interface-boundary-status.json 位于 artifacts/acceptance/：errors=[]，
+60 场和全部 9 类边界缺失；最新只读原版检查仍无新 Mod 指纹，未发游戏动作。
+独立检出复现记录仍明确绑定 2c25a99，不把它写成后来提交的新一次冷安装证明。
+面板已正常重启加载本轮代码，PID 165874 / exec session 73014；当前是暂停的模拟器
+新会话。旧完成态轨迹以 session_closed/server_shutdown 收尾，原始记录保留；新
+实验头和 API 均含根分支来源，health 仍 original_game_verified=false。证据为
+artifacts/interface-service-restart.json，其中保留检查脚本最初误期望归档事件的更正。
+下一实机动作仍是 Windows 安装新 Mod、重启到主菜单、核验指纹和槽位 2，再检查
+声明种子的第 2 层初态。GitHub 认证仍无恢复证据，所有新增实现保持本地提交。
+
 2026-10-23 最新状态核对（本段优先于下方历史记录）：用户询问当前工作和阶段。
 仍在第一阶段，正在完善 P1-02/P1-06 的平台与复现证据，实机关键路径是 P1-03/04。
 阶段 2 搜索与分层决策、阶段 3 高效训练尚未开始。完整原版参考集仍为 0/60。
@@ -496,10 +516,11 @@ Spire2Lab 面向《杀戮尖塔 2》的自主强化学习研究，目标是支�
 
 ### 已经存在
 
-- 协议 `0.2.0`：`sts2lab/contracts.py`
+- 协议 `0.3.0`：`sts2lab/contracts.py`
 - C# NativeAOT 模拟器和只读观测导出：`native/`
-- Linux 模拟器、snapshot/restore、`sample_world`：`sts2lab/simulator.py`
-- Gymnasium `combat-entities-v2`：`sts2lab/gym_env.py`
+- Linux 模拟器、snapshot/restore、`sample_world` 与父分支记录：`sts2lab/simulator.py`
+- 共享环境与能力拒绝契约：`sts2lab/environment.py`、`docs/ENVIRONMENT-CONTRACT.md`
+- Gymnasium `combat-entities-v3` 与项目 token 词表：`sts2lab/gym_env.py`、`config/content-v1.json`
 - 随机和可解释启发式策略：`sts2lab/policies.py`
 - FastAPI + 无构建步骤浏览器面板：`sts2lab/server.py`、`web/`
 - Windows 原版异步适配器与桥接：`sts2lab/original.py`、`sts2lab/bridge.py`
@@ -517,12 +538,12 @@ Spire2Lab 面向《杀戮尖塔 2》的自主强化学习研究，目标是支�
 
 | 证据 | 结果 | 说明 |
 | --- | --- | --- |
-| Python 测试 | 47 passed | `artifacts/lab-tests.xml`；包含模拟 PowerShell 流程，非 Windows 实机 |
+| Python 测试 | 123 passed | `artifacts/interface-boundary-regression-tests.xml`；含模拟 PowerShell 流程，非 Windows 实机 |
 | 模拟器面板浏览器检查 | 6 passed | `artifacts/browser-checks.json` |
 | 合成原版接口面板检查 | 5 passed | `artifacts/original-dashboard-synthetic/report.json` |
 | 开发集模拟器基准 | 60 episodes / 980 decisions | `artifacts/benchmark-development.json` |
-| 进程采样测量 | 9 rounds / 2,700 episodes / 44,100 decisions | `artifacts/sampling-development.json`；对应轨迹一致，含硬件与计时边界 |
-| 全新检出安装 | 46 passed / 1 optional skip；60 条公开轨迹一致 | `artifacts/repro-check.json`；同一 Linux 主机，新依赖和新二进制 |
+| 进程采样测量 | 9 rounds / 2,700 episodes / 44,100 decisions | `artifacts/sampling-protocol03-development.json`；2c25a99，含硬件与计时边界 |
+| 全新检出安装 | 113 passed / 1 optional skip；300 次公开轨迹一致 | `artifacts/repro-2c25a99-comparison.json`；同一 Linux 主机，提交 2c25a99，新依赖和新二进制，非逐字节复现 |
 | 桥接与只读诊断测试 | 12 passed | `artifacts/windows/bridge-check-tests.xml`；合成 HTTP，未重跑整个项目测试集 |
 | 原版主菜单 | 7 项检查通过 | `artifacts/windows/bridge-check-20261022T165923467279.json`；服务器经隧道直接采集，仅 GET |
 | 发行版本 | v0.107.1 关联核验通过 | `artifacts/windows/release-verification.json`；原始报告不改写 |
@@ -545,6 +566,8 @@ cd /user/chenzk/sts2-lab
 当前关键路径是受控第 2 层场景准备，再将原版适配器接入面板。安装、隧道、发行版本
 和一次第 1 层真实出牌探针已经通过，不需要用户继续上传文件。游戏目前停在槽位 2
 首战出牌后，SSH 窗口保持打开；接手先读取当前状态，勿重放导航脚本或重复动作。
+新受控场景 Mod 尚待 Windows 安装并重启到主菜单；需要核对运行指纹，不能仅凭
+原版桥接旧端点仍可读便提交初始化请求。
 
 以后返回主菜单时可重做只读连接检查（当前战斗状态不会通过该菜单检查）：
 

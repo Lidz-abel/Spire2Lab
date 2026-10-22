@@ -362,6 +362,7 @@ def verify_scope(raw, encounter, *, opening):
 
 class OriginalEnvironment(UnsupportedOperations):
     backend = "original_game"
+    branch_provenance = None
     capabilities = {
         "observe": True,
         "step": True,

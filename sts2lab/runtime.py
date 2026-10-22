@@ -102,6 +102,11 @@ class Lab:
                 "policy_seed": policy_seed,
                 "build": new_env.manifest,
                 "capabilities": new_env.capabilities,
+                "branch_provenance": (
+                    new_env.branch_provenance.model_dump()
+                    if new_env.branch_provenance is not None
+                    else None
+                ),
                 "content_vocabulary": vocabulary().metadata(),
             }
             if backend == "original_game":

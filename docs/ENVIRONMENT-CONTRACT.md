@@ -34,6 +34,43 @@ an invalid encounter or seed must leave the current environment intact. Restorin
 a snapshot must not change that snapshot or another branch. A capability claim
 must be backed by a callable implementation and tests.
 
+## Branch provenance
+
+Each native environment exposes immutable `branch_provenance` metadata with a
+unique `branch_id`, `parent_branch_id`, `parent_decision_id` and `operation`.
+The branch ID is the existing decision-ID epoch. A new environment or successful
+reset is a root with no parent. `snapshot` and `sample_world` create a new ID and
+refer to the source branch and decision at the time of cloning. `restore`
+creates another new ID whose parent is the checkpoint being restored. Advancing
+a source, resetting it or closing it must not rewrite a descendant's provenance.
+
+Provenance belongs to the environment and trace header, never `Observation` or
+training tensors. It contains no RNG state, resampling seed or hidden card order.
+Older trace headers without this additive field remain readable; their ancestry
+is unavailable and must not be reconstructed by guessing from a run name.
+An original-game environment exposes `None`: it cannot be cloned. The controller
+continues to create root sessions only; simulated branches do not execute game
+commands or enter an original-game trace. This is branch bookkeeping, not a
+search implementation or a history-conditioned belief model.
+
+The existing `Decision.policy` already carries the baseline version, such as
+`heuristic-v1` or `random-v1`; preserve that field when recording proposals.
+
+## Training transition boundary
+
+An action outside the declared Gym action space raises before taking a step.
+A masked action inside that space is a no-op with zero reward,
+`invalid_action=True` and `training_transition=False`; it must be filtered from
+training data. It counts toward the wrapper's attempt limit, without advancing
+the underlying simulator or changing its decision ID.
+
+Reaching the attempt limit yields `truncated=True`, not a fabricated loss.
+A genuine win/loss on the final allowed action yields `terminated=True` and
+`truncated=False`, with the versioned terminal reward. Either ending zeros the
+returned action mask and requires reset before another step. Invalid attempts
+can make the wrapper truncate before the simulator; the simulator's still-live
+state must not be relabeled as a terminal game outcome.
+
 ## Initialization and information boundary
 
 Controlled original-game setup is a separate operator workflow, described in

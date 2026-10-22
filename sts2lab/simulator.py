@@ -20,6 +20,7 @@ from .contracts import (
     StepResult,
     canonical_json,
 )
+from .environment import BranchProvenance
 
 ROOT = Path(__file__).resolve().parents[1]
 CONFIG = json.loads((ROOT / "config/phase1.json").read_text())
@@ -126,6 +127,7 @@ class Simulator:
             self.reward_buf = (ctypes.c_float * 1)()
             self.sequence = 0
             self.epoch = uuid.uuid4().hex
+            self.branch_provenance = BranchProvenance(branch_id=self.epoch)
             self.terminated = False
             self.truncated = False
             self.native.reset_arena(
@@ -342,7 +344,7 @@ class Simulator:
                 },
             )
 
-    def _fork(self, *, resample_seed=None):
+    def _fork(self, *, operation, resample_seed=None):
         with LOCK:
             copy = object.__new__(Simulator)
             for key in (
@@ -357,6 +359,12 @@ class Simulator:
             ):
                 setattr(copy, key, getattr(self, key))
             copy.epoch = uuid.uuid4().hex
+            copy.branch_provenance = BranchProvenance(
+                branch_id=copy.epoch,
+                parent_branch_id=self.branch_provenance.branch_id,
+                parent_decision_id=self.decision_id,
+                operation=operation,
+            )
             copy.buf = (ctypes.c_int * self.native.OBS_SIZE)()
             copy.reward_buf = (ctypes.c_float * 1)()
             copy.handle = self.native.clone(
@@ -368,19 +376,19 @@ class Simulator:
 
     def snapshot(self):
         """Exact in-process checkpoint for replay/debug; caller must close it."""
-        return self._fork()
+        return self._fork(operation="snapshot")
 
     def sample_world(self, search_seed):
         """Search entry point. Always resamples the hidden state."""
         if type(search_seed) is not int or not 0 <= search_seed < 2**31:
             raise ValueError("Search seed must be in [0, 2**31)")
-        return self._fork(resample_seed=search_seed)
+        return self._fork(operation="sample_world", resample_seed=search_seed)
 
     def restore(self, snapshot):
         with LOCK:
             if snapshot.encounter != self.encounter or snapshot.seed != self.seed:
                 raise ValueError("Checkpoint belongs to another scenario")
-            replacement = snapshot._fork()
+            replacement = snapshot._fork(operation="restore")
             self.close()
             self.__dict__.update(replacement.__dict__)
             replacement.handle = -1

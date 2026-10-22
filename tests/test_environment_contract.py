@@ -63,6 +63,82 @@ def test_reset_preserves_independent_snapshot():
         ).observation
 
 
+def test_branch_lineage_tracks_source_decisions_and_survives_parent_reset():
+    with Simulator() as env:
+        root = env.branch_provenance
+        assert root.operation == "root"
+        assert root.parent_branch_id is None and root.parent_decision_id is None
+        env.step("end_turn", env.decision_id)
+        source_decision = env.decision_id
+        with env.snapshot() as checkpoint, env.sample_world(17) as sampled:
+            records = [checkpoint.branch_provenance, sampled.branch_provenance]
+            assert {r.operation for r in records} == {"snapshot", "sample_world"}
+            assert len({root.branch_id, *(r.branch_id for r in records)}) == 3
+            for branch in (checkpoint, sampled):
+                provenance = branch.branch_provenance
+                assert provenance.parent_branch_id == root.branch_id
+                assert provenance.parent_decision_id == source_decision
+                assert branch.decision_id.startswith(provenance.branch_id + ":")
+                assert "parent_branch_id" not in branch.observe().model_dump_json()
+                assert set(provenance.model_dump()) == {
+                    "branch_id",
+                    "parent_branch_id",
+                    "parent_decision_id",
+                    "operation",
+                }
+            sampled.step("end_turn", sampled.decision_id)
+            sampled_decision = sampled.decision_id
+            with sampled.snapshot() as descendant:
+                assert (
+                    descendant.branch_provenance.parent_branch_id
+                    == records[1].branch_id
+                )
+                assert (
+                    descendant.branch_provenance.parent_decision_id == sampled_decision
+                )
+                before = descendant.observe()
+                env.reset(seed=2)
+                assert env.branch_provenance.operation == "root"
+                assert env.branch_provenance.parent_branch_id is None
+                assert env.branch_provenance.branch_id != root.branch_id
+                assert checkpoint.branch_provenance == records[0]
+                assert sampled.branch_provenance == records[1]
+                assert descendant.observe() == before
+
+
+def test_restore_creates_new_lineage_without_changing_checkpoint_or_sibling():
+    from pydantic import ValidationError
+
+    with (
+        Simulator() as env,
+        env.snapshot() as checkpoint,
+        env.sample_world(3) as sibling,
+    ):
+        checkpoint_before = checkpoint.observe()
+        checkpoint_lineage = checkpoint.branch_provenance
+        sibling_before = sibling.observe()
+        original_id = env.branch_provenance.branch_id
+        env.step("end_turn", env.decision_id)
+        restored = env.restore(checkpoint)
+        first_lineage = env.branch_provenance
+        assert first_lineage.operation == "restore"
+        assert first_lineage.parent_branch_id == checkpoint_lineage.branch_id
+        assert first_lineage.parent_decision_id == checkpoint_before.decision_id
+        assert first_lineage.branch_id not in {
+            original_id,
+            checkpoint_lineage.branch_id,
+        }
+        assert semantic_state(restored) == semantic_state(checkpoint_before)
+        env.restore(checkpoint)
+        assert env.branch_provenance.branch_id != first_lineage.branch_id
+        assert env.branch_provenance.parent_branch_id == checkpoint_lineage.branch_id
+        assert checkpoint.observe() == checkpoint_before
+        assert checkpoint.branch_provenance == checkpoint_lineage
+        assert sibling.observe() == sibling_before
+        with pytest.raises(ValidationError, match="frozen"):
+            first_lineage.parent_branch_id = "rewrite-history"
+
+
 @pytest.mark.asyncio
 async def test_original_unsupported_operations_never_contact_the_game(tmp_path):
     requests = []
@@ -80,6 +156,7 @@ async def test_original_unsupported_operations_never_contact_the_game(tmp_path):
     )
     try:
         assert isinstance(env, Environment)
+        assert env.branch_provenance is None
         operations = [
             ("reset", "reset", lambda: env.reset(seed=1)),
             ("snapshot", "snapshot", env.snapshot),

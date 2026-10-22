@@ -1,9 +1,18 @@
 """Project-owned backend contract; contains no native or original-game imports."""
 
 from collections.abc import Awaitable
-from typing import Protocol, runtime_checkable
+from typing import Literal, Protocol, runtime_checkable
 
-from .contracts import Observation, StepResult
+from .contracts import Observation, StepResult, StrictModel
+
+
+class BranchProvenance(StrictModel):
+    """Controller metadata, deliberately separate from policy observations."""
+
+    branch_id: str
+    parent_branch_id: str | None = None
+    parent_decision_id: str | None = None
+    operation: Literal["root", "snapshot", "sample_world", "restore"] = "root"
 
 
 class UnsupportedCapability(ValueError):
@@ -36,6 +45,7 @@ class Environment(Protocol):
     encounter: str
     seed: int | None
     sequence: int
+    branch_provenance: BranchProvenance | None
 
     def observe(self) -> Observation: ...
     def step(
