@@ -22,6 +22,23 @@ VS Code Git 凭据服务连接被拒绝，GitHub 拒绝匿名写入。远程核�
 本次 Logo 和 README 尚未上传。已请用户在本机 Git 客户端恢复登录，未索取令牌。
 项目目标：**完成第一阶段**
 
+2026-10-23 用户补充确认：游戏已关闭；Windows 127.0.0.1:15526 和
+127.0.0.1:21526 均由同一 PID 44400 / Code.exe 监听。证据汇总在
+artifacts/windows/both-ports-owned-by-vscode.json，来源为用户 PowerShell 输出和
+明确的游戏关闭说明。21526 的占用者已知；具体转发条目、自动/手动/扩展来源仍待核对。
+下一步保持 21526 迁移方案，在实际远程 VS Code 窗口的工作区设置关闭
+remote.autoForwardPorts、remote.restoreForwardedPorts、remote.forwardOnOpen，
+再在 Ports 按本地转发地址停止 15526 和 21526 对应条目，确认端口释放后继续配置。
+仓库 .vscode/settings.json 已增加上述设置，范围仅为本项目工作区；若打开的是
+父目录或其他工作区，需要用户在实际窗口设置。已有转发不会因设置自动删除，
+扩展仍可显式建立转发；不能仅凭设置文件改动就声称 Windows 占用已经解除。
+本项目使用独立 SSH 隧道，上述设置不控制该隧道；未关闭其他转发、强杀进程、
+修改全局配置或重装 Mod。游戏配置当前内容仍未回传，迁移尚未执行，原版仍为 0/60。
+参考 Microsoft 官方 Remote SSH 文档与 remote.contribution.ts 设置定义，链接见
+README.txt。GitHub 认证仍无恢复证据，保留本地提交，不重复调用失败的凭据服务。
+本轮校验：工作区设置/状态 JSON、接入包生成与逐文件哈希、git diff --check 均通过。
+两个 PowerShell 脚本没有改动；不重复运行与本次配置/文档无关的测试。
+
 2026-10-23 换端口尝试反馈：用户运行上一轮提供的 PowerShell 配置代码，触发
 “21526 已被占用”保护检查并退出。按回传代码执行顺序，本次尚未读取、备份或写入
 STS2_MCP.conf，也没有由该代码重建隧道；不能记为已迁移到 21526。新监听者的

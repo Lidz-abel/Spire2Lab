@@ -95,6 +95,14 @@ Windows 桥接超时：检查端口拥有者（以下为默认 15526，换端口
   若仍有其他进程占用，或没有找到对应转发，保留进程信息和日志继续定位，不直接终止整个编辑器。
   .vscode/settings.json 对 15526/18526/21526 设置 onAutoForward=ignore，仅在以本项目为工作区时应用。
   它不会关闭已有、手动或恢复的转发，也不修改全局设置；当前冲突仍须按上面的步骤解除。
+  若换端口后仍由 Code.exe 占用，本项目使用独立 SSH 隧道，因此工作区设置也关闭
+  remote.autoForwardPorts、remote.restoreForwardedPorts、remote.forwardOnOpen。
+  如果 VS Code 打开的目录不是本项目，仓库设置未必生效：在实际远程窗口 Ctrl+,，
+  选择“工作区 / Workspace”，逐项搜索上述设置并取消勾选；不要覆盖整个设置文件。
+  再按 F1 执行 Ports: Focus on Ports View，停止两项冲突的本地转发并检查端口释放。
+  关闭自动转发不会删除已有条目，也不能阻止扩展显式建立转发；仍占用时检查其他
+  远程窗口的 Ports 条目。保留其他转发和独立 SSH 连接，不强制结束整个编辑器。
+  这些设置只控制 VS Code 的转发行为；独立 OpenSSH 隧道不由这些设置管理。
   VS Code 官方端口转发说明：https://code.visualstudio.com/docs/remote/ssh#_forwarding-a-port-creating-ssh-tunnel
   设置定义：https://github.com/microsoft/vscode/blob/main/src/vs/workbench/contrib/remote/common/remote.contribution.ts
 

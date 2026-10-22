@@ -39,7 +39,7 @@
       {
         "id": "P1-03",
         "title": "最小实机闭环",
-        "status": "bridge_installed_port_migration_aborted_21526_listener_owner_unknown",
+        "status": "game_closed_both_bridge_ports_owned_by_vscode_release_and_migration_pending",
         "depends_on": [
           "P1-01"
         ]
@@ -119,7 +119,7 @@
     "independent_backend_migration": "planned_not_implemented",
     "phase_one_scope": "existing_finite_scope_and_live_game_acceptance_preserved"
   },
-  "status": "awaiting_windows_alternate_port_owner_diagnostics",
+  "status": "awaiting_windows_vscode_forward_release",
   "requirements": {
     "versioned_semantic_protocol": "implemented_v0.2.0",
     "native_linux_simulator": "built_and_smoke_tested",
@@ -149,7 +149,7 @@
     "reference_candidate_generation": "declared_seed_public_and_private_opening_checks_no_search_no_state_overrides_component_tested_live_pending",
     "scoped_reference_acceptance_gate": "implemented_60_case_matrix_and_boundary_coverage_no_live_cases_available",
     "sampling_scaling_measurement": "nine_rounds_2700_episodes_44100_decisions_equal_public_trajectory_hashes_worker_cleanup_tested",
-    "windows_bridge_listener": "old_15526_code_exe_user_reported_21526_also_listening_owner_unknown_migration_aborted_before_config_write"
+    "windows_bridge_listener": "15526_and_21526_both_owned_by_code_exe_pid_44400_user_reported_game_closed_port_release_pending"
   },
   "evidence": {
     "local_tests": "artifacts/lab-tests.xml (47 passed, 1 existing dependency deprecation warning; 2026-10-22)",
@@ -182,13 +182,14 @@
     "post_restart_diagnostics": "artifacts/windows/restart-probe.json (both tunneled GETs timed out); user reported local requests timed out too; local-listener-timeout.json records listener 127.0.0.1:15526 owned by PID 44400 and explicit Proxy=null GET timeout; later owner identification is recorded in windows_port_conflict",
     "windows_port_conflict": "artifacts/windows/port-owner-conflict.json (user transcript: listener PID 44400 is Code.exe; Mod settings injection and game main menu logged, no HTTP startup line supplied; exact VS Code forwarding entry and bind error unverified)",
     "port_migration_tests": "artifacts/windows/port-migration-tests.xml (1 pytest harness passed; PowerShell 7.6.6 on Linux, mocked SSH/SCP/Steam; default/custom tunnel mappings, invalid/conflicting port rejection, installer and rollback preserve port config; not live Windows evidence)",
-    "port_migration_attempt": "artifacts/windows/port-migration-blocked.json (user PowerShell transcript: 21526 already listening; supplied script throws before reading, backing up or writing Mod config; PID/process identity and current config unknown)"
+    "port_migration_attempt": "artifacts/windows/port-migration-blocked.json (user PowerShell transcript: 21526 already listening; supplied script throws before reading, backing up or writing Mod config; PID/process identity and current config unknown)",
+    "both_bridge_port_owners": "artifacts/windows/both-ports-owned-by-vscode.json (user Windows transcript: 127.0.0.1 ports 15526 and 21526 both owned by Code.exe PID 44400; user confirms game is closed; exact forwarding entries and release not verified)"
   },
-  "next_external_step": "Collect Windows listeners on 15526 and 21526 with their current PID, process name and executable path; read current STS2_MCP.conf and confirm whether the game is closed. The attempted migration stopped before modifying the config. Identify the 21526 owner before releasing a specific forward or selecting another available port; do not assume the old Code.exe PID owns the new port.",
+  "next_external_step": "In the actual remote VS Code window workspace settings, disable remote.autoForwardPorts, remote.restoreForwardedPorts and remote.forwardOnOpen. In Ports view stop only entries whose local forwarded addresses use 15526 and 21526; check other remote windows if missing. Keep the game closed and verify Windows 21526 is free. Existing forwards are not deleted by settings and extensions can still explicitly forward. Then back up/update the Mod config and reconnect the independent SSH tunnel for 18526 -> 21526; config contents and live HTTP are still pending.",
   "completion_rule": "Do not mark complete until original-game behavior and declared supported scenario parity have been verified. Simulator-only tests do not prove local game parity.",
   "limitations": [
     "User reports main-menu v0.107.1 / 2026.06.18, matching the target; DLL metadata remains 0.1.0.0 and no runtime fingerprint-bound version capture has been obtained. Acceptance currently rejects the generic DLL version.",
-    "Bridge compilation, metadata checks and mocked port-migration tests passed; installation and partial Mod initialization are user-reported. The earlier 15526 listener belonged to Code.exe. Proposed 21526 is also occupied, owner unknown; migration script aborted before any config write. Current config, replacement tunnel and original-game state/action/result remain unverified.",
+    "Bridge compilation, metadata checks and mocked port-migration tests passed; installation and partial Mod initialization are user-reported. User confirms the game is closed and both 15526/21526 listeners belong to Code.exe PID 44400. Exact forwarding entries, port release, current Mod config, replacement tunnel and original-game state/action/result remain unverified.",
     "Comparison coverage excludes catalog-derived card values and hidden RNG; a matching finite trace never proves global game parity.",
     "Exact original/simulator initial state and RNG alignment still require implementation and live evidence.",
     "Reference replay checks one declared seed and refuses initial-state mismatches; no automatic original-game staging or RNG import is implemented."
@@ -206,6 +207,8 @@
     "new_tunnel_verified": false,
     "live_http_verified": false,
     "migration_attempt": "aborted_before_config_read_backup_or_write_due_to_21526_listener",
-    "new_port_owner": null
+    "new_port_owner": "Code.exe PID 44400 (user transcript)",
+    "game_closed_user_reported": true,
+    "conflicting_forwards_released": false
   }
 }

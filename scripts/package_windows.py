@@ -70,7 +70,11 @@ SSH 连接失败时：
    保留 Connect-Windows.ps1 窗口；确认 Windows 15526 已释放后，从 Steam 再启动游戏。
    不要将 Linux 18526 再转发到 Windows 15526。无需终止整个 VS Code 或反复重装 Mod。
    若没有找到对应转发，保留进程拥有者和启动日志继续定位。
-   仓库 .vscode/settings.json 仅排除桥接端口的自动转发，不关闭已有/恢复的转发。
+   仓库 .vscode/settings.json 为本项目工作区关闭自动/恢复/点击链接转发，不删除已有条目。
+   若 15526 和新端口都被 Code.exe 占用，在实际远程窗口的工作区设置中关闭
+   remote.autoForwardPorts、remote.restoreForwardedPorts、remote.forwardOnOpen，
+   然后在 Ports 面板停止冲突的本地转发；若打开的不是项目目录，仓库设置未必生效。
+   关闭自动转发不删除已有条目，也不阻止扩展显式转发。独立 SSH 隧道不受这些设置控制。
 
 完整说明：README.txt；验收状态：PHASE1-STATUS.json。
 两个脚本必须使用同一个服务器、项目绝对路径与端口。SSH 隧道只监听两台电脑的 loopback 地址。
