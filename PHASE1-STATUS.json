@@ -64,7 +64,7 @@
       {
         "id": "P1-06",
         "title": "搜索训练接口与复现能力验收",
-        "status": "scaling_and_reproducibility_measured_fresh_install_pending",
+        "status": "scaling_and_same_host_fresh_checkout_verified_remaining_scope_audit_pending",
         "depends_on": [
           "P1-02"
         ]
@@ -142,7 +142,7 @@
     "native_atomic_publish": "staged_binary_replacement_exercised",
     "windows_install_script": "configurable_checkout_hash_refusal_license_and_build_install_rollback_mock_tested_not_executed_on_windows",
     "pinned_source_integrity": "archive_hash_and_1417_source_files_verified_build_and_first_load_guarded",
-    "bootstrap": "current_workspace_install_verify_build_test_completed",
+    "bootstrap": "fresh_checkout_fresh_dependencies_and_native_build_verified_on_same_linux_host_independent_machine_pending",
     "native_build_history": "previous_binary_and_manifest_archive_verified",
     "unknown_action_archive": "tested_and_browser_verified_no_game_action_or_fabricated_outcome",
     "reference_candidate_generation": "declared_seed_public_and_private_opening_checks_no_search_no_state_overrides_component_tested_live_pending",
@@ -163,7 +163,9 @@
     "readme_branding": "artifacts/branding/structure-check.json and readme-render-check.json (3 SVGs, 30 local links/anchors, 4 local theme/viewport previews; not GitHub-hosted rendering)",
     "readme_example": "artifacts/branding/python-example.txt (one real native simulator action, verified 2026-10-22)",
     "sampling_benchmark": "artifacts/sampling-development.json (1/2/4 workers, 3 repeats, 300 episodes per round; source and hardware recorded; simulator only)",
-    "windows_script_checks": "tests/windows_scripts.ps1 via tests/test_windows_scripts.py (PowerShell 7.6.6 on Linux; synthetic files and mocked SSH/SCP/Steam; not Windows execution)"
+    "windows_script_checks": "tests/windows_scripts.ps1 via tests/test_windows_scripts.py (PowerShell 7.6.6 on Linux; synthetic files and mocked SSH/SCP/Steam; not Windows execution)",
+    "fresh_checkout": "artifacts/repro-check.json and artifacts/repro-bootstrap.log (commit a2c29eb; 46 passed, 1 optional PowerShell skip; 60 public trajectories match original build; same host only)",
+    "dashboard_health": "artifacts/dashboard-health.json (loopback 8765 serving, original_game_verified false, checked 2026-10-22)"
   },
   "next_external_step": "Run scripts/Connect-Windows.ps1 on the Windows Steam PC with -Server, -RemoteRoot (actual Linux checkout path), and -SshPort; transfer version evidence and reference DLLs and keep the SSH tunnel open.",
   "completion_rule": "Do not mark complete until original-game behavior and declared supported scenario parity have been verified. Simulator-only tests do not prove local game parity.",

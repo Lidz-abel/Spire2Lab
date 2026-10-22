@@ -22,6 +22,9 @@ VS Code Git 凭据服务连接被拒绝，GitHub 拒绝匿名写入。远程核�
 本次 Logo 和 README 尚未上传。已请用户在本机 Git 客户端恢复登录，未索取令牌。
 项目目标：**完成第一阶段**
 
+最新第一阶段代码提交：`a2c29eb`（进程采样测量与 Windows 接入改进）。推送仍因
+GitHub 凭据服务连接失败退出 128，尚未上传；不能把本地检出验证当作远程已更新。
+
 当前实施工作（2026-10-22，用户要求继续第一阶段）：Windows report 和桥接隧道仍缺失，
 原版验收仍为 0/60。已完成可独立推进的进程采样测量和 Windows 接入脚本改进：
 
@@ -36,7 +39,15 @@ VS Code Git 凭据服务连接被拒绝，GitHub 拒绝匿名写入。远程核�
   PowerShell 7.6.6 在 Linux 上以合成文件、模拟 SSH/SCP/Steam 测试路径、连接失败、
   非法路径、指纹拒绝、成功安装和回滚。Windows 实机执行仍待确认。
 - 接入 ZIP 已重新生成；必须使用本轮版本并给两个脚本传相同服务器、项目路径和端口。
-- 完整项目测试：47 passed（1 项现有依赖弃用警告）；新目录安装复现接下来独立验证。
+- 完整项目测试：47 passed（1 项现有依赖弃用警告）。
+- 新目录复现已通过：本机另行检出 `a2c29eb`，新建 venv、下载依赖和源码、隔离
+  Python/NuGet/SDK 缓存、重新编译 NativeAOT，bootstrap 得到 46 passed / 1 skipped。
+  跳过项为新目录没有安装可选 PowerShell 的模拟脚本测试；原工作区该测试已通过。
+  新旧二进制哈希不同，但 60 个固定用例的公开逐步轨迹一致，测量源码哈希相同。
+  证据：`artifacts/repro-check.json` 与 `artifacts/repro-bootstrap.log`。这是同一机器
+  的全新检出验证，未证明另一台机器/系统兼容性；保留上游编译警告与依赖弃用警告。
+- 主工作区面板已启动，当前 PID 4055089、监听 127.0.0.1:8765；健康检查
+  `artifacts/dashboard-health.json` 显示原版未验证。接手时重新检查进程，不依赖旧 PID。
 
 为本轮增加的 `sampling.py` 先定义了固定工作量、信息边界、测量口径和进程退出用例，
 再使用 Python 标准库实现；规则仍经原有适配器执行，未替换上游引擎或 Mod。
@@ -141,6 +152,7 @@ Spire2Lab 面向《杀戮尖塔 2》的自主强化学习研究，目标是支�
 | 合成原版接口面板检查 | 5 passed | `artifacts/original-dashboard-synthetic/report.json` |
 | 开发集模拟器基准 | 60 episodes / 980 decisions | `artifacts/benchmark-development.json` |
 | 进程采样测量 | 9 rounds / 2,700 episodes / 44,100 decisions | `artifacts/sampling-development.json`；对应轨迹一致，含硬件与计时边界 |
+| 全新检出安装 | 46 passed / 1 optional skip；60 条公开轨迹一致 | `artifacts/repro-check.json`；同一 Linux 主机，新依赖和新二进制 |
 | 验收矩阵 | incomplete | Windows report 缺失，60 条原版 case 全部缺失 |
 | 原版实机 | 未验证 | 尚无 Windows DLL、Mod 编译运行和真实捕获 |
 
@@ -250,4 +262,4 @@ git status --short
 | 2026-10-22 | 用户明确要求 | 平台尽可能原创，允许参考开源实现 | 本轮记录原创原则、O-01 至 O-05 迁移计划及 `AGENTS.md`；独立引擎/Mod 尚未实现；第一阶段仍待 Windows 实机输入 |
 | 2026-10-22 | 用户重新规划 | 按三个阶段推进，准备完成第一阶段；再次提供 `.git` 仓库地址 | `three-stage-v1`；P1-01 至 P1-08 明确任务/证据/依赖；当前仍为 0/60 原版参考；远程只读检查为 `0a5c869`，不代表写入认证恢复 |
 | 2026-10-22 | 用户品牌与文档要求 | 持久记录完整 README 设计标准；优先原创尖塔 Logo、当前 README 与 GitHub 上传 | `PROJECT-IDENTITY.md` 保存验收清单；新增三份 SVG，README 按真实实现重组；核心代码与实机验收状态不变 |
-| 2026-10-22 | 用户继续第一阶段 | 推进环境建设与验收 | 新增 1/2/4 进程采样测量与一致性检查；Windows 脚本支持指定目录并保留安装来源；47 项测试通过；原版仍为 0/60 |
+| 2026-10-22 | 用户继续第一阶段 | 推进环境建设与验收 | `a2c29eb`：新增 1/2/4 进程采样测量；Windows 脚本支持指定目录并保留安装来源；47 项测试通过；同机全新检出安装与 60 用例复现通过；面板已启动；原版仍为 0/60，推送仍待认证 |
