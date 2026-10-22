@@ -30,6 +30,8 @@ Windows 接入
      DLL 仅保存在被 Git 忽略的 artifacts/windows/assemblies，不发布、不进入项目源码。
      隧道：Windows 127.0.0.1:8765 -> Linux 127.0.0.1:8765。
      反向隧道：Linux 127.0.0.1:18526 -> Windows 127.0.0.1:15526。
+     默认游戏端口为 15526；若已修改 Mod 配置，追加 -GameBridgePort 21526（或实际端口）。
+     此参数只改变 SSH 目标，不修改 Mod 配置；Linux 18526 和面板 8765 保持原值。
      保持脚本窗口打开，即可在 Windows 浏览器访问面板。
   2. Linux 核对实际版本后构建：
      .venv/bin/python scripts/build_bridge.py
@@ -57,7 +59,26 @@ Windows 接入
 安装器会备份已有文件并在复制失败时尝试恢复。用户已回传 Windows 安装成功输出；
 实机 Mod 加载与状态接口仍待确认，失败回滚目前仅有模拟测试证据。
 
-Windows 桥接超时：检查端口拥有者
+现有 Windows 安装改用 21526
+  本轮用 21526 避开此前 Code.exe 占用的 15526；尚需 Windows 检查和实际 HTTP 验证。
+  1. 正常退出游戏，在原 Connect-Windows.ps1 窗口按 Ctrl+C 关闭旧隧道。
+  2. 在 Windows PowerShell 检查：
+       Get-NetTCPConnection -LocalPort 21526 -State Listen -ErrorAction SilentlyContinue
+     有监听者时先停止，不覆盖其他服务；换一个空闲端口并同步下方配置和 SSH 目标。
+     没有监听者后，在游戏目录 mods/STS2_MCP 下备份 STS2_MCP.conf，再将其中整数 port
+     改成 21526。文件为 UTF-8 JSON，例如 {"port":21526}；已有其他属性保留。
+     此文件由已安装 Mod 的 LoadPort 在启动时读取，无需重新编译或重新安装 DLL。
+  3. 从 Steam 重启游戏，停留主菜单，在 Windows 验证：
+       & "$env:SystemRoot\System32\curl.exe" --noproxy "*" --max-time 5 "http://127.0.0.1:21526/"
+       & "$env:SystemRoot\System32\curl.exe" --noproxy "*" --max-time 5 "http://127.0.0.1:21526/api/v1/singleplayer"
+  4. 用独立 PowerShell 窗口重建隧道（替换 SSH 目标及端口，保持窗口打开）：
+       ssh -N -p 22 -o ExitOnForwardFailure=yes -o ServerAliveInterval=30 -o ServerAliveCountMax=3 -L 127.0.0.1:8765:127.0.0.1:8765 -R 127.0.0.1:18526:127.0.0.1:21526 用户@服务器
+     该命令适用于已上传并安装的环境，不重新上传或覆盖版本报告。旧版接入脚本仍指向
+     15526，不要用它重新连接。以后使用更新后的脚本时须显式传 -GameBridgePort 21526。
+     若 SSH 报端口绑定失败，检查旧隧道是否已关闭；不要把新隧道失败当作成功连接。
+     恢复旧端口时先关闭游戏与隧道，恢复配置备份，并将 SSH 目标端口同步恢复。
+
+Windows 桥接超时：检查端口拥有者（以下为默认 15526，换端口后使用实际号码）
   Windows 15526 应供游戏桥接使用；Linux 18526 由 Connect-Windows.ps1 反向转发到它。
   在 Windows PowerShell 检查监听者：
     Get-NetTCPConnection -LocalPort 15526 -State Listen -ErrorAction SilentlyContinue | Select-Object LocalAddress,LocalPort,OwningProcess
@@ -72,7 +93,7 @@ Windows 桥接超时：检查端口拥有者
   不要把 Linux 18526 再转发到 Windows 15526；这会指回原来的桥接目的端口。
   Mod 的设置项出现，只说明部分初始化执行；须看到 HTTP 响应才算接口连通。
   若仍有其他进程占用，或没有找到对应转发，保留进程信息和日志继续定位，不直接终止整个编辑器。
-  .vscode/settings.json 对 15526/18526 设置 onAutoForward=ignore，仅在以本项目为工作区时应用。
+  .vscode/settings.json 对 15526/18526/21526 设置 onAutoForward=ignore，仅在以本项目为工作区时应用。
   它不会关闭已有、手动或恢复的转发，也不修改全局设置；当前冲突仍须按上面的步骤解除。
   VS Code 官方端口转发说明：https://code.visualstudio.com/docs/remote/ssh#_forwarding-a-port-creating-ssh-tunnel
   设置定义：https://github.com/microsoft/vscode/blob/main/src/vs/workbench/contrib/remote/common/remote.contribution.ts

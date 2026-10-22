@@ -1,6 +1,6 @@
 # Spire2Lab 项目转接文档
 
-更新时间：2026-10-22
+更新时间：2026-10-23
 
 项目地址：<https://github.com/Lidz-abel/Spire2Lab>
 
@@ -21,6 +21,23 @@ VS Code Git 凭据服务连接被拒绝，GitHub 返回 `No anonymous write acce
 VS Code Git 凭据服务连接被拒绝，GitHub 拒绝匿名写入。远程核对仍为 `0a5c869`；
 本次 Logo 和 README 尚未上传。已请用户在本机 Git 客户端恢复登录，未索取令牌。
 项目目标：**完成第一阶段**
+
+2026-10-23 用户选择换端口：采用 Windows 游戏端口 21526，Linux 桥接入口保持
+18526、面板保持 8765。此前“先解除 VS Code 的 15526 占用”不再是本轮必要前置，
+但新端口是否空闲须由 Windows 实测；不能将端口迁移规划记为已经修复。
+已核对实际编译输入 .tools/bridge-src/McpMod.cs：LoadPort 读取 Mod 同目录的
+STS2_MCP.conf，JSON 整数属性 port 可配置；不需要改 DLL 或重新安装。独立 SSH
+隧道须同步改为 Linux 18526 -> Windows 21526，旧隧道由用户 Ctrl+C 正常关闭。
+Connect-Windows.ps1 增加 -GameBridgePort，默认 15526 保持现有安装兼容；拒绝
+越界端口和与本地面板冲突的 8765。该参数只改 SSH 目标，不修改游戏配置。
+项目设置排除 21526 自动转发，README.txt 与接入包新增迁移和恢复步骤。为当前已
+上传/已安装环境提供直接 SSH 命令，不要求重传 DLL，也不覆盖原始版本报告。
+尚待用户关闭游戏、检查新端口、备份/修改配置、重启及重建隧道，再读 HTTP 状态。
+仍无原版状态或战斗证据，参考集 0/60；GitHub 认证阻塞尚无恢复证据。
+验证：tests/test_windows_scripts.py 通过（1 个 pytest 包装测试；PowerShell 在
+Linux 模拟 SSH/SCP/Steam），覆盖默认/自定义转发、非法/冲突端口拒绝、安装与失败
+回滚保留端口配置。证据 artifacts/windows/port-migration-tests.xml。接入 ZIP 已
+重建并校验文件内容；JSON 和 git diff --check 通过。未重跑不相关的模拟器测试。
 
 2026-10-22 端口拥有者已确认：用户回传 Win32_Process 显示 PID 44400 为 Code.exe，
 与此前 Windows 127.0.0.1:15526 的监听 PID 一致；这是当前明确的端口冲突。

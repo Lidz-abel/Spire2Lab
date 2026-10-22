@@ -7,6 +7,10 @@
     "18526": {
       "label": "Spire2Lab bridge via Connect-Windows.ps1",
       "onAutoForward": "ignore"
+    },
+    "21526": {
+      "label": "Spire2Lab alternate Windows game bridge",
+      "onAutoForward": "ignore"
     }
   }
 }

@@ -27,6 +27,8 @@ files["START-HERE.txt"] = """STS2 Lab Windows 接入包
    若 SSH 目标是配置文件中的别名，仍须提供其实际端口；当前脚本显式使用端口参数。
    不需要在聊天中提供密码或私钥。首次 SSH 信任与登录由本机 OpenSSH 处理。
    若无法发现游戏，追加 -GameDir "D:\\SteamLibrary\\steamapps\\common\\Slay the Spire 2"。
+   若已将 Mod 的 STS2_MCP.conf 中 port 改成 21526，追加 -GameBridgePort 21526。
+   此参数只调整隧道目标，不替你修改 Mod 配置；默认仍为 15526，Linux 入口仍为 18526。
 3. 脚本读取 Steam 构建信息和文件指纹，把三个编译引用 DLL 传到你的 Linux 服务器。
    它不会安装 Mod，也不会修改存档。保持窗口打开以维持 SSH 隧道。
 4. Linux 端收到文件后，由构建流程核对实际版本并生成桥接 Mod。
@@ -49,7 +51,17 @@ SSH 连接失败时：
    exit 255 是 SSH 失败；exit 20 是远程项目文件缺失；exit 21 是远程目录创建失败。
    本地版本报告保存在 $env:TEMP\\sts2-lab-windows-report.json，失败时仍保留。
 
-本机桥接 15526 超时且监听者为 Code.exe 时：
+已安装的 Mod 改用其他端口（例如 21526）：
+   先关闭游戏，在旧接入窗口按 Ctrl+C 关闭隧道；检查 Windows 新端口没有监听者。
+   备份游戏目录 mods\\STS2_MCP\\STS2_MCP.conf，将 JSON 中整数 port 改成 21526，保留其他属性。
+   若没有配置文件，在上述已安装 Mod 目录创建 UTF-8 JSON 文件，内容为 {"port":21526}。
+   从 Steam 重启，先验证 http://127.0.0.1:21526/ 和 /api/v1/singleplayer。
+   已完成上传/安装时，可直接重建隧道，避免再次上传版本报告：
+   ssh -N -p 端口 -o ExitOnForwardFailure=yes -o ServerAliveInterval=30 -o ServerAliveCountMax=3 -L 127.0.0.1:8765:127.0.0.1:8765 -R 127.0.0.1:18526:127.0.0.1:21526 用户@服务器
+   后续使用此版 Connect-Windows.ps1 时须传 -GameBridgePort 21526；旧版脚本不支持该参数。
+   修改配置无需重编译 Mod，实际连通性仍需本机和服务器 HTTP 验证。
+
+默认端口 15526 超时且监听者为 Code.exe 时（也可按上面的方法换端口）：
    Windows 15526 供游戏桥接使用；Linux 18526 通过独立 SSH 隧道指向它。
    在退出游戏前保留 godot.log 中的 [STS2 MCP] 启动成功/失败信息。
    日志位于 $env:APPDATA\\SlayTheSpire2\\logs\\godot.log，启动信息可能不在文件末尾。

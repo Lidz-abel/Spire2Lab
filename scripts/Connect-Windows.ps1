@@ -3,17 +3,20 @@ Run on the Windows PC that owns the Steam installation.
 Reads build information and copies three reference DLLs to the user's Linux server,
 then opens loopback-only SSH tunnels. Does not change saves or install a game mod.
 Example: .\Connect-Windows.ps1 -Server user@server -RemoteRoot /srv/Spire2Lab -SshPort 22
+Use -GameBridgePort to match the port in the installed mod's STS2_MCP.conf.
 #>
 [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true)][ValidatePattern('^[a-zA-Z0-9_.@:\[\]-]+$')][string]$Server,
     [Parameter(Mandatory=$true)][ValidatePattern('^/[a-zA-Z0-9_][a-zA-Z0-9_./-]*$')][string]$RemoteRoot,
     [ValidateRange(1,65535)][int]$SshPort = 22,
+    [ValidateRange(1,65535)][int]$GameBridgePort = 15526,
     [string]$GameDir = '',
     [switch]$SkipAssemblyCopy
 )
 $ErrorActionPreference = 'Stop'
 if ($Server.StartsWith('-')) { throw 'Server must be an SSH hostname or user@hostname.' }
+if ($GameBridgePort -eq 8765) { throw 'GameBridgePort 8765 conflicts with the local dashboard tunnel. Choose another game bridge port.' }
 $RemoteRoot = $RemoteRoot.TrimEnd('/')
 foreach ($Tool in @('ssh','scp')) { if (-not (Get-Command $Tool -ErrorAction SilentlyContinue)) { throw "Windows OpenSSH client is required: $Tool was not found." } }
 
@@ -96,6 +99,7 @@ if (-not $SkipAssemblyCopy) {
 Write-Host ''
 Write-Host 'Keep this window open. Dashboard: http://127.0.0.1:8765'
 Write-Host 'The game bridge will be available on the server at 127.0.0.1:18526 after the mod is installed.'
+Write-Host "Forwarding to Windows 127.0.0.1:$GameBridgePort. The port in STS2_MCP.conf must match; this script does not change it."
 Write-Host 'Press Ctrl+C to close the tunnel. Game saves have not been changed.'
-& ssh -N -p $SshPort -o ExitOnForwardFailure=yes -o ServerAliveInterval=30 -o ServerAliveCountMax=3 -L '127.0.0.1:8765:127.0.0.1:8765' -R '127.0.0.1:18526:127.0.0.1:15526' $Server
+& ssh -N -p $SshPort -o ExitOnForwardFailure=yes -o ServerAliveInterval=30 -o ServerAliveCountMax=3 -L '127.0.0.1:8765:127.0.0.1:8765' -R "127.0.0.1:18526:127.0.0.1:$GameBridgePort" $Server
 if ($LASTEXITCODE -ne 0) { throw 'SSH tunnel ended with an error; inspect the SSH message above.' }

@@ -74,6 +74,20 @@ foreach ($Call in @($global:SpireTestCalls | Where-Object tool -eq 'scp')) {
 }
 Assert-True ($global:SpireTestCalls[-1].arguments -contains '127.0.0.1:18526:127.0.0.1:15526') 'Reverse tunnel must stay loopback only'
 
+$global:SpireTestCalls.Clear()
+$CustomPort = $Options.Clone()
+$CustomPort.GameBridgePort = 21526
+& $Connect @CustomPort -SkipAssemblyCopy
+Assert-True ($global:SpireTestCalls.Count -eq 3) 'SkipAssemblyCopy must keep only preflight, report upload and tunnel'
+Assert-True ($global:SpireTestCalls[-1].arguments -contains '127.0.0.1:18526:127.0.0.1:21526') 'Custom game port not used by reverse tunnel'
+Assert-True ($global:SpireTestCalls[-1].arguments -contains '127.0.0.1:8765:127.0.0.1:8765') 'Custom game port changed dashboard tunnel'
+foreach ($InvalidPort in @(0,65536,8765)) {
+    $global:SpireTestCalls.Clear()
+    $CustomPort.GameBridgePort = $InvalidPort
+    Assert-Throws { & $Connect @CustomPort }
+    Assert-True ($global:SpireTestCalls.Count -eq 0) 'Invalid or conflicting game port reached SSH'
+}
+
 foreach ($Failure in @(
     @{code=255; message='SSH failed (exit 255)'},
     @{code=20; message='Remote checkout files are missing (exit 20)'},
@@ -96,6 +110,8 @@ Assert-True ($global:SpireTestCalls.Count -eq 0) 'Invalid path reached SSH'
 $Target = Join-Path $GameDir 'mods/STS2_MCP'
 New-Item -ItemType Directory -Force -Path $Target | Out-Null
 Set-Content (Join-Path $Target 'STS2_MCP.dll') 'previous mod'
+Set-Content (Join-Path $Target 'STS2_MCP.conf') '{"port":21526}'
+$ConfigHash = (Get-FileHash (Join-Path $Target 'STS2_MCP.conf')).Hash
 foreach ($Name in @('STS2_MCP.dll','mod_manifest.json','LICENSE.txt')) {
     Set-Content (Join-Path $FakeRemote $Name) "synthetic package $Name"
 }
@@ -115,6 +131,7 @@ foreach ($Name in @('STS2_MCP.dll','mod_manifest.json','LICENSE.txt','build.json
     Assert-True ((Get-FileHash (Join-Path $Target $Name)).Hash -eq (Get-FileHash (Join-Path $FakeRemote $Name)).Hash) "Installation lost $Name"
 }
 Assert-True (@($global:SpireTestCalls | Where-Object tool -eq 'start').Count -eq 1) 'Successful installation did not launch Steam'
+Assert-True ((Get-FileHash (Join-Path $Target 'STS2_MCP.conf')).Hash -eq $ConfigHash) 'Installation overwrote custom port configuration'
 foreach ($Call in @($global:SpireTestCalls | Where-Object { $_.tool -eq 'scp' -and $_.arguments[-2].StartsWith('tester@host:') })) {
     Assert-True ($Call.arguments[-2].StartsWith('tester@host:/srv/relocated/Spire2Lab/artifacts/windows/mod/')) 'Download ignored RemoteRoot'
 }
@@ -132,4 +149,5 @@ foreach ($Name in $Before.Keys) {
     Assert-True ((Get-FileHash (Join-Path $Target $Name)).Hash -eq $Before[$Name]) "Rollback did not restore $Name"
 }
 Assert-True (@($global:SpireTestCalls | Where-Object tool -eq 'start').Count -eq 1) 'Failed installation launched Steam'
-Write-Output 'PASS: relocated checkout, SSH failure classification and local report retention, unsafe path, hash refusal, install provenance, rollback'
+Assert-True ((Get-FileHash (Join-Path $Target 'STS2_MCP.conf')).Hash -eq $ConfigHash) 'Rollback overwrote custom port configuration'
+Write-Output 'PASS: relocated checkout, custom game port, invalid port rejection, SSH failure classification and local report retention, unsafe path, hash refusal, install provenance, rollback, preserved port configuration'
