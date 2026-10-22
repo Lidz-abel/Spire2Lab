@@ -22,6 +22,24 @@ VS Code Git 凭据服务连接被拒绝，GitHub 拒绝匿名写入。远程核�
 本次 Logo 和 README 尚未上传。已请用户在本机 Git 客户端恢复登录，未索取令牌。
 项目目标：**完成第一阶段所有的内容**（用户于本轮重新设为 active；当前未完成）
 
+2026-10-23 后端接口继续推进：场景初始化里程碑已提交为 650f3a4（仍未推送）。
+等待 Windows 安装期间新增 docs/ENVIRONMENT-CONTRACT.md，定义本项目 Environment
+协议、统一同步/异步 step 调用及可选能力拒绝。模拟器 reset 成功创建新状态后才释放
+原状态，错误种子/遭遇保持原状态；原版 reset/snapshot/restore/sample_world 明确
+拒绝且不发 HTTP。针对性 33 项及完整回归 100 项通过，各 1 项既有依赖警告，证据
+artifacts/environment-contract-tests.xml 和 environment-contract-regression-tests.xml。
+未更改 C# 扩展或已通知用户安装的 Mod；其构建指纹继续有效。
+P1-02 边界审阅还发现 Card.native_id 暴露上游编号、gym_env.py 读取 sim.names，
+下一步须建立内容词表并版本化迁移观测/训练编码；本任务尚未全部完成。
+面板旧进程已正常停止，原暂停模拟器会话先归档保留，未向 Windows 发送动作；
+新服务 PID 109135 / exec session 94569 在 8765 正常工作，加载 650f3a4 版本。
+旧轨迹最后事件为 session_archived；检查器最初误期望 session_closed，已核对源码
+语义并在 dashboard-restart-20261022T175710789348.json 记录更正及实际证据。
+新生命周期改动尚需在下一次实际实验前重启面板加载，不必为等待安装反复重启。
+最新 staging-install-check-20261022T175804953650.json 仍读到旧 Mod/原第 1 层战斗；
+无用户安装反馈，未调用 lab_prepare。先完成此接口提交，再可独立推进内容边界，
+实机初始化必须等新 Mod 的运行指纹匹配。阶段 1 仍未完成，0/60 原版参考场次。
+
 2026-10-23 场景初始化交付前检查通过：57 项针对性检查及 92 项完整回归测试通过，
 各有 1 项既有 Starlette/httpx 弃用警告；证据为 artifacts/windows/ 下
 scenario-component-tests.xml、scenario-regression-tests.xml。C# 测试独立编译生产

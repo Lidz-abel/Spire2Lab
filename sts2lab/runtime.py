@@ -9,6 +9,7 @@ import uuid
 
 from .bridge import OutcomeUnknown
 from .contracts import StepRequest, digest, semantic_state
+from .environment import Environment
 from .original import OriginalEnvironment
 from .policies import Policy
 from .simulator import Simulator, CONFIG, ROOT
@@ -24,7 +25,8 @@ class Lab:
         self.data_dir = Path(data_dir or ROOT / "artifacts/runs")
         self.original_factory = original_factory or OriginalEnvironment.attach
         self.lock = asyncio.Lock()
-        self.env = self.trace = None
+        self.env: Environment | None = None
+        self.trace = None
         self.status = "idle"
         self.revision = 0
         self.cache = OrderedDict()
@@ -205,12 +207,9 @@ class Lab:
             self.status, self.error = "executing", None
             self.revision += 1
             try:
-                if self.metadata["backend"] == "original_game":
-                    result = await self.env.step(
-                        action_id, req.decision_id, request_id=req.request_id
-                    )
-                else:
-                    result = self.env.step(action_id, req.decision_id)
+                result = await await_if_needed(
+                    self.env.step(action_id, req.decision_id, request_id=req.request_id)
+                )
                 return self._complete(result)
             except Exception as exc:
                 self._failure(exc)

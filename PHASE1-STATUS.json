@@ -33,7 +33,7 @@
       {
         "id": "P1-02",
         "title": "自主平台核心与可替换环境接口",
-        "status": "partially_implemented_boundary_review_pending",
+        "status": "shared_lifecycle_contract_tested_upstream_numeric_content_encoding_boundary_pending",
         "depends_on": []
       },
       {
@@ -154,7 +154,9 @@
     "windows_main_menu_state": "verified_then_progressed_to_profile2_floor1_combat_with_one_defend_action",
     "readonly_bridge_check": "implemented_live_main_menu_passed_synthetic_failure_tests_passed_no_combat_actions",
     "original_release_binding": "release_info_exact_version_commit_prefix_sha1_int32_compatibility_hash_and_full_dll_sha256_verified",
-    "controlled_scenario_staging": "mod_compiled_client_contract_and_journal_recovery_synthetic_tests_passed_windows_installation_and_live_validation_pending"
+    "controlled_scenario_staging": "mod_compiled_client_contract_and_journal_recovery_synthetic_tests_passed_windows_installation_and_live_validation_pending",
+    "shared_environment_contract": "observe_step_close_and_optional_operations_declared_native_reset_and_no_io_original_refusals_tested",
+    "content_encoding_boundary": "upstream_card_native_id_and_gym_name_table_coupling_identified_versioned_vocabulary_migration_pending"
   },
   "evidence": {
     "local_tests": "artifacts/lab-tests.xml (47 passed, 1 existing dependency deprecation warning; 2026-10-22)",
@@ -207,7 +209,11 @@
     "scenario_staging_failed_builds": "artifacts/windows/scenario-build-1.log and scenario-build-2.log (retained failed compilation attempts before the successful third build)",
     "scenario_staging_component_tests": "artifacts/windows/scenario-component-tests.xml (57 passed, 1 existing dependency warning; includes synthetic transport, recovery, provenance and compiled C# input contract checks)",
     "scenario_staging_regression_tests": "artifacts/windows/scenario-regression-tests.xml (92 passed, 1 existing dependency warning; no additional original-game gameplay evidence)",
-    "scenario_staging_preinstall": "artifacts/windows/staging-preinstall-20261022T174839985791.json (live read-only GET: old Mod has no new fingerprint/capability, floor-1 battle still active; installer steps sent to user)"
+    "scenario_staging_preinstall": "artifacts/windows/staging-preinstall-20261022T174839985791.json (live read-only GET: old Mod has no new fingerprint/capability, floor-1 battle still active; installer steps sent to user)",
+    "environment_contract_tests": "artifacts/environment-contract-tests.xml (33 passed, 1 existing dependency warning; real native reset/branch preservation and synthetic no-I/O original capability refusal)",
+    "environment_contract_regression": "artifacts/environment-contract-regression-tests.xml (100 passed, 1 existing dependency warning; no new live gameplay evidence)",
+    "dashboard_service_reload": "artifacts/windows/dashboard-restart-20261022T175710789348.json (healthy paused simulator after restart; previous native session archived without game action; this service loaded commit 650f3a4 before later lifecycle edits)",
+    "staging_install_recheck": "artifacts/windows/staging-install-check-20261022T175804953650.json (live GET still reports old Mod and existing battle; no lab_prepare sent)"
   },
   "next_external_step": "Installer instructions sent: close Windows game, keep SSH tunnel, run existing Install-Windows-Mod.ps1, restart through Steam and stay at main menu. After installation verify running Mod SHA-256 and experiment profile 2, then run one controlled floor-2 setup. No additional reference upload needed. Last observed floor-1 Defend probe remains excluded from the reference matrix.",
   "completion_rule": "Do not mark complete until original-game behavior and declared supported scenario parity have been verified. Simulator-only tests do not prove local game parity.",

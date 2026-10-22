@@ -89,6 +89,9 @@ def load_native():
 class Simulator:
     backend = "native_simulator"
     capabilities = {
+        "observe": True,
+        "step": True,
+        "close": True,
         "reset": True,
         "snapshot": True,
         "restore": True,
@@ -99,7 +102,7 @@ class Simulator:
     def __init__(self, encounter="nibbits-weak", seed=1):
         if encounter not in CONFIG["encounters"]:
             raise ValueError("Encounter is outside the phase-one support inventory")
-        if not 0 <= seed < 2**31:
+        if type(seed) is not int or not 0 <= seed < 2**31:
             raise ValueError("Seed must be in [0, 2**31)")
         with LOCK:
             self.native, self.names, self.manifest = load_native()
@@ -268,7 +271,24 @@ class Simulator:
                 outcome=outcome,
             )
 
-    def step(self, action_id, decision_id):
+    def reset(self, *, encounter=None, seed=None):
+        """Replace initial state only after successful construction and observation."""
+        with LOCK:
+            replacement = Simulator(
+                self.encounter if encounter is None else encounter,
+                self.seed if seed is None else seed,
+            )
+            try:
+                observation = replacement.observe()
+            except BaseException:
+                replacement.close()
+                raise
+            self.close()
+            self.__dict__.update(replacement.__dict__)
+            replacement.handle = -1
+            return observation
+
+    def step(self, action_id, decision_id, *, request_id=None):
         with LOCK:
             before = self.observe()
             if decision_id != before.decision_id:
@@ -333,7 +353,7 @@ class Simulator:
 
     def sample_world(self, search_seed):
         """Search entry point. Always resamples the hidden state."""
-        if not 0 <= search_seed < 2**31:
+        if type(search_seed) is not int or not 0 <= search_seed < 2**31:
             raise ValueError("Search seed must be in [0, 2**31)")
         return self._fork(resample_seed=search_seed)
 

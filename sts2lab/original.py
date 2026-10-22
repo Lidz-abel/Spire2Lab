@@ -15,6 +15,7 @@ import re
 import uuid
 
 from .bridge import BridgeClient, BridgeError, OutcomeUnknown
+from .environment import UnsupportedOperations
 from .catalog import catalog
 from .contracts import (
     Action,
@@ -360,9 +361,12 @@ def verify_scope(raw, encounter, *, opening):
             )
 
 
-class OriginalEnvironment:
+class OriginalEnvironment(UnsupportedOperations):
     backend = "original_game"
     capabilities = {
+        "observe": True,
+        "step": True,
+        "close": True,
         "reset": False,
         "snapshot": False,
         "restore": False,

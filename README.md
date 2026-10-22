@@ -36,7 +36,7 @@ The immediate goal is a trustworthy environment for later work on search, hierar
 
 | Capability | Implementation |
 | --- | --- |
-| **Semantic environment** | Typed observations, decision-scoped card/enemy references, legal actions, and versioned step results. Policies receive player-visible information. |
+| **Semantic environment** | Typed observations, decision-scoped card/enemy references, legal actions, and versioned step results. A shared [backend contract](docs/ENVIRONMENT-CONTRACT.md) defines supported operations and explicit refusals. |
 | **Live decision inspection** | Single-step and automatic execution, pause, manual overrides, candidate scores with their meaning, and recorded trajectory replay. The current dashboard is in Chinese. |
 | **Simulator branching** | Exact snapshot/restore and independently sampled hidden worlds. Exact hidden-state snapshots are for debugging and regression; they must not become a policy oracle. |
 | **Learning interface** | Gymnasium wrapper, entity encoding, action masks, termination/truncation handling, and process-isolated vector sampling tests. No training pipeline is included yet. |
