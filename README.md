@@ -30,7 +30,7 @@ Spire2Lab is an experimental foundation for researchers studying sequential deci
 
 The immediate goal is a trustworthy environment for later work on search, hierarchical decisions, and reinforcement learning. The platform separates player-visible information from hidden simulator state and keeps original-game evidence distinct from simulator tests. This makes it possible to investigate both **what an agent decided** and **whether the environment behaved as expected**.
 
-> **Development status — phase 1.** The local simulator and dashboard are usable. The Windows adapter has synthetic transport tests; a compiled live Mod, repeatable original-game initialization, and real-game parity are still pending. Search algorithms, hierarchical policies, RL training, and original-game imagery are planned capabilities.
+> **Development status — phase 1.** The local simulator and dashboard are usable. The bridge is compiled, and a user-provided Windows transcript confirms main-menu HTTP responses with a matching game DLL fingerprint. Server tunnel verification, controlled original-game battles, repeatable initialization, and real-game parity are still pending. Search algorithms, hierarchical policies, RL training, and original-game imagery are planned capabilities.
 
 ## Key features
 
@@ -59,7 +59,7 @@ flowchart TB
         T --> V["Replay and acceptance checks"]
     end
     subgraph windows["Windows · game host"]
-        G["Steam game + Mod bridge<br/>Live validation pending"]
+        G["Steam game + Mod bridge<br/>Combat validation pending"]
     end
     O <-->|SSH tunnel| G
     classDef default fill:#172B38,stroke:#688592,color:#EDF3F7
@@ -171,7 +171,7 @@ The original-game workflow is separate from the simulator quick start:
 3. Close the game and run [`Install-Windows-Mod.ps1`](scripts/Install-Windows-Mod.ps1) with the same server, path and port, then launch through Steam and enable the Mod.
 4. Start the Linux dashboard and verify one settled state/action/result before attempting a full reference battle.
 
-The helpers require an absolute remote path using letters, digits, `_`, `.`, `/`, and `-`; spaces are currently unsupported. Connection setup checks the remote checkout before uploading. The installer verifies fingerprints, preserves license/build records, and backs up managed files for rollback. These behaviors have mocked PowerShell tests. References from Steam public build `23811903` have been received and hash-verified, and the bridge compiles against them. The semantic game release and in-game behavior remain unverified; compilation does not establish simulator parity. Detailed operator steps are in [README.txt](README.txt).
+The helpers require an absolute remote path using letters, digits, `_`, `.`, `/`, and `-`; spaces are currently unsupported. Connection setup checks the remote checkout before uploading. The installer verifies fingerprints, preserves license/build records, and backs up managed files for rollback. These behaviors have mocked PowerShell tests. References from Steam public build `23811903` have been received and hash-verified, and the bridge compiles against them. A user-provided Windows transcript confirms main-menu HTTP access and a matching runtime DLL fingerprint; the semantic release still needs independent verification, and combat behavior remains unverified. Detailed operator steps, including custom game ports and VS Code forwarding conflicts, are in [README.txt](README.txt).
 
 ## Validation
 

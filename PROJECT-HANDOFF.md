@@ -22,6 +22,23 @@ VS Code Git 凭据服务连接被拒绝，GitHub 拒绝匿名写入。远程核�
 本次 Logo 和 README 尚未上传。已请用户在本机 Git 客户端恢复登录，未索取令牌。
 项目目标：**完成第一阶段**
 
+2026-10-23 首次 Windows 本机 HTTP 成功：用户完整回传配置输出 port=21526，
+以及绕过代理的 GET / 和 GET /api/v1/singleplayer JSON。根路径 status=ok，
+状态为 menu/main、lab_protocol=1。运行时 game_assembly_sha256 与服务器重新
+计算的 sts2.dll SHA-256、原始 Windows 报告和 Mod 构建记录全部一致。这确认
+本次主菜单读数来自匹配引用的桥接运行，证据来源仍明确为用户提供的终端响应。
+原始回传保存在 artifacts/windows/local-main-menu-user-transcript.json，指纹核对
+保存在 local-main-menu-check.json；不把手工保存的回传当作服务器直接采集。
+lab_action_ready=false 符合主菜单状态；源码只在战斗玩家出牌阶段允许动作。
+lab_settled=false 表示本次读数尚未满足 250ms 稳定观察窗口，不据此判网络错误。
+服务器检查仍只有 8765 监听，18526 无监听，故请求用户建立独立 SSH 反向隧道
+18526 -> Windows 21526 并保持游戏主菜单。未发送任何 POST 或游戏动作。
+本轮同步 README 的编译/主菜单状态，保留服务器隧道、运行时语义版本独立核验、
+战斗单步、可重复初态和 60 场原版验收未完成的边界；不能将指纹匹配等同于版本门
+或战斗一致性通过。GitHub 认证仍无恢复证据，本地提交保留。
+验证：状态/证据 JSON、README 本地文件链接和 git diff --check 通过；无核心代码
+变更，不重复运行模拟器或合成 HTTP 测试。历史超时记录继续保留。
+
 2026-10-23 端口释放进展：用户按上一轮 Windows 15526/21526 监听检查反馈
 “现在没有输出了”，记录为游戏关闭期间两端口无监听的用户报告；此前 Code.exe
 占用已解除到可以继续配置的程度，但尚未验证游戏启动后的 HTTP 服务。

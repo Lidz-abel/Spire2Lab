@@ -1,7 +1,7 @@
 Spire2Lab — 第一阶段实验环境
 
 项目目录：/user/chenzk/sts2-lab（GitHub：Lidz-abel/Spire2Lab）
-当前状态：Linux 战斗环境与面板可运行；原版适配已接入运行控制并通过合成接口测试，Windows 实机兼容与逐步一致性尚未通过。
+当前状态：Linux 战斗环境与面板可运行；用户回传 Windows 主菜单 HTTP 成功响应，运行时 DLL 指纹匹配。服务器新隧道、实机战斗动作与逐步一致性尚未通过。
 完整验收清单见 PHASE1-STATUS.json。不得将模拟器自测视为本机原版一致性证明。
 整体架构、第一阶段建设顺序与后续路线见 ARCHITECTURE-PLAN.txt。
 当前采用 three-stage-v1：可信实验平台 → 搜索与分层决策 → 高效训练与原版评测。
@@ -57,10 +57,11 @@ Windows 接入
 
 桥接构建采用固定上游的 mods/STS2_MCP/STS2_MCP.dll 与 mod_manifest.json 布局。
 安装器会备份已有文件并在复制失败时尝试恢复。用户已回传 Windows 安装成功输出；
-实机 Mod 加载与状态接口仍待确认，失败回滚目前仅有模拟测试证据。
+用户随后回传主菜单接口与 lab_protocol=1，运行时指纹匹配；服务器新隧道与战斗接口仍待验证。
+失败回滚目前仅有模拟测试证据。
 
 现有 Windows 安装改用 21526
-  本轮用 21526 避开此前 Code.exe 占用的 15526；尚需 Windows 检查和实际 HTTP 验证。
+  本轮已按用户终端记录迁移到 21526，Windows 根路径和主菜单状态 HTTP 成功；服务器新隧道待验证。
   1. 正常退出游戏，在原 Connect-Windows.ps1 窗口按 Ctrl+C 关闭旧隧道。
   2. 在 Windows PowerShell 检查：
        Get-NetTCPConnection -LocalPort 21526 -State Listen -ErrorAction SilentlyContinue
