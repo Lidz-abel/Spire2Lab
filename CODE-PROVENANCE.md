@@ -58,6 +58,7 @@ O-02 至 O-04 随实机证据逐步替换；阶段 2 实现搜索/层级核心�
 | `scripts/*.py`、`scripts/*.ps1` | 本项目 | 构建、来源校验、Windows 接入、安装、回放、审计和浏览器检查 |
 | `tests/*.py`、`config/*.json`、`web/*` | 本项目新增实现；部分测试依赖上游素材 | 测试、实验范围、验收规则和面板；`test_original.py` 读取上游 A8 捕获，不属于本机实机证据 |
 | `ARCHITECTURE-PLAN.txt`、`README.md`、`PROJECT-HANDOFF.md` | 本项目 | 研究规划、使用说明和转接记录 |
+| `assets/logo.svg`、`assets/logo-dark.svg`、`assets/mark.svg` | 本项目原创矢量设计 | 独立绘制的尖塔/卡组/路线和路径字标；无复制的商标或提取的游戏素材；设计参考记录在 `PROJECT-IDENTITY.md` |
 | `vendor/sts2` | 上游 `evangambit/sts2`，MIT | 固定提交的模拟器/游戏规则来源，不属于我们的原创代码 |
 | `vendor/sts2mcp-v107` | 上游 `evangambit/STS2MCP`，MIT | 固定提交的原版 Mod/API 来源，不属于我们的原创代码 |
 | `requirements.lock` 中的包 | 外部开源依赖 | 依各自许可证使用，不属于我们的原创实现 |

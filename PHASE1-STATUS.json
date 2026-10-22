@@ -130,7 +130,9 @@
     "native_library_sha256": "90f73b83758827c8f8377b35f5ea19f1f59fc8c4a6b72ed01be02b0500f6a65d",
     "bootstrap": "artifacts/bootstrap-check.json",
     "windows_onboarding_package": "artifacts/installers/sts2-lab-windows.zip (scripts only, not executed on Windows)",
-    "acceptance_audit": "artifacts/acceptance/status.json (incomplete; 60 original-game cases missing)"
+    "acceptance_audit": "artifacts/acceptance/status.json (incomplete; 60 original-game cases missing)",
+    "readme_branding": "artifacts/branding/structure-check.json and readme-render-check.json (3 SVGs, 30 local links/anchors, 4 local theme/viewport previews; not GitHub-hosted rendering)",
+    "readme_example": "artifacts/branding/python-example.txt (one real native simulator action, verified 2026-10-22)"
   },
   "next_external_step": "Run scripts/Connect-Windows.ps1 on the Windows Steam PC to transfer version evidence and reference DLLs, and establish the SSH tunnel.",
   "completion_rule": "Do not mark complete until original-game behavior and declared supported scenario parity have been verified. Simulator-only tests do not prove local game parity.",

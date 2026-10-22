@@ -22,7 +22,24 @@ VS Code Git 凭据服务连接被拒绝，GitHub 返回 `No anonymous write acce
 当前路线：`three-stage-v1`。三个阶段依次为可信实验平台、搜索与分层决策、
 高效训练与原版评测；详细任务 P1-01 至 P1-08 见 `ARCHITECTURE-PLAN.txt`。
 此前五阶段划分已被这份路线替代，原版画面要求合并到阶段 2/3，原创优先继续执行。
-本轮变更只涉及规划文档和机器可读状态；未新增功能或原版证据，未重新运行历史测试。
+三阶段规划变更只涉及文档和机器可读状态；未新增功能或原版证据，未重新运行历史测试。
+
+当前文档工作：用户要求专业英文科研 README，先制作有《杀戮尖塔》辨识度的原创
+SVG Logo 并更新上传首页。完整要求已记录于 `PROJECT-IDENTITY.md`，后续会话继续遵守。
+本轮新增浅/深 Logo 与独立图标，重写 README 的首屏、结构、最小示例、来源及验证边界；
+不涉及核心行为变更。验证和 Git 同步结果在本文件持续记录。
+
+2026-10-22 品牌与 README 验证：三份 SVG 的 XML、内部引用、无外部资源和浅/深几何
+一致性通过；README 的 30 个内部链接/锚点通过。使用本地 CommonMark + HTML/table
+预览及 Mermaid 11.4.1，在 1280/390 宽度、浅/深主题下验证图片、主题选择、架构图
+及无页面溢出；这是本地兼容预览，不是 GitHub 线上渲染截图。
+README 的 Python 单步示例已执行；`bash scripts/start.sh` 启动检查和面板 6 项交互
+检查通过，无 JavaScript 错误，临时服务已关闭。记录见 `artifacts/branding/`。
+未重新运行完整 pytest 或新机器 bootstrap；此前 43 项测试报告仍属历史证据。
+本轮一次文档写入因 heredoc 分隔符冲突失败，意外重跑了开发集基准（60 场、980 步，
+报告已刷新）并触发无服务时的浏览器连接失败；随后采用独立分隔符重写，源码未变。
+初次健康检查还受代理影响；改为直接访问本机回环后验证通过。保留失败与纠正记录，
+这些检查均不新增 Windows 实机证据。
 
 ## 新会话启动指令
 
@@ -181,6 +198,7 @@ git status --short
 - [`README.md`](README.md)：GitHub 首页，面向研究者和开发者；
 - [`CODE-PROVENANCE.md`](CODE-PROVENANCE.md)：本项目代码、上游代码和许可证边界；
 - [`AGENTS.md`](AGENTS.md)：原创优先与持续记录的执行约定；
+- [`PROJECT-IDENTITY.md`](PROJECT-IDENTITY.md)：品牌方案、完整 README 设计要求与验收清单；
 - [`README.txt`](README.txt)：详细 Linux/Windows 运维步骤；
 - [`ARCHITECTURE-PLAN.txt`](ARCHITECTURE-PLAN.txt)：总体架构和后续路线；
 - [`PHASE1-STATUS.json`](PHASE1-STATUS.json)：机器可读的状态与证据；
@@ -208,3 +226,4 @@ git status --short
 | 2026-10-21 | 用户询问与来源检查 | 明确新增代码和上游模拟器/Mod 的边界 | `CODE-PROVENANCE.md`；已推送 `0a5c869` |
 | 2026-10-22 | 用户明确要求 | 平台尽可能原创，允许参考开源实现 | 本轮记录原创原则、O-01 至 O-05 迁移计划及 `AGENTS.md`；独立引擎/Mod 尚未实现；第一阶段仍待 Windows 实机输入 |
 | 2026-10-22 | 用户重新规划 | 按三个阶段推进，准备完成第一阶段；再次提供 `.git` 仓库地址 | `three-stage-v1`；P1-01 至 P1-08 明确任务/证据/依赖；当前仍为 0/60 原版参考；远程只读检查为 `0a5c869`，不代表写入认证恢复 |
+| 2026-10-22 | 用户品牌与文档要求 | 持久记录完整 README 设计标准；优先原创尖塔 Logo、当前 README 与 GitHub 上传 | `PROJECT-IDENTITY.md` 保存验收清单；新增三份 SVG，README 按真实实现重组；核心代码与实机验收状态不变 |
