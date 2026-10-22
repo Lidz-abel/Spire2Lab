@@ -2,6 +2,8 @@
 
 开始工作先阅读 `PROJECT-HANDOFF.md`、`CODE-PROVENANCE.md` 和 `PHASE1-STATUS.json`，
 再核对当前工作区。文档中的状态应以文件、运行结果和远程 Git 的实际证据为准。
+当前路线为 `three-stage-v1`：可信实验平台 → 搜索与分层决策 → 高效训练与原版评测。
+第一阶段执行 P1-01 至 P1-08，见 `ARCHITECTURE-PLAN.txt`；旧五阶段路线已被替代。
 
 ## 原创优先（用户于 2026-10-22 提出）
 

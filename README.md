@@ -29,7 +29,7 @@ The long term research direction is a single agent stack with:
 - live decision inspection through a browser dashboard;
 - finite, evidence-backed parity checks against the original game.
 
-The repository currently focuses on the first requirement: a trustworthy, observable experimental environment. The original-game parity gate is intentionally visible in the status records and is not inferred from simulator-only tests.
+The repository currently focuses on the first stage: a trustworthy, observable experimental environment. The original-game parity gate is intentionally visible in the status records and is not inferred from simulator-only tests.
 
 ## Implementation direction
 
@@ -44,7 +44,7 @@ Their implementation status and reference sources are tracked in [CODE-PROVENANC
 
 Spire2Lab treats an interactive card game as a partially observable decision process. The agent receives player-visible state and legal actions. Internal draw order, random streams, and other unavailable fields stay outside the policy observation. A trace records what the agent saw, what it proposed, what was executed, and what the environment confirmed.
 
-This separation supports three kinds of experiments:
+The research stack separates the following responsibilities:
 
 | Layer | Role | Current state |
 | --- | --- | --- |
@@ -170,15 +170,20 @@ Spire2Lab/
 
 ## Roadmap
 
-**Phase 1 — Trusted environment.** Finish the Windows bridge, establish controlled original-game initialization, align the observable opening state, collect the finite reference suite, and verify every declared field with raw captures.
+The project follows **three stages**, with project-authored core implementations and attributed
+reference backends. The current plan is `three-stage-v1`; detailed tasks are in
+[ARCHITECTURE-PLAN.txt](ARCHITECTURE-PLAN.txt).
 
-**Phase 2 — Combat search.** Add budgeted search over simulator branches while preserving the same observation boundary. Compare random, heuristic, and search policies under fixed wall-clock and node budgets.
+| Stage | Deliverable | Exit evidence |
+| --- | --- | --- |
+| **1 · Trusted experimental platform** | Unified environment interfaces, live decisions, replay, Windows execution, search/training interfaces | Versioned builds, repeatable initialization, 60 independent real-game reference battles plus boundary coverage, UI and reproducibility checks |
+| **2 · Search and hierarchical decisions** | Budgeted combat search, explicit goals and sub-decisions, incremental single-act support, original-game screenshots | Held-out baseline comparisons, fixed compute budgets, ablations, replayable decisions and new mechanic reference cases |
+| **3 · Efficient learning and original-game evaluation** | Policy/value learning, parallel sampling, batched inference, validated run-level support, synchronized original-game visualization | Reproducible models and experiments, sample/time/compute measurements, generalization and simulator-to-game evaluation |
 
-**Phase 3 — Efficient learning.** Add a learned policy and value baseline, process-isolated rollout workers, batched inference, checkpointed datasets, and sample-efficiency measurements.
-
-**Phase 4 — Hierarchical decisions.** Extend from combat actions to run goals, map choices, deck/resource objectives, and explicit parent-child decision records.
-
-**Phase 5 — Original-game visualization.** Associate original screenshots or low-rate video frames with `run_id`, `decision_id`, and confirmed game state. A future vision-only agent will be evaluated as a separate observation pipeline.
+Original-game images begin with decision-boundary screenshots in stage 2 and mature into a
+synchronized demonstration in stage 3. A vision-only policy is a separate optional research task.
+Independent bindings, a minimal bridge, and a finite combat engine are introduced incrementally;
+each replacement requires its own validation before becoming the default backend.
 
 ## Reproducibility rules
 

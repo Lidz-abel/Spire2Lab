@@ -4,6 +4,8 @@ Spire2Lab — 第一阶段实验环境
 当前状态：Linux 战斗环境与面板可运行；原版适配已接入运行控制并通过合成接口测试，Windows 实机兼容与逐步一致性尚未通过。
 完整验收清单见 PHASE1-STATUS.json。不得将模拟器自测视为本机原版一致性证明。
 整体架构、第一阶段建设顺序与后续路线见 ARCHITECTURE-PLAN.txt。
+当前采用 three-stage-v1：可信实验平台 → 搜索与分层决策 → 高效训练与原版评测。
+第一阶段按 P1-01 至 P1-08 验收；当前首要步骤为 Windows 版本采集和一次实机动作确认。
 
 启动（Linux）
   cd /user/chenzk/sts2-lab

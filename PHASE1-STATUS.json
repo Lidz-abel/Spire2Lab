@@ -2,6 +2,86 @@
   "goal": "完成第一阶段",
   "project_name": "Spire2Lab",
   "repository_slug": "Spire2Lab",
+  "roadmap": {
+    "version": "three-stage-v1",
+    "updated_at": "2026-10-22",
+    "plan": "ARCHITECTURE-PLAN.txt",
+    "stages": [
+      {
+        "id": 1,
+        "title": "可信实验平台",
+        "status": "in_progress_live_validation_pending"
+      },
+      {
+        "id": 2,
+        "title": "搜索与分层决策",
+        "status": "planned"
+      },
+      {
+        "id": 3,
+        "title": "高效训练与原版评测",
+        "status": "planned"
+      }
+    ],
+    "phase_one_milestones": [
+      {
+        "id": "P1-01",
+        "title": "版本与来源冻结",
+        "status": "awaiting_windows_input",
+        "depends_on": []
+      },
+      {
+        "id": "P1-02",
+        "title": "自主平台核心与可替换环境接口",
+        "status": "partially_implemented_boundary_review_pending",
+        "depends_on": []
+      },
+      {
+        "id": "P1-03",
+        "title": "最小实机闭环",
+        "status": "not_live_verified",
+        "depends_on": ["P1-01"]
+      },
+      {
+        "id": "P1-04",
+        "title": "可重复场景与随机性对齐",
+        "status": "not_implemented",
+        "depends_on": ["P1-03"]
+      },
+      {
+        "id": "P1-05",
+        "title": "面板与决策记录验收",
+        "status": "simulator_and_synthetic_tested_live_pending",
+        "depends_on": ["P1-02", "P1-03"]
+      },
+      {
+        "id": "P1-06",
+        "title": "搜索训练接口与复现能力验收",
+        "status": "partially_tested_scaling_and_fresh_install_pending",
+        "depends_on": ["P1-02"]
+      },
+      {
+        "id": "P1-07",
+        "title": "原版参考集验收",
+        "status": "incomplete_no_live_cases",
+        "depends_on": ["P1-03", "P1-04", "P1-05", "P1-06"]
+      },
+      {
+        "id": "P1-08",
+        "title": "第一阶段交付",
+        "status": "not_ready",
+        "depends_on": ["P1-01", "P1-02", "P1-03", "P1-04", "P1-05", "P1-06", "P1-07"]
+      }
+    ],
+    "first_execution_unit": ["P1-01", "P1-03"],
+    "linux_work_without_windows_input": ["P1-02", "P1-06"],
+    "original_visuals": {
+      "stage_one": "reserve_run_and_decision_associations",
+      "stage_two": "capture_decision_boundary_screenshots",
+      "stage_three": "synchronize_screenshots_and_optional_low_fps_video",
+      "vision_only_policy": "optional_separate_research"
+    }
+  },
   "implementation_direction": {
     "requested_at": "2026-10-22",
     "user_requirement": "平台尽可能原创，可以参考开源实现",
