@@ -61,7 +61,7 @@ O-02 至 O-04 随实机证据逐步替换；阶段 2 实现搜索/层级核心�
 | `native/LabExports.cs` | 本项目 | 只读观测导出扩展；不新增卡牌效果或敌人规则 |
 | `native/Sts2Lab.csproj` | 本项目构建文件 | 将我们的观测扩展与上游 C# 引擎一起编译 |
 | `bridge/McpMod.Lab.cs` | 本项目适配扩展 | 对 STS2MCP 的状态、请求去重和实验桥接扩展；依赖上游 Mod API |
-| `bridge/ScenarioContract.cs`、`bridge/McpMod.Scenario.cs`、`sts2lab/scenarios.py`、`scripts/prepare_scenario.py` | 本项目受控初始化与验证实现 | 需求先记录于 `docs/SCENARIO-STAGING.md`；接口签名来自收到的本机 DLL 元数据，兼容性参考固定上游 `NativeExports.ResetArena/SeedStreams`、`GameRng`、`EncounterRng`；使用游戏自身启动与 RNG 工厂，不独立实现游戏规则。Mod 已编译，客户端/请求契约/日志恢复的合成测试通过，实机初始化待验收 |
+| `bridge/ScenarioContract.cs`、`bridge/McpMod.Scenario.cs`、`sts2lab/scenarios.py`、`scripts/prepare_scenario.py` | 本项目受控初始化与验证实现，包含注明的上游 API 使用参考 | 需求先记录于 `docs/SCENARIO-STAGING.md`；接口签名来自收到的本机 DLL 元数据，兼容性参考固定上游 `NativeExports.ResetArena/SeedStreams`、`GameRng`、`EncounterRng`。首次实机失败后的 `EncounterModel.ToMutable()` 用法参考固定 `STS2MCP/McpMod.Debug.cs`，并由本机 DLL 元数据确认；使用游戏自身可变模型和 RNG 工厂，不独立实现游戏规则。客户端/契约测试通过，实机初始化尚未成功 |
 | `tests/test_scenarios.py`、`tests/test_scenario_contract.py`、`tests/scenario_contract.cs` | 本项目测试 | 合成 HTTP 与临时文件覆盖未知结果、指纹/初态拒绝及中断恢复；独立编译生产 C# 请求解析器并检查 36 组合成输入，不载入游戏程序集，不作为原版运行证据 |
 | `scripts/*.py`、`scripts/*.ps1` | 本项目 | 构建、来源校验、Windows 接入、安装、回放、审计和浏览器检查 |
 | `tests/*.py`、`config/*.json`、`web/*` | 本项目新增实现；部分测试依赖上游素材 | 测试、实验范围、验收规则和面板；`test_original.py` 读取上游 A8 捕获，不属于本机实机证据 |

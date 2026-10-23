@@ -47,7 +47,7 @@
       {
         "id": "P1-04",
         "title": "可重复场景与随机性对齐",
-        "status": "staging_endpoint_compiled_client_contract_recovery_tests_passed_windows_installation_and_live_validation_pending",
+        "status": "live_setup_failed_canonical_encounter_corrected_build_compiled_windows_installation_and_successful_live_setup_pending",
         "depends_on": [
           "P1-03"
         ],
@@ -120,7 +120,7 @@
     "independent_backend_migration": "planned_not_implemented",
     "phase_one_scope": "existing_finite_scope_and_live_game_acceptance_preserved"
   },
-  "status": "awaiting_windows_new_mod_installation_local_interfaces_tested_original_acceptance_incomplete",
+  "status": "live_staging_failed_canonical_encounter_fix_compiled_awaiting_windows_installation",
   "requirements": {
     "versioned_semantic_protocol": "implemented_v0.3.0_public_card_ids_semantic_only",
     "native_linux_simulator": "built_and_smoke_tested",
@@ -151,10 +151,10 @@
     "scoped_reference_acceptance_gate": "implemented_60_case_matrix_and_boundary_coverage_no_live_cases_available",
     "sampling_scaling_measurement": "protocol03_nine_rounds_2700_episodes_44100_decisions_equal_public_trajectory_hashes_worker_cleanup_verified",
     "windows_bridge_listener": "21526_serving_root_and_main_menu_through_linux_18526_tunnel_protocol_1_reference_fingerprint_matches",
-    "windows_main_menu_state": "verified_then_progressed_to_profile2_floor1_combat_with_one_defend_action",
+    "windows_main_menu_state": "new_scenario_mod_fingerprint_profile2_main_menu_verified_before_first_setup_then_partial_failed_map_state",
     "readonly_bridge_check": "implemented_live_main_menu_passed_synthetic_failure_tests_passed_no_combat_actions",
     "original_release_binding": "release_info_exact_version_commit_prefix_sha1_int32_compatibility_hash_and_full_dll_sha256_verified",
-    "controlled_scenario_staging": "mod_compiled_client_contract_and_journal_recovery_synthetic_tests_passed_windows_installation_and_live_validation_pending",
+    "controlled_scenario_staging": "first_build_runtime_verified_one_live_setup_failed_canonical_encounter_mutable_copy_fix_compiled_related_tests_passed_corrected_build_live_validation_pending",
     "shared_environment_contract": "observe_step_close_and_optional_operations_declared_native_reset_and_no_io_original_refusals_tested",
     "content_encoding_boundary": "native_id_removed_from_public_observations_semantic_benchmark_config_and_project_tokens_tested_old_versions_explicitly_refused",
     "branch_provenance": "immutable_branch_id_parent_branch_parent_decision_and_operation_tested_recorded_in_session_metadata_not_observations_original_backend_none",
@@ -224,22 +224,26 @@
     "protocol_03_service": "artifacts/protocol-migration-restart-20261022T181009567473.json (old native session archived before restart; PID 127906 serves the new protocol; no Windows actions)",
     "protocol_03_sampling": "artifacts/sampling-protocol03-development.json (commit 2c25a99, clean source at measurement; 1/2/4 workers, 3 repeats, 300 cases per round; 2700 episodes and 44100 decisions; all public trajectory hashes match)",
     "protocol_03_cold_install": "artifacts/repro-2c25a99-bootstrap-resumed.log and repro-2c25a99-bootstrap-resumed-result.json (exit 0 after network recovery; fresh venv, independent caches, downloaded SDK and native build; no copied runtime dependencies; 113 passed, 1 optional PowerShell skip, 1 existing dependency warning). Two earlier TLS failure logs/results preserved under artifacts/repro-2c25a99-bootstrap*",
-    "latest_windows_install_check": "artifacts/windows/interface-final-readiness.json (live GET only; same old game process without new Mod SHA or capabilities; matches_current_mod false; no game actions sent)",
+    "latest_windows_install_check": "artifacts/windows/mutability-install-readiness-20261023T071852941959.json (live GET only; corrected mutable-model build readiness recorded, no game actions)",
     "protocol_03_fresh_build_comparison": "artifacts/repro-2c25a99-comparison.json (same host; 300 simulator runs, 60 unique cases, 4900 decisions; per-case records match excluding only library_sha256; native binaries differ, no bitwise reproducibility claim; tracked source unchanged, report dirty flag reflects untracked .repro-cache/)",
     "interface_boundary_tests": "artifacts/interface-boundary-tests.xml (30 passed, 1 existing dependency warning; native lineage, Gym transition boundary, stored policy versions and synthetic original transport)",
     "interface_boundary_regression": "artifacts/interface-boundary-regression-tests.xml (123 passed, 1 existing Starlette/httpx deprecation warning; no live-game battle validation)",
     "interface_boundary_acceptance": "artifacts/acceptance/interface-boundary-status.json (expected exit 1; errors empty; all 60 original battles and all 9 coverage types missing)",
     "interface_service": "artifacts/interface-service-restart.json (old finished simulator session closed on server shutdown; new PID 165874/session 73014 serves paused simulator root with provenance; no Windows actions, health remains unverified; checker event-name correction retained)",
-    "interface_fresh_regression": "artifacts/interface-fresh-regression.json and matching log/XML (independently installed 2c25a99 environment upgraded to source 9ac68a2; 122 passed, 1 optional PowerShell skip; native build unchanged from fresh bootstrap; not another cold install)"
+    "interface_fresh_regression": "artifacts/interface-fresh-regression.json and matching log/XML (independently installed 2c25a99 environment upgraded to source 9ac68a2; 122 passed, 1 optional PowerShell skip; native build unchanged from fresh bootstrap; not another cold install)",
+    "scenario_mod_first_install": "artifacts/windows/restarted-mod-20261023T071130936391.json and bridge-check-20261023T071154498270.json (live runtime Mod/game hashes match; new process, profile 2 and main menu; 7 read-only checks passed)",
+    "scenario_first_live_failure": "artifacts/windows/scenario-20261023T071207228987.json and .jsonl (one seed-1 Nibbit request acknowledged; non-saving run and RNG initialization reached, combat creation throws CanonicalModelException; failed partial map state, no card actions or reference case)",
+    "scenario_mutability_fix": "artifacts/windows/scenario-mutability-api.json, scenario-mutability-build.log and scenario-mutability-build-verification.json (local DLL metadata confirms public ToMutable/AssertMutable; corrected build succeeds with 0 errors, 1 upstream warning; bundle/source/release binding verified; previous Mod archived; new SHA 93e1cc5c0d903d9b2bd23731e8ed7e9baccf47edb5e7daba7290bef601ee15bd; not live-verified)",
+    "scenario_mutability_tests": "artifacts/windows/scenario-mutability-regression-tests.xml (57 related tests passed, 1 existing dependency warning; no successful real-game initialization)"
   },
-  "next_external_step": "Installer instructions sent: close Windows game, keep SSH tunnel, run existing Install-Windows-Mod.ps1, restart through Steam and stay at main menu. After installation verify running Mod SHA-256 and experiment profile 2, then run one controlled floor-2 setup. No additional reference upload needed. Last observed floor-1 Defend probe remains excluded from the reference matrix.",
+  "next_external_step": "The first scenario build installation is verified. Close the failed non-saving experiment, run the same Install-Windows-Mod.ps1 command to install the corrected mutable-encounter build, restart through Steam to the main menu with the tunnel open. Verify SHA 93e1cc5c0d903d9b2bd23731e8ed7e9baccf47edb5e7daba7290bef601ee15bd and profile 2 before one new seed-1 setup; never resubmit or continue the failed old request.",
   "completion_rule": "Do not mark complete until original-game behavior and declared supported scenario parity have been verified. Simulator-only tests do not prove local game parity.",
   "limitations": [
     "Installed release v0.107.1 is bound to the received DLL through release_info commit and compatibility checksum plus full SHA-256 references/runtime match. This checks local file consistency, not a publisher signature.",
     "One live floor-1 Defend probe passed through BridgeClient. Fixed benchmark requires floor 2; normal adapter attachment, live dashboard behavior, end-turn/reconnection, full battle and original/simulator parity remain unverified.",
     "Comparison coverage excludes catalog-derived card values and hidden RNG; a matching finite trace never proves global game parity.",
     "Exact original/simulator initial state and RNG alignment still require implementation and live evidence.",
-    "Reference replay checks one declared seed and refuses initial-state mismatches; a controlled staging draft is compiled but not installed or game-verified. No live evidence yet establishes initial-state or RNG alignment."
+    "Reference replay checks one declared seed and refuses initial-state mismatches; the first staging build loaded but failed before combat; a mutable-model correction is compiled and awaits installation. No live evidence yet establishes initial-state or RNG alignment."
   ],
   "architecture_plan": "ARCHITECTURE-PLAN.txt",
   "bridge_connection_plan": {
@@ -263,7 +267,7 @@
     "windows_config_evidence_source": "user_supplied_configuration_output",
     "windows_http_verified_user_transcript": true,
     "linux_http_verified": true,
-    "current_game_state": "profile2_floor1_round1_after_one_defend_energy2_block5_hp80",
+    "current_game_state": "profile2_failed_seed1_scenario_partial_map_floor2_not_validated_battle",
     "linux_tunnel_listener_present": true,
     "verification_scope": "main_menu_and_single_floor1_card_probe_not_benchmark_parity",
     "experiment_profile_id": 2
@@ -271,9 +275,9 @@
   "blocking_conditions": [
     {
       "id": "windows_new_mod_installation",
-      "state": "waiting_for_external_action",
-      "evidence": "artifacts/windows/interface-final-readiness.json",
-      "required_action": "Close the Windows game, run the existing Install-Windows-Mod.ps1 against the current checkout, restart through Steam and stay at the main menu with the SSH tunnel open. Verify runtime Mod fingerprint before staging.",
+      "state": "first_installation_resolved_corrected_build_installation_pending",
+      "evidence": "artifacts/windows/scenario-mutability-build-verification.json",
+      "required_action": "The first scenario build installation is verified. Close the failed non-saving experiment, run the same Install-Windows-Mod.ps1 command to install the corrected mutable-encounter build, restart through Steam to the main menu with the tunnel open. Verify SHA 93e1cc5c0d903d9b2bd23731e8ed7e9baccf47edb5e7daba7290bef601ee15bd and profile 2 before one new seed-1 setup; never resubmit or continue the failed old request.",
       "blocks": [
         "P1-03",
         "P1-04",

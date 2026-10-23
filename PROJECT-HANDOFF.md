@@ -22,6 +22,29 @@ VS Code Git 凭据服务连接被拒绝，GitHub 拒绝匿名写入。远程核�
 本次 Logo 和 README 尚未上传。已请用户在本机 Git 客户端恢复登录，未索取令牌。
 项目目标：**完成第一阶段所有的内容**（用户于本轮重新设为 active；当前未完成）
 
+2026-10-23 新 Mod 实机接入与首次初始化失败（优先于下方历史）：用户报告安装并
+重启后，直接读取确认运行 DLL 为 6de822b9db90892337ff0c00f08aae023f2fd4d192b12c8292315e5dd723268c，
+游戏指纹匹配，进程已更换，主菜单/槽位 2/场景能力正确；7 项只读菜单检查通过。
+证据 artifacts/windows/restarted-mod-20261023T071130936391.json 与
+bridge-check-20261023T071154498270.json。此前“新 Mod 未安装”的阻塞已解除。
+随后仅提交一次 nibbits-weak / seed 1 初始化请求。游戏报告非保存运行、初始牌组
+和 12 个命名 RNG 流初始化成功，但创建战斗时抛 CanonicalModelException：
+本项目把共享 canonical 遭遇模板直接传给 CombatRoom，而接口要求可变副本。
+明确失败，不是结果未知；未发出牌/结束回合动作，也未将失败初态或楼层算作通过。
+完整报告和日志 artifacts/windows/scenario-20261023T071207228987.json/.jsonl
+保留，包含一次请求、一次回执及 13 次状态读取。游戏最后报告第 2 层地图状态，
+这是部分初始化残留，必须重启后重新开始，不能从该状态继续填补通过记录。
+已将 EncounterModel.ToMutable() 与 AssertMutable() 移到启动实验之前，记录
+encounter_model_type/mutable；API 由本机 DLL 元数据确认，用法参考固定上游
+McpMod.Debug.cs，来源说明已更新。旧产物按 SHA 归档，新包编译 0 错误、1 项既有
+上游警告；57 项相关测试通过、1 项既有依赖警告。构建/来源/发行关联验证通过。
+修复包 SHA 为 93e1cc5c0d903d9b2bd23731e8ed7e9baccf47edb5e7daba7290bef601ee15bd，
+证据 scenario-mutability-build.log、scenario-mutability-build-verification.json、
+scenario-mutability-regression-tests.xml 均在 artifacts/windows/。这不是修复实机
+成功的证明；已请用户关闭游戏、再次运行原安装命令、Steam 重启到主菜单后继续。
+验收门重算仍 errors=[]、0/60，缺全部 9 类覆盖；第一阶段未完成。勿重新提交旧
+失败请求、勿沿用旧包指纹；收到安装反馈后先核对新 SHA、进程和槽位，再做固定种子。
+
 2026-10-23 本轮交付与阻塞核对：实现已提交为 9ac68a2，本地 main 此时领先跟踪远程
 30 个提交。独立安装目录保留原先下载的依赖及新构建，源码从 2c25a99 升级至
 9ac68a2 后重跑全套：122 项通过、1 项可选 PowerShell 跳过；tracked source 未变化。

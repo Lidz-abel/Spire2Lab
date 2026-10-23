@@ -1,7 +1,9 @@
 # Controlled original-game scenarios
 
-Status: endpoint compiled; client, journal recovery and input-contract checks pass.
-Windows installation and live initialization validation are still pending.
+Status: the first staging build loaded in the original game, but its first live
+initialization failed while creating the combat room. The mutable-encounter fix
+has compiled and related checks pass; its Windows installation and successful
+live initialization remain pending. No battle parity has been established.
 
 The fixed phase-one benchmark remains Ironclad A0, floor 2, zero completed
 combats, the ten-card starter deck, Burning Blood, no potions, 80/80 HP and
@@ -19,6 +21,8 @@ a unique request ID and the expected game-state token. The controller must:
 3. Use the game's own run, encounter, card and combat APIs to construct the
    declared initial conditions. Record this as a debug-staged scenario, distinct
    from a naturally reached run.
+   Resolve the canonical encounter into a fresh mutable game model before starting
+   the run. Never pass a shared canonical model into combat-room creation.
 4. Initialize named RNG streams from the declared seed before combat begins.
    Document the original game's stream seeding and the simulator's corresponding
    derivation. Never search seeds, copy simulator outcomes into the original,
@@ -62,12 +66,19 @@ The current draft spans `bridge/ScenarioContract.cs`, `bridge/McpMod.Scenario.cs
 `sts2lab/scenarios.py` and `scripts/prepare_scenario.py`. It requests a non-saving
 run in profile 2 and records explicit debug setup, including a noncombat history
 anchor when needed and numeric run-stream initialization before entering combat.
-These code paths have not yet been exercised in the original game.
+The first live attempt created a non-saving run in profile 2, initialized the
+declared numeric RNG streams, then failed before entering combat: the game's
+`CombatRoom` rejected the canonical `NibbitsWeak` model with
+`CanonicalModelException`. The failed request and raw state are preserved in
+`artifacts/windows/scenario-20261023T071207228987.json` and its journal. No battle
+was validated, and the failed setup must not be retried in its partly initialized
+run. The model must be cloned through the game's `ToMutable()` API first.
 
-The new bridge build compiled with no errors and one upstream nullable warning;
-the previous build and manifest were archived before replacement. Windows
-installation and runtime verification remain required. Compilation and synthetic
-tests alone cannot establish that staging works.
+The initial build compiled with no errors and one upstream nullable warning,
+and its runtime fingerprint, main menu and profile 2 were verified after the
+Windows installation. That did not establish correct scene initialization.
+Install the corrected build after compilation and restart to the main menu before
+another setup attempt. Compilation and synthetic tests cannot replace this check.
 
 ## Operator workflow
 

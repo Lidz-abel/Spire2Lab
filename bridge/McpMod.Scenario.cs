@@ -112,6 +112,12 @@ public static partial class McpMod
     {
         try
         {
+            // ModelDb holds shared canonical definitions. CombatRoom requires a
+            // fresh mutable encounter (also used by the pinned upstream debug API).
+            var encounter = ModelDb.AllEncounters.Single(e => e.GetType().Name == ScenarioRequest.Encounters[request.Encounter]).ToMutable();
+            encounter.AssertMutable();
+            LabScenario!["encounter_model_type"] = encounter.GetType().Name;
+            LabScenario["encounter_model_mutable"] = encounter.IsMutable;
             // The game's run startup creates character inventory and scene nodes.
             // A display seed is not claimed to hash to the requested numeric seed.
             var game = NGame.Instance ?? throw new InvalidOperationException("Game scene is unavailable");
@@ -148,7 +154,6 @@ public static partial class McpMod
             LabScenario["rng_before_combat"] = StreamEvidence(rng);
             LabScenario["completed_combats_before"] = 0;
             LabScenario["status"] = "entering_combat";
-            var encounter = ModelDb.AllEncounters.Single(e => e.GetType().Name == ScenarioRequest.Encounters[request.Encounter]);
             await RunManager.Instance.EnterMapCoordDebug(new MapCoord(0, 1), RoomType.Monster, MapPointType.Monster, encounter, false);
             GuardScenarioProfile(request);
             if (run.TotalFloor != 2) throw new InvalidOperationException("Actual game floor differs from 2");
