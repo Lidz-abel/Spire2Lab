@@ -1,6 +1,6 @@
 # Spire2Lab 项目转接文档
 
-更新时间：2026-10-23
+更新时间：2026-10-24
 
 项目地址：<https://github.com/Lidz-abel/Spire2Lab>
 
@@ -20,7 +20,14 @@ VS Code Git 凭据服务连接被拒绝，GitHub 返回 `No anonymous write acce
 最新品牌与 README 提交：`9cc73a7`。提交后执行 `git push origin main` 仍退出 128：
 VS Code Git 凭据服务连接被拒绝，GitHub 拒绝匿名写入。远程核对仍为 `0a5c869`；
 本次 Logo 和 README 尚未上传。已请用户在本机 Git 客户端恢复登录，未索取令牌。
-项目目标：**完成第一阶段所有的内容**（用户于本轮重新设为 active；当前未完成）
+当前工作：用户于 2026-10-24 要求进入第二阶段。第一阶段本地验收通过，历史远程交付仍待同步。
+
+2026-10-24 第二阶段已开始：工作树 /user/chenzk/sts2-lab-phase2，分支
+phase2/search-hierarchy。原 /user/chenzk/sts2-lab 保留第一阶段已验收源码与运行环境。
+先按 docs/PHASE2-PLAN.md 实现只使用可见历史的粒子采样、预算 rollout 搜索、战术
+目标与面板记录，再冻结配置做基线/消融。原版截图和单幕扩展仍是第二阶段独立验收项。
+实时状态见 PHASE2-STATUS.json；不得把第一执行单元称为整个第二阶段完成。
+依赖复用原安装，native 二进制/清单及生成副本复制到新工作树，不称新环境冷安装。
 
 2026-10-23 远程交付结果：本地验收提交 ac59b44 已生成。默认推送及单次 HTTP/1.1
 重试均因 gnutls_handshake / TLS connection non-properly terminated 退出 128，尚未

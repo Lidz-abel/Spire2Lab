@@ -1,0 +1,25 @@
+{
+  "stage": 2,
+  "status": "implementation_started",
+  "started_at": "2026-10-24",
+  "branch": "phase2/search-hierarchy",
+  "phase_one_checkpoint": "f9faf0a",
+  "plan": "docs/PHASE2-PLAN.md",
+  "milestones": {
+    "P2-01": "contract_recorded",
+    "P2-02": "planned",
+    "P2-03": "planned",
+    "P2-04": "planned",
+    "P2-05": "planned",
+    "P2-06": "planned",
+    "P2-07": "planned",
+    "P2-08": "planned"
+  },
+  "implementation_scope": "starter combat belief, rollout search, tactical hierarchy, inspection and fixed-budget evaluation first; images and single-act support remain required later gates",
+  "evidence": {},
+  "limitations": [
+    "No phase-two policy results yet.",
+    "Phase-one acceptance does not automatically certify the changed branch.",
+    "Historical GitHub delivery remains pending."
+  ]
+}
