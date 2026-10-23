@@ -12,10 +12,10 @@ files = {
     name: (ROOT / "scripts" / name).read_bytes()
     for name in ("Connect-Windows.ps1", "Install-Windows-Mod.ps1")
 }
-files["START-HERE.txt"] = """STS2 Lab Windows 接入包
+files["START-HERE.txt"] = """Spire2Lab Windows 接入包
 
 此包只有接入/安装脚本，不包含游戏、游戏 DLL 或实验用 Mod 二进制。
-第一阶段仍待你的 Windows 实机验证。
+每台电脑的版本和桥接都须单独核验；项目验收进度见 PHASE1-STATUS.json。
 
 1. 解压后，在此目录打开 PowerShell。
 2. 使用你平时从 Windows 登录 Linux 的 SSH 目标与端口运行：
@@ -36,7 +36,8 @@ files["START-HERE.txt"] = """STS2 Lab Windows 接入包
    Set-ExecutionPolicy -Scope Process Bypass -Force
    .\\Install-Windows-Mod.ps1 -Server 用户@服务器 -RemoteRoot /srv/Spire2Lab -SshPort 端口
    直接使用当前 PowerShell 会话，无需再次调用 powershell 启动命令。
-   安装前关闭游戏。脚本会检查文件指纹、备份旧文件并通过 Steam 启动游戏。
+   安装前关闭游戏。脚本会检查文件指纹、备份旧文件并安装 Mod。
+   安装成功后，请通过 Steam 启动游戏。
    若首次同意加载 Mod 后游戏退出，从 Steam 再启动一次，先停留主菜单核对版本和接口。
    若再次退出，保留启动日志供诊断，无需反复重装。
 5. Linux 启动 bash scripts/start.sh 后，在 Windows 浏览器打开 http://127.0.0.1:8765。

@@ -51,6 +51,7 @@ On 2026-10-23, a separate 12-step original-game probe passed these checks:
 | Automatic execution and pause | Pausing during execution allowed the current action to finish and prevented the next automatic action. |
 | Manual override and loss | Overrides were marked in the trace. Repeated end-turn decisions reached a real loss at 0 HP, without a victory heal. |
 | Read-only replay and layout | First/last-step replay sent no game action; desktop and narrow-screen browser checks completed without JavaScript errors. |
+| Trace export | The browser-downloaded archive matched the server ledger byte for byte, retained a valid hash chain and contained all 12 transitions. Download and replay issued no mutating browser requests. |
 
 The response loss was **injected**, not a naturally observed network outage. Game
 states and actions were real. Twelve recorded transitions correspond to twelve
@@ -62,6 +63,8 @@ The private report is
 `artifacts/live-boundaries/20261023T085145678089/report.json`. Its request journal,
 reference/candidate traces and browser captures are retained beside it. These
 files contain local experiment data and are not distributed in Git.
+The subsequent read-only download check is recorded in `download-check.json`
+in the same directory.
 
 ## Corrections established by live evidence
 

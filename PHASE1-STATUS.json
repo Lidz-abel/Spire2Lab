@@ -323,11 +323,11 @@
     }
   ],
   "live_reference_progress": {
-    "accepted": 24,
+    "accepted": 29,
     "required": 60,
     "covered_boundary_types": 9,
     "required_boundary_types": 9,
-    "checked_at": "2026-10-23T09:00:11.250703+00:00",
+    "checked_at": "2026-10-23T09:05:59.010128+00:00",
     "evidence": "artifacts/acceptance/status.json"
   }
 }
