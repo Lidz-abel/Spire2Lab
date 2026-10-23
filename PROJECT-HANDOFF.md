@@ -22,6 +22,14 @@ VS Code Git 凭据服务连接被拒绝，GitHub 拒绝匿名写入。远程核�
 本次 Logo 和 README 尚未上传。已请用户在本机 Git 客户端恢复登录，未索取令牌。
 项目目标：**完成第一阶段所有的内容**（用户于本轮重新设为 active；当前未完成）
 
+2026-10-23 远程交付结果：本地验收提交 ac59b44 已生成。默认推送及单次 HTTP/1.1
+重试均因 gnutls_handshake / TLS connection non-properly terminated 退出 128，尚未
+上传，不能称阶段完整交付。此前 HTTPS 只读核对远程 main 仍为 0a5c869；SSH 探测
+另因 DNS 失败。当前推送未到认证，因此历史写认证故障也没有恢复证据。无需重复
+安装游戏 Mod 或重新采集 60 场；修复 GitHub 连接后从本目录 git push origin main，
+再用 git ls-remote origin refs/heads/main 核对与本地 HEAD 一致。日志和结构化结果
+见 artifacts/github-final-delivery.json。工作区保留标准面板 PID 633440，无采集进程。
+
 2026-10-23 最终本地验收摘要（本段优先）：60/60 固定原版战斗与单独的
 probe:live-loss-recovery 均通过，9/9 类边界覆盖，最终审计无错误。Nibbit、Slimes、
 Sludge Spinner 各 20 场；公开状态比较、原始捕获哈希和独立模拟器重执行全部通过。
