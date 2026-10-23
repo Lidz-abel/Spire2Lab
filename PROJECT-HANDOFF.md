@@ -22,6 +22,11 @@ VS Code Git 凭据服务连接被拒绝，GitHub 拒绝匿名写入。远程核�
 本次 Logo 和 README 尚未上传。已请用户在本机 Git 客户端恢复登录，未索取令牌。
 项目目标：**完成第一阶段所有的内容**（用户于本轮重新设为 active；当前未完成）
 
+2026-10-23 分项检查点：Nibbit 与 Slimes 各 20/20 完整参考通过，Sludge Spinner
+剩余用例继续按固定队列采集。矩阵总进度以状态文件为准。仍为同一 Mod 与 native
+行为版本；后续提交仅更新文档/接入包说明。GitHub SSH 只读探测因 DNS 解析失败
+退出 255，尚未进入认证；不据此推断 SSH 凭据是否可用。证据 artifacts/github-ssh-connectivity.json。
+
 2026-10-23 当前交接摘要（优先于下方历史）：结算 Mod 已实机验证，游戏无需重装。
 当前 native 为 1ef77a847010c7c0590f2c610da26c711dc5d636649df5afea6f61e9c64a005d，
 源码检查点 4f8447b。固定 60 场矩阵正在继续；实时已通过数量见 PHASE1-STATUS.json

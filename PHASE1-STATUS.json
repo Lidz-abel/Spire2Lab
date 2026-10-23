@@ -267,7 +267,11 @@
     "live_execution_boundaries": "artifacts/live-boundaries/20261023T085145678089/report.json (real game, injected response loss, GET-only recovery, duplicate/stale refusal, manual/auto/pause/loss/replay/mobile; 12 transitions, 12 game POSTs, zero JS errors; separate probe outside matrix)",
     "current_native_sampling": "artifacts/sampling-live-compat-development.json (4f8447b, 1/2/4 workers, 3 repeats, 2700 episodes, 43875 decisions; public trajectories match; shared-host timing overlapped live capture/native compilation)",
     "current_native_reproduction": "artifacts/live-compat-reproduction.json (independently installed same-host environment upgraded to 4f8447b and rebuilt; 132 passed, 1 optional PowerShell skip; 300 public trajectories match, 4875 decisions; binary hashes differ)",
-    "live_validation_documentation": "docs/LIVE-VALIDATION.md"
+    "live_validation_documentation": "docs/LIVE-VALIDATION.md",
+    "current_readme_example": "artifacts/current-readme-example.json (current native 1ef77a84..., printed output matches README; simulator only)",
+    "live_trace_download": "artifacts/live-boundaries/20261023T085145678089/download-check.json (browser download byte-identical to archived original ledger, hash chain valid, 12 transitions, no mutating browser requests)",
+    "mid_campaign_gate": "artifacts/acceptance/mid-campaign-api-check.json (incomplete matrix remains unverified in acceptance API and health endpoint)",
+    "current_windows_package": "artifacts/installers/latest-package-check.json (updated instruction text; scripts, START-HERE and hash manifest only; archive/bytes/hash validation passed)"
   },
   "next_external_step": "No Windows reinstall is currently needed. Keep the game and tunnel running while remaining declared cases are checked.",
   "completion_rule": "Do not mark complete until original-game behavior and declared supported scenario parity have been verified. Simulator-only tests do not prove local game parity.",
@@ -323,11 +327,11 @@
     }
   ],
   "live_reference_progress": {
-    "accepted": 29,
+    "accepted": 43,
     "required": 60,
     "covered_boundary_types": 9,
     "required_boundary_types": 9,
-    "checked_at": "2026-10-23T09:05:59.010128+00:00",
+    "checked_at": "2026-10-23T09:23:14.705781+00:00",
     "evidence": "artifacts/acceptance/status.json"
   }
 }
