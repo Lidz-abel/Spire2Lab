@@ -22,6 +22,22 @@ VS Code Git 凭据服务连接被拒绝，GitHub 拒绝匿名写入。远程核�
 本次 Logo 和 README 尚未上传。已请用户在本机 Git 客户端恢复登录，未索取令牌。
 项目目标：**完成第一阶段所有的内容**（用户于本轮重新设为 active；当前未完成）
 
+2026-10-23 最终本地验收摘要（本段优先）：60/60 固定原版战斗与单独的
+probe:live-loss-recovery 均通过，9/9 类边界覆盖，最终审计无错误。Nibbit、Slimes、
+Sludge Spinner 各 20 场；公开状态比较、原始捕获哈希和独立模拟器重执行全部通过。
+报告 artifacts/acceptance/final-phase1-audit.json；公开有限摘要 docs/PHASE1-VALIDATION.json。
+原始捕获/DLL/存档不入 Git，摘要本身不能让新克隆获得“已验证”状态。范围不外推到
+全游戏、隐藏 RNG 或未独立测量的卡牌数值；原版画面、搜索、层级策略与训练仍属后续阶段。
+固定采集批次已结束，最后一场实验已归档，没有未决动作或仍运行的采集循环。
+标准面板服务保留运行，用户可以查看已记录决策和回放；无需再次安装 Windows Mod。
+最终服务/浏览器检查：验收 API 为 verified_scope，health 原版验证 true、全局一致性
+false，页面显示“限定参考集已通过”，无 JS 错误或变更请求；报告 final-service-check.json
+位于 artifacts/acceptance/。固定矩阵共 975 决策，额外探针 12 决策，分开统计。
+73 个文档相对路径/锚点、公开摘要中的 61 个 case 及源码/审计哈希均检查通过。
+本地技术验收完成，P1-08 的远程交付仍需核实 GitHub 连通/写认证和实际远程 HEAD。
+此前最新行为测试检查点为 4f8447b（133 通过）；之后为文档与接入包说明更新。
+独立重建、共享主机采样、控制探针与下载的具体证据见 docs/LIVE-VALIDATION.md。
+
 2026-10-23 分项检查点：Nibbit 与 Slimes 各 20/20 完整参考通过，Sludge Spinner
 剩余用例继续按固定队列采集。矩阵总进度以状态文件为准。仍为同一 Mod 与 native
 行为版本；后续提交仅更新文档/接入包说明。GitHub SSH 只读探测因 DNS 解析失败

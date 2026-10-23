@@ -1,0 +1,1046 @@
+{
+  "schema": "spire2lab-finite-validation-summary-v1",
+  "checked_at": "2026-10-23T09:39:05.357701+00:00",
+  "status": "local_finite_reference_suite_passed",
+  "scope": "Ironclad A0 starter benchmark; finite original-game reference traces only",
+  "game_version": "0.107.1",
+  "steam_build_id": "23811903",
+  "game_assembly_sha256": "a1f9e653f1e28e4076558fee1e60d218619cb7e057b887c6417f62c62c6d7a52",
+  "mod_sha256": "60d7f563611013b31d46438c5b03cfb99765b6ef00fecd28f0732bb62a38257a",
+  "native_sha256": "1ef77a847010c7c0590f2c610da26c711dc5d636649df5afea6f61e9c64a005d",
+  "protocol_version": "0.3.0",
+  "benchmark_version": "ironclad-starter-v2",
+  "encoding_version": "combat-entities-v3",
+  "source_checkpoint": "8199571819d2f83c6d3937bbf26f75e8cf761759",
+  "behavior_tested_commit": "4f8447bdd0ba19597576dc52a0ba8b7d8194f4dd",
+  "comparison_profile": "starter-live-observables-v1",
+  "required_cases": 60,
+  "passed_cases": 60,
+  "additional_probes": 1,
+  "boundary_types": [
+    "end_turn",
+    "enemy_removed",
+    "lost",
+    "play_card",
+    "power_present",
+    "status_card_intent",
+    "status_card_present",
+    "turn_advance",
+    "won"
+  ],
+  "global_game_parity_proven": false,
+  "hidden_rng_alignment_proven": false,
+  "rl_training_performed": false,
+  "raw_evidence_distributed": false,
+  "audit_sha256": "58c94fae8caa4a984805129cddb95098409d2f0b7acd7dff2dbc4cea1de02729",
+  "index_sha256": "5d9856eaafac0680df847f366882292a9185cbc82747a61cc4675bf8b7c05f36",
+  "encounters": [
+    {
+      "encounter": "nibbits-weak",
+      "required": 20,
+      "passed": 20,
+      "decisions": 303,
+      "outcomes": {
+        "won": 20,
+        "lost": 0
+      }
+    },
+    {
+      "encounter": "slimes-weak",
+      "required": 20,
+      "passed": 20,
+      "decisions": 397,
+      "outcomes": {
+        "won": 20,
+        "lost": 0
+      }
+    },
+    {
+      "encounter": "sludge-spinner",
+      "required": 20,
+      "passed": 20,
+      "decisions": 275,
+      "outcomes": {
+        "won": 20,
+        "lost": 0
+      }
+    }
+  ],
+  "cases": [
+    {
+      "id": "nibbits-weak:1:heuristic",
+      "steps": 11,
+      "outcome": "won",
+      "coverage": [
+        "end_turn",
+        "play_card",
+        "power_present",
+        "turn_advance",
+        "won"
+      ],
+      "reference_sha256": "bcbdead776138f7a626ad3b8cbec47fb82499d223a90fc4789fe8ed3a8181d08",
+      "candidate_sha256": "7fe5c4d3c20de782ee0d28057f8d81593fe1e43eb430114bd4c332168ea5be4b"
+    },
+    {
+      "id": "nibbits-weak:1:random",
+      "steps": 17,
+      "outcome": "won",
+      "coverage": [
+        "end_turn",
+        "play_card",
+        "power_present",
+        "turn_advance",
+        "won"
+      ],
+      "reference_sha256": "d3518bea9adc34b6d7bf3ad4769aba7bcfd35e05076e85d4285ce9c9c7c51d17",
+      "candidate_sha256": "c8c20e34c195396a172a2a1fa034657964e1e1bf0e25ca9c3814f7a0d41b14c6"
+    },
+    {
+      "id": "slimes-weak:1:heuristic",
+      "steps": 19,
+      "outcome": "won",
+      "coverage": [
+        "end_turn",
+        "enemy_removed",
+        "play_card",
+        "status_card_intent",
+        "status_card_present",
+        "turn_advance",
+        "won"
+      ],
+      "reference_sha256": "9f4899feeadf49bc045b9946edf3b4fea213d7edaaefdf5341b73dd6584c0739",
+      "candidate_sha256": "08e488e397629bfafa66d9638514c3343b0fa5531759d538c087b7b251180e15"
+    },
+    {
+      "id": "sludge-spinner:1:heuristic",
+      "steps": 9,
+      "outcome": "won",
+      "coverage": [
+        "end_turn",
+        "play_card",
+        "power_present",
+        "turn_advance",
+        "won"
+      ],
+      "reference_sha256": "16a052930756d80b8a7f87a9ba1da658b140605540058f70f97b9e2c98b8f5f6",
+      "candidate_sha256": "e134a6d0f73612d328a6ab3e4092058efd72c86e47edde1faf17c8c95f39f7b3"
+    },
+    {
+      "id": "slimes-weak:1:random",
+      "steps": 21,
+      "outcome": "won",
+      "coverage": [
+        "end_turn",
+        "enemy_removed",
+        "play_card",
+        "power_present",
+        "status_card_intent",
+        "status_card_present",
+        "turn_advance",
+        "won"
+      ],
+      "reference_sha256": "f6d61296b860c327f77ebb84ca86f57e6e2bdd9cff6f4b1ad690618aedfcb88b",
+      "candidate_sha256": "8a930338227b6ae239d7c5727f090299ebbb8d738e8c397eca2e59cf9fecd488"
+    },
+    {
+      "id": "sludge-spinner:1:random",
+      "steps": 15,
+      "outcome": "won",
+      "coverage": [
+        "end_turn",
+        "play_card",
+        "power_present",
+        "turn_advance",
+        "won"
+      ],
+      "reference_sha256": "eaab3dd9056b51992870e929dbb6f51da13ff83f293f77ee327e55446a109660",
+      "candidate_sha256": "8f08ff9f25a0a412d7e02f4e526a467840d88d0839303adbdf86f7efa710e89b"
+    },
+    {
+      "id": "nibbits-weak:2:random",
+      "steps": 20,
+      "outcome": "won",
+      "coverage": [
+        "end_turn",
+        "play_card",
+        "power_present",
+        "turn_advance",
+        "won"
+      ],
+      "reference_sha256": "355deae7e8bfb101ccb71f6d9d9e7aab232770548141a72d0747304dfd069557",
+      "candidate_sha256": "a38aff73824520878f48b5c8fa4cff35f1310969de012074a3c2499edca88650"
+    },
+    {
+      "id": "nibbits-weak:2:heuristic",
+      "steps": 12,
+      "outcome": "won",
+      "coverage": [
+        "end_turn",
+        "play_card",
+        "power_present",
+        "turn_advance",
+        "won"
+      ],
+      "reference_sha256": "6654fa92c8490997aa9828ac23367909dbbb5db6183b4c6869a997b2c833485b",
+      "candidate_sha256": "1abc849b0e9797926c48f1843b81647485b8121473abb2d94f811990b7a51c6d"
+    },
+    {
+      "id": "nibbits-weak:3:random",
+      "steps": 17,
+      "outcome": "won",
+      "coverage": [
+        "end_turn",
+        "play_card",
+        "power_present",
+        "turn_advance",
+        "won"
+      ],
+      "reference_sha256": "d317b110a017f48b842e72c13d519cfce35a604d49d893c5f06795871df9f50c",
+      "candidate_sha256": "7f3b20ab4ca7bf0c86c8cb448c05aef0574e2e7539ee28b4241fd5c5cef25e68"
+    },
+    {
+      "id": "nibbits-weak:3:heuristic",
+      "steps": 15,
+      "outcome": "won",
+      "coverage": [
+        "end_turn",
+        "play_card",
+        "power_present",
+        "turn_advance",
+        "won"
+      ],
+      "reference_sha256": "78acbd86cad493ebbcc2143bed4f531f3b30bd0c7dd7cb9ce478d90c9d67cf75",
+      "candidate_sha256": "21035bc1ba740588b0bb749e8e0d9f60cca41a801bcee4825c3a8d353212e5d2"
+    },
+    {
+      "id": "nibbits-weak:4:random",
+      "steps": 14,
+      "outcome": "won",
+      "coverage": [
+        "end_turn",
+        "play_card",
+        "power_present",
+        "turn_advance",
+        "won"
+      ],
+      "reference_sha256": "8c460404826845d25c92716fb6bf6e292422e00a07b9043f3c7c03a2e0eb91d4",
+      "candidate_sha256": "8fcbbe4aa158b333874823dcfeb4184a8fa1bb8236fe99e42dd7e8f6e2be57e1"
+    },
+    {
+      "id": "nibbits-weak:4:heuristic",
+      "steps": 12,
+      "outcome": "won",
+      "coverage": [
+        "end_turn",
+        "play_card",
+        "power_present",
+        "turn_advance",
+        "won"
+      ],
+      "reference_sha256": "b712ab707fd775037cc38537c0722c30274d70b70cf60156467f1d8d8ec721e6",
+      "candidate_sha256": "539b8354eba7a63f2e36490a0e3d234214eb39fa6e86459ebe1d3b3f60f80a31"
+    },
+    {
+      "id": "nibbits-weak:5:random",
+      "steps": 13,
+      "outcome": "won",
+      "coverage": [
+        "end_turn",
+        "play_card",
+        "power_present",
+        "turn_advance",
+        "won"
+      ],
+      "reference_sha256": "babfe73491280ef4a3200bd43c5e2b9d17571e4403c4f6c88e297f36fffa980e",
+      "candidate_sha256": "fb396159ec436ef8e86f71e39d8072d1c1a850622aac20d3760d7ed3732fa287"
+    },
+    {
+      "id": "nibbits-weak:5:heuristic",
+      "steps": 11,
+      "outcome": "won",
+      "coverage": [
+        "end_turn",
+        "play_card",
+        "power_present",
+        "turn_advance",
+        "won"
+      ],
+      "reference_sha256": "e73c7f5779200294de5f414eb4eef20c180e1e47b9e0afcbd592cfa9e3bd9866",
+      "candidate_sha256": "ea07ee74e02a55a9bb1d6e120857ea1e0e5c52d5de6f1c970356247241a1f300"
+    },
+    {
+      "id": "nibbits-weak:6:random",
+      "steps": 24,
+      "outcome": "won",
+      "coverage": [
+        "end_turn",
+        "play_card",
+        "power_present",
+        "turn_advance",
+        "won"
+      ],
+      "reference_sha256": "605ab6396e322dbefe515361adac5bc5157e81f878d79d0495a5f3257d9ed5ee",
+      "candidate_sha256": "49ed75b3c41de53f7952a1edf7ccc3f819df64aa1eb0d6f9ef1684f9c89c7b39"
+    },
+    {
+      "id": "nibbits-weak:6:heuristic",
+      "steps": 15,
+      "outcome": "won",
+      "coverage": [
+        "end_turn",
+        "play_card",
+        "power_present",
+        "turn_advance",
+        "won"
+      ],
+      "reference_sha256": "fb04e9cef8d36471b2970b73336e0d291f5a4b3e9ea4b3b31e814c9585a1365f",
+      "candidate_sha256": "0352298ae26d32917d90be312de9a6ecd08315cddfd832e6342dec5deb8f77fb"
+    },
+    {
+      "id": "nibbits-weak:7:random",
+      "steps": 21,
+      "outcome": "won",
+      "coverage": [
+        "end_turn",
+        "play_card",
+        "power_present",
+        "turn_advance",
+        "won"
+      ],
+      "reference_sha256": "0434316b6bd6bd66f50edfe4080d9dd2bb06a28a7292a59b08f3ad343a2d728b",
+      "candidate_sha256": "067bb2bb30a1284fa0e695ab33ffd4b7b10340d03f2eb79ebf6968f76ec962ce"
+    },
+    {
+      "id": "nibbits-weak:7:heuristic",
+      "steps": 12,
+      "outcome": "won",
+      "coverage": [
+        "end_turn",
+        "play_card",
+        "power_present",
+        "turn_advance",
+        "won"
+      ],
+      "reference_sha256": "149119fefc507cc98f7bb960f96e5da0403d19f1886eb0b5fbd215101d588dc5",
+      "candidate_sha256": "7987779af1724ecbcd2daa905e747bf339c9606b5253cc898f0b9b3a04952f6d"
+    },
+    {
+      "id": "nibbits-weak:8:random",
+      "steps": 9,
+      "outcome": "won",
+      "coverage": [
+        "end_turn",
+        "play_card",
+        "power_present",
+        "turn_advance",
+        "won"
+      ],
+      "reference_sha256": "0b002e17a8810a0e64ef60db870527be805ac7c341c24e9bcef0f6d1b37cf90c",
+      "candidate_sha256": "06c57414dcbf6028d66f158bcf66f667dcbd409b6142130ca4bce9cd308bade9"
+    },
+    {
+      "id": "probe:live-loss-recovery",
+      "steps": 12,
+      "outcome": "lost",
+      "coverage": [
+        "end_turn",
+        "lost",
+        "play_card",
+        "power_present",
+        "turn_advance"
+      ],
+      "reference_sha256": "f099c5e60e43670a9d01514c181f728427f962145a8f7b738797b8b14c4f6840",
+      "candidate_sha256": "826afbd24fa663ea407ffdbaa1485774aa47677a54001f0d6a9c95fe9637c3bf"
+    },
+    {
+      "id": "nibbits-weak:8:heuristic",
+      "steps": 13,
+      "outcome": "won",
+      "coverage": [
+        "end_turn",
+        "play_card",
+        "power_present",
+        "turn_advance",
+        "won"
+      ],
+      "reference_sha256": "6020a7bf6b066e3b51ebc153c04a0d33d64e1a608057073471462d4e34a05cb7",
+      "candidate_sha256": "b27c29bed8f6afd055bf2d240595a5a741f71dcb968ac95b234d7ecb7fd088a8"
+    },
+    {
+      "id": "nibbits-weak:9:random",
+      "steps": 24,
+      "outcome": "won",
+      "coverage": [
+        "end_turn",
+        "play_card",
+        "power_present",
+        "turn_advance",
+        "won"
+      ],
+      "reference_sha256": "d64345a0771b9fba714ff76bd61c660c2e7e3fe3939642e4ad44b1432cd82d38",
+      "candidate_sha256": "1ff4e9dc9f3fbc9b178e834b93a4bb6b69054b9ac64b944b4461572c562da60c"
+    },
+    {
+      "id": "nibbits-weak:9:heuristic",
+      "steps": 13,
+      "outcome": "won",
+      "coverage": [
+        "end_turn",
+        "play_card",
+        "power_present",
+        "turn_advance",
+        "won"
+      ],
+      "reference_sha256": "4d2e16c499ac44e7149f17cd9cc177c2f9248ee7bf2dc62b8d2f2d5d3d07b3ba",
+      "candidate_sha256": "2a8bd2d189b2f73b8aa7aae4e80a70e3f6f40bf6abe21a3b350c24ae5c182b84"
+    },
+    {
+      "id": "nibbits-weak:10:random",
+      "steps": 19,
+      "outcome": "won",
+      "coverage": [
+        "end_turn",
+        "play_card",
+        "power_present",
+        "turn_advance",
+        "won"
+      ],
+      "reference_sha256": "53c72ed914589c2057f556fb80f0d04b8de3013c91bf8a42b53b10169689ee71",
+      "candidate_sha256": "7f0e86d2784f43acdff20274ab8798c2b72bbedef162c252826a7b51e5f3d198"
+    },
+    {
+      "id": "nibbits-weak:10:heuristic",
+      "steps": 11,
+      "outcome": "won",
+      "coverage": [
+        "end_turn",
+        "play_card",
+        "power_present",
+        "turn_advance",
+        "won"
+      ],
+      "reference_sha256": "8b4ea9c12aaf39ecd95d700978e9f3604308b009d1b55020e4bad3021572e43d",
+      "candidate_sha256": "655b13f1870d620536395a34d4e5312ebd8a3ff416d9469b62d0368f26964a30"
+    },
+    {
+      "id": "slimes-weak:2:random",
+      "steps": 23,
+      "outcome": "won",
+      "coverage": [
+        "end_turn",
+        "enemy_removed",
+        "play_card",
+        "power_present",
+        "status_card_intent",
+        "status_card_present",
+        "turn_advance",
+        "won"
+      ],
+      "reference_sha256": "2152eeaae56e4e816979df4f5fd423720bd7f31201041d70ecdd52cd543e4618",
+      "candidate_sha256": "b10bef07ca789f4d7dea63a345dc8d16f474cd03875484a08d4a48b0b4232b52"
+    },
+    {
+      "id": "slimes-weak:2:heuristic",
+      "steps": 17,
+      "outcome": "won",
+      "coverage": [
+        "end_turn",
+        "enemy_removed",
+        "play_card",
+        "power_present",
+        "status_card_intent",
+        "status_card_present",
+        "turn_advance",
+        "won"
+      ],
+      "reference_sha256": "d9fb13f944c4748e3f49281655728b7e34e5fae57cffa79e9a1fdcc4fa6ccc08",
+      "candidate_sha256": "b754ae379f299b3cc00be553bcddab3403033eb6c2e686229bbc08192cfdfc1d"
+    },
+    {
+      "id": "slimes-weak:3:random",
+      "steps": 17,
+      "outcome": "won",
+      "coverage": [
+        "end_turn",
+        "enemy_removed",
+        "play_card",
+        "power_present",
+        "status_card_intent",
+        "status_card_present",
+        "turn_advance",
+        "won"
+      ],
+      "reference_sha256": "3ff0e6cc2a32d42e6d6402baca9567ac4c8cb618e400ddb048677eaa5ed7a8f6",
+      "candidate_sha256": "f4189d031fdb39a28dd1c08bac7e97e2773dacacc955e9f303cbc05a890c171f"
+    },
+    {
+      "id": "slimes-weak:3:heuristic",
+      "steps": 13,
+      "outcome": "won",
+      "coverage": [
+        "end_turn",
+        "enemy_removed",
+        "play_card",
+        "power_present",
+        "status_card_intent",
+        "status_card_present",
+        "turn_advance",
+        "won"
+      ],
+      "reference_sha256": "9b79d7e8d1bf522a7d486ab94dbf4f2e64f6907b4536791a59b95e6b54ca0db0",
+      "candidate_sha256": "b3784998dff94973d1bd954799b7798d25ba27e795c9e68ac9227959df856adc"
+    },
+    {
+      "id": "slimes-weak:4:random",
+      "steps": 16,
+      "outcome": "won",
+      "coverage": [
+        "end_turn",
+        "enemy_removed",
+        "play_card",
+        "power_present",
+        "status_card_intent",
+        "status_card_present",
+        "turn_advance",
+        "won"
+      ],
+      "reference_sha256": "83d3f070759b3ba94e9816d1d84fbfbd562402d61bbc02ddfc603becb36c1984",
+      "candidate_sha256": "178bffb383a5d01e80e9aab02a95866661734e95c11da7ad8e1a75dce0a009b6"
+    },
+    {
+      "id": "slimes-weak:4:heuristic",
+      "steps": 13,
+      "outcome": "won",
+      "coverage": [
+        "end_turn",
+        "enemy_removed",
+        "play_card",
+        "power_present",
+        "status_card_intent",
+        "status_card_present",
+        "turn_advance",
+        "won"
+      ],
+      "reference_sha256": "fbc0595776bcf3b63ba3d9858663a2763bf64a99b7a3a6887969f9ebe900f026",
+      "candidate_sha256": "b2877e4fca28bfc73351bba272e927d45dd9d87eeb277ffe739a37d6ece1728b"
+    },
+    {
+      "id": "slimes-weak:5:random",
+      "steps": 28,
+      "outcome": "won",
+      "coverage": [
+        "end_turn",
+        "enemy_removed",
+        "play_card",
+        "status_card_intent",
+        "status_card_present",
+        "turn_advance",
+        "won"
+      ],
+      "reference_sha256": "bec8829fb7e1e7a01559f860a6d33c7eaa4365cbfd794256eb7351d99db83616",
+      "candidate_sha256": "0204c109f62e7be6114510067164da881343e08e31bc5921ceac597d089604af"
+    },
+    {
+      "id": "slimes-weak:5:heuristic",
+      "steps": 13,
+      "outcome": "won",
+      "coverage": [
+        "end_turn",
+        "enemy_removed",
+        "play_card",
+        "power_present",
+        "status_card_intent",
+        "status_card_present",
+        "turn_advance",
+        "won"
+      ],
+      "reference_sha256": "33d6c16a5a9eadfb276a6a0f42073cac21a0367f16d59cf4b61f01265645832f",
+      "candidate_sha256": "5585ecb1cc5f5555be3ce362388dfe39fe5e79a01ab9fd17d87d8bb586be276f"
+    },
+    {
+      "id": "slimes-weak:6:random",
+      "steps": 16,
+      "outcome": "won",
+      "coverage": [
+        "end_turn",
+        "enemy_removed",
+        "play_card",
+        "status_card_intent",
+        "status_card_present",
+        "turn_advance",
+        "won"
+      ],
+      "reference_sha256": "f6e2b55441750d14a696fed29ebb407989aef24d14b42232ee0dcfb537b3f67e",
+      "candidate_sha256": "f6f936d6576ea62d9d16e2815edd36919fe63314115cc5af4a4f9054df5515ef"
+    },
+    {
+      "id": "slimes-weak:6:heuristic",
+      "steps": 17,
+      "outcome": "won",
+      "coverage": [
+        "end_turn",
+        "enemy_removed",
+        "play_card",
+        "power_present",
+        "status_card_intent",
+        "status_card_present",
+        "turn_advance",
+        "won"
+      ],
+      "reference_sha256": "1fc66dcceea17f656cea5f2f8d7f26d87d6ff501943743e64ddeb3960463cc69",
+      "candidate_sha256": "19496fd0dbc637e36194bb9518ed8202baa62abdc3d42d0892ae563696ce6f8e"
+    },
+    {
+      "id": "slimes-weak:7:random",
+      "steps": 12,
+      "outcome": "won",
+      "coverage": [
+        "end_turn",
+        "enemy_removed",
+        "play_card",
+        "power_present",
+        "status_card_intent",
+        "status_card_present",
+        "turn_advance",
+        "won"
+      ],
+      "reference_sha256": "75f84e5d5b311eee83e8a39ef705d3113138cb614321704b13c892b7b2b7b320",
+      "candidate_sha256": "14f625680d1398c433848f5b96cf1e00112e4779893a9ca253f5239dba4fac71"
+    },
+    {
+      "id": "slimes-weak:7:heuristic",
+      "steps": 16,
+      "outcome": "won",
+      "coverage": [
+        "end_turn",
+        "enemy_removed",
+        "play_card",
+        "power_present",
+        "status_card_intent",
+        "status_card_present",
+        "turn_advance",
+        "won"
+      ],
+      "reference_sha256": "c43b71487eb945dc767289155816bf43e57fa52fea0086ebc5ecc98c382983b8",
+      "candidate_sha256": "f983a2ab8a222ee155ca5207a5143058a235f78dcbae8ca8913ae35e957ca578"
+    },
+    {
+      "id": "slimes-weak:8:random",
+      "steps": 19,
+      "outcome": "won",
+      "coverage": [
+        "end_turn",
+        "enemy_removed",
+        "play_card",
+        "power_present",
+        "status_card_intent",
+        "status_card_present",
+        "turn_advance",
+        "won"
+      ],
+      "reference_sha256": "49a6f76abcaf682783b3ac8c021c54d59307de99884248098b657a2d5fd4f468",
+      "candidate_sha256": "3322568cdddae1eaee7f2c3f2e44cbe711aebf438f3267712d121c80ddffe8f0"
+    },
+    {
+      "id": "slimes-weak:8:heuristic",
+      "steps": 16,
+      "outcome": "won",
+      "coverage": [
+        "end_turn",
+        "enemy_removed",
+        "play_card",
+        "status_card_intent",
+        "status_card_present",
+        "turn_advance",
+        "won"
+      ],
+      "reference_sha256": "047c29dbf5a06aa8bb0bb5c07ef54e07e5b8ffb52a6cf53af37fc8afd1dc86d0",
+      "candidate_sha256": "7e05026edd5a7620d7ec7fc18f9c32a4ba4da930a9459483ddb475e0a2a79aa9"
+    },
+    {
+      "id": "slimes-weak:9:random",
+      "steps": 27,
+      "outcome": "won",
+      "coverage": [
+        "end_turn",
+        "enemy_removed",
+        "play_card",
+        "status_card_intent",
+        "status_card_present",
+        "turn_advance",
+        "won"
+      ],
+      "reference_sha256": "f9c6efe62c161e0737ea7a62b78e20d1d6cb339939c20c40a80992396e274b49",
+      "candidate_sha256": "1c5a506594e69d39e98d7e8f81c1c9edd837f74f10fbe315d17f43445dae968a"
+    },
+    {
+      "id": "slimes-weak:9:heuristic",
+      "steps": 20,
+      "outcome": "won",
+      "coverage": [
+        "end_turn",
+        "enemy_removed",
+        "play_card",
+        "power_present",
+        "status_card_intent",
+        "status_card_present",
+        "turn_advance",
+        "won"
+      ],
+      "reference_sha256": "e70f652c29e73361d67e78c42edb256518bea9194ec8aaa2d8fc7ac09a0a566b",
+      "candidate_sha256": "204790d5aef95b5bc0b1bd44a3a1f38c4c3178bf9e0db9087cb0f5077650736e"
+    },
+    {
+      "id": "slimes-weak:10:random",
+      "steps": 54,
+      "outcome": "won",
+      "coverage": [
+        "end_turn",
+        "enemy_removed",
+        "play_card",
+        "status_card_intent",
+        "status_card_present",
+        "turn_advance",
+        "won"
+      ],
+      "reference_sha256": "993eb57aa217c8bce8ab9e1256c41b27f3df96aaa83c56df6bcc26ff056f7833",
+      "candidate_sha256": "eeedfe518054a0baafdbbaa05e30f7898a1a0d111a1428e7173edc06ae70f7de"
+    },
+    {
+      "id": "slimes-weak:10:heuristic",
+      "steps": 20,
+      "outcome": "won",
+      "coverage": [
+        "end_turn",
+        "enemy_removed",
+        "play_card",
+        "power_present",
+        "status_card_intent",
+        "status_card_present",
+        "turn_advance",
+        "won"
+      ],
+      "reference_sha256": "b377a62738e647278519d33f4884139d412030f06390332fa52c5a9d335a6a6d",
+      "candidate_sha256": "fa4ac306076c56314791051ace87a85c40208dcace8e4fa80b3c46897cd0f6b2"
+    },
+    {
+      "id": "sludge-spinner:2:random",
+      "steps": 15,
+      "outcome": "won",
+      "coverage": [
+        "end_turn",
+        "play_card",
+        "power_present",
+        "turn_advance",
+        "won"
+      ],
+      "reference_sha256": "f0ea09955c4d4da6acb0c63c56843ed84a5bd2769e56485b21ca686a3e98b7b8",
+      "candidate_sha256": "18f515d9c7d5e7bf93df52de04e3f990fef890883a23eef4fb159da8b5210639"
+    },
+    {
+      "id": "sludge-spinner:2:heuristic",
+      "steps": 12,
+      "outcome": "won",
+      "coverage": [
+        "end_turn",
+        "play_card",
+        "power_present",
+        "turn_advance",
+        "won"
+      ],
+      "reference_sha256": "3e44f6d297933c4e4e9aedddcb8d11a573a80c8d903f2212e0898dfd4e90855e",
+      "candidate_sha256": "7ee0949366fdd1119adf8f718f521309be63794a8b50a808c915eae5aacfdca4"
+    },
+    {
+      "id": "sludge-spinner:3:random",
+      "steps": 16,
+      "outcome": "won",
+      "coverage": [
+        "end_turn",
+        "play_card",
+        "power_present",
+        "turn_advance",
+        "won"
+      ],
+      "reference_sha256": "0b076380ea38339defc176cf7d9fc1ea6668beae21632a893918da336f4689e8",
+      "candidate_sha256": "076701975b900b915a669d0a5462ed9d778e43ca782848d18caa468f031bbc2b"
+    },
+    {
+      "id": "sludge-spinner:3:heuristic",
+      "steps": 15,
+      "outcome": "won",
+      "coverage": [
+        "end_turn",
+        "play_card",
+        "power_present",
+        "turn_advance",
+        "won"
+      ],
+      "reference_sha256": "2deff220717d7e1d99e7b8331f52d4207c9a910101fde227dc87a3a3333b3ad2",
+      "candidate_sha256": "768e587f8b265deb5a8445ed611e0b45003cf811bbc7d3e012a38599360ca1a2"
+    },
+    {
+      "id": "sludge-spinner:4:random",
+      "steps": 13,
+      "outcome": "won",
+      "coverage": [
+        "end_turn",
+        "play_card",
+        "power_present",
+        "turn_advance",
+        "won"
+      ],
+      "reference_sha256": "129c2fa9fab3128684f4505e8528401ce462fd6352a9184b10d9c7c1186638b1",
+      "candidate_sha256": "dc09b678acc65bb98f2fffaf2fd14579d17da8597e30ff6f9d7f70a2e166bc78"
+    },
+    {
+      "id": "sludge-spinner:4:heuristic",
+      "steps": 12,
+      "outcome": "won",
+      "coverage": [
+        "end_turn",
+        "play_card",
+        "power_present",
+        "turn_advance",
+        "won"
+      ],
+      "reference_sha256": "d06de4761adac1750a47ab39694d468481466b1c57c17f99f001b5e81b1507d9",
+      "candidate_sha256": "220949f59fa05def71470e4dd9476c0eb2aad341ac68455d2a8251ca4a38283a"
+    },
+    {
+      "id": "sludge-spinner:5:random",
+      "steps": 12,
+      "outcome": "won",
+      "coverage": [
+        "end_turn",
+        "play_card",
+        "power_present",
+        "turn_advance",
+        "won"
+      ],
+      "reference_sha256": "b4e9c2a316971450718c583aec1f3f17fb727079ce212b387d948e0c792db808",
+      "candidate_sha256": "69e24373041e7ecde5149538dc94ef59e94dc57eeaf74343c1247cdebb038fb0"
+    },
+    {
+      "id": "sludge-spinner:5:heuristic",
+      "steps": 15,
+      "outcome": "won",
+      "coverage": [
+        "end_turn",
+        "play_card",
+        "power_present",
+        "turn_advance",
+        "won"
+      ],
+      "reference_sha256": "8b680f0ad68c8ca8616ce023493ea0a8efe25ffde29a6f0415fc57710a32a3dd",
+      "candidate_sha256": "f26084ad9650ae79c78b6f460c450d9c2938de804f9698a87ad874aca319dcce"
+    },
+    {
+      "id": "sludge-spinner:6:random",
+      "steps": 16,
+      "outcome": "won",
+      "coverage": [
+        "end_turn",
+        "play_card",
+        "power_present",
+        "turn_advance",
+        "won"
+      ],
+      "reference_sha256": "06fc1f6fdf1a17fab4c8410607e6e7dcaa0ffa95d8756f13a35a668a610298e8",
+      "candidate_sha256": "9b6d1e508910f69a856d492ad0ae65186424c5396d6598746816ec0c9ea9b194"
+    },
+    {
+      "id": "sludge-spinner:6:heuristic",
+      "steps": 12,
+      "outcome": "won",
+      "coverage": [
+        "end_turn",
+        "play_card",
+        "power_present",
+        "turn_advance",
+        "won"
+      ],
+      "reference_sha256": "d7b921b39b302e60dc9c71e287182380b506b86b895d984905ce074f0b497778",
+      "candidate_sha256": "ab93d1c287a2a05fc28d10c2e179a9e451a4aa836c7e79f726e93057da7b634a"
+    },
+    {
+      "id": "sludge-spinner:7:random",
+      "steps": 14,
+      "outcome": "won",
+      "coverage": [
+        "end_turn",
+        "play_card",
+        "power_present",
+        "turn_advance",
+        "won"
+      ],
+      "reference_sha256": "9d56c161e4681b857b6d5cb9b18177b4186b8f1aa5ba28588710ad85ec25d99b",
+      "candidate_sha256": "9e311188f49a31a5233ecd2411270dd2119bda5ffca706a77fded7e4e4cb78bc"
+    },
+    {
+      "id": "sludge-spinner:7:heuristic",
+      "steps": 13,
+      "outcome": "won",
+      "coverage": [
+        "end_turn",
+        "play_card",
+        "power_present",
+        "turn_advance",
+        "won"
+      ],
+      "reference_sha256": "87e437b91a6283be3f02f7567882735940a2139dd702f69f9098299fedca75ca",
+      "candidate_sha256": "166edfb5a3faf0b5b5f53bc58cec6d75eaa9bdf9438d244d659646fdcc26b31d"
+    },
+    {
+      "id": "sludge-spinner:8:random",
+      "steps": 9,
+      "outcome": "won",
+      "coverage": [
+        "end_turn",
+        "play_card",
+        "power_present",
+        "turn_advance",
+        "won"
+      ],
+      "reference_sha256": "fe3bf5f1a31c233f083cc551f8098d0859a596107d6d1813e082bb1cb8ebbe53",
+      "candidate_sha256": "445fc5841a784b0f754f1c49957b26ba507325a407c82de0bdf36784f41f960a"
+    },
+    {
+      "id": "sludge-spinner:8:heuristic",
+      "steps": 13,
+      "outcome": "won",
+      "coverage": [
+        "end_turn",
+        "play_card",
+        "power_present",
+        "turn_advance",
+        "won"
+      ],
+      "reference_sha256": "34827ee7c4ca9a87f9c6e440f014b04a0a270b08e81e133d5ca580cef01713a0",
+      "candidate_sha256": "1aa7f30eb2d17d45b864d8f9bb2de758c60c9836c246f3816059de7635ba5311"
+    },
+    {
+      "id": "sludge-spinner:9:random",
+      "steps": 22,
+      "outcome": "won",
+      "coverage": [
+        "end_turn",
+        "play_card",
+        "power_present",
+        "turn_advance",
+        "won"
+      ],
+      "reference_sha256": "4ee9fb00e51e387a8d92c503c7fe2a37bebdc476b66d8bcfa7e5afd43008bc3a",
+      "candidate_sha256": "09f28058d63b9831754045a62a045cb0d021d0d7760528f76014e9857a270dbb"
+    },
+    {
+      "id": "sludge-spinner:9:heuristic",
+      "steps": 13,
+      "outcome": "won",
+      "coverage": [
+        "end_turn",
+        "play_card",
+        "power_present",
+        "turn_advance",
+        "won"
+      ],
+      "reference_sha256": "8f93d2d50126c92f87ecdf97a40c9c4b9e1b34ae8c6d75fee9af0f00833a4b81",
+      "candidate_sha256": "8a683e5d9a710e080c463b79fe3e20bc520e5bc2822bd86d7f3daa19ff008e24"
+    },
+    {
+      "id": "sludge-spinner:10:random",
+      "steps": 16,
+      "outcome": "won",
+      "coverage": [
+        "end_turn",
+        "play_card",
+        "power_present",
+        "turn_advance",
+        "won"
+      ],
+      "reference_sha256": "693033da62a27e07a49d2f45e85fd7b97de535ddc40894c6f4f5e75c277dafc2",
+      "candidate_sha256": "8e4d1401fdbe536135838a100eb28eb2aceb2a02fd1e402a8da8579d09cdfa06"
+    },
+    {
+      "id": "sludge-spinner:10:heuristic",
+      "steps": 13,
+      "outcome": "won",
+      "coverage": [
+        "end_turn",
+        "play_card",
+        "power_present",
+        "turn_advance",
+        "won"
+      ],
+      "reference_sha256": "c06fe82c54000c32b9c2eb77019a29ad744cd8b84827cee67dae1526ebae829b",
+      "candidate_sha256": "2a988ce714a2f369474390409472c5ed1608d10acad465d8bf3be2bdef721700"
+    }
+  ],
+  "source_sha256": {
+    "ENCODING.json": "950ca93251510469a9b51768fcd236f9b572fb7db016b802c387606d978c8de0",
+    "bridge/McpMod.Lab.cs": "dfbf277f7f0f685e8e2415771fb54faf947637f4a635a0aa12111ee9a924e915",
+    "bridge/McpMod.Scenario.cs": "996cb8bd3367f11eccf6575a8a3cd16e9ec02908631600bac0d35b1f58008dfb",
+    "bridge/ScenarioContract.cs": "2abf3e07d61e949d11fc6bb80aaa1a6c2781b8b05e0ad0ffc8603ce936f194c3",
+    "bridge/SettlementGate.cs": "f1007e860f9840ef3dee796dcbb6a6a4963f7c4d19ce1479d2c6f1c01df03b28",
+    "config/acceptance.json": "753bb4be7637f6abe12b05cd6174c9ec60e7cb1ecfa4004b41d0eba5c0931b81",
+    "config/content-v1.json": "9df050a8e9f7d0177e83f9c59cdc95c6856913728d253cdf32d13c538357452c",
+    "config/phase1.json": "ee6d05f24609cb2da13d960e306902f34e4fddda271f1e1532609d907506675f",
+    "native/LabCombat.cs": "5843e16bfb01aed7ca97d2357d4d15a313c2d81fb722ac4c7a64e6d353303682",
+    "native/LabExports.cs": "228bd29840f878168a09cd0d18372c3f9f006f553745b7250a46f494fe606b2d",
+    "native/Sts2Lab.csproj": "91725e15995b9a71807e74f484063afd1fb22d7f24769998a394269bf3267710",
+    "scripts/build_bridge.py": "a6533d0934041837947833e3df05fd82a76a9e4ed9df2b915cbc75c242ec03f1",
+    "scripts/build_native.py": "fa7a75378d5923783a8a6a3bb836c29f4281d2fd8a86363c5aa03d98a9feec9d",
+    "sts2lab/__init__.py": "a2fd2743d395265293d3ef6b1f6cef67ab02758588f3ac7b848affb42d1df98b",
+    "sts2lab/acceptance.py": "c770da36ceab829ee33db507576d24a30fc306d1ad645e6657406fb7d6683694",
+    "sts2lab/bridge.py": "1e12a1bccad459018babffc9fe1a7beed5b6f1776f2a8874f59105792afe3acf",
+    "sts2lab/bridge_check.py": "2bf54fe6b6615091e5dee1828e83b55d2e92483b8d7159172c8ae8501442490e",
+    "sts2lab/catalog.py": "db919491645c8ace9e04f9306e1e3b5e2a8aa43249f915e51de5aabc782cbb7b",
+    "sts2lab/contracts.py": "7faf0718face8c6c82c2a16b10c2bf081a554953dffa33635413a302f43684cf",
+    "sts2lab/environment.py": "aab10873feac62471a30914032cf0b1b47e28e80135bd306997c0341d9628ef2",
+    "sts2lab/gym_env.py": "17b778ab553eaff5a7418e38c1d590bd52a4370bdd32b3a32fa52692f667c3f8",
+    "sts2lab/native_compat.py": "b4d2f8caa9f2d755104ccb97d2c0d150a025d076ea7cd31de46f4b6630ff7865",
+    "sts2lab/original.py": "ed8b3bb9a8e80badffed11a8b9285aac19cf4bd7ed554f3a12707a35d8d141e0",
+    "sts2lab/parity.py": "a55556ca27a863a0fe04d47bca51025083f5abf644ddaed278d165656331ef50",
+    "sts2lab/policies.py": "18765fd1f4884d75b1981cc953be93fabb3bd2d85cf80d49aed2c9157e17c901",
+    "sts2lab/reference_replay.py": "6f39aa7d2c7cd5249fd9d4da19c059521e03f9150e44564a0b21b81690ca889d",
+    "sts2lab/release.py": "964bb329ab2f771b14e8e5318a3e854be1639dcbcfd8af1f9a6a2a6cb51481ce",
+    "sts2lab/runtime.py": "74d0de307d24b7917b999d8c8ff7535c56015bd0dbf70b156f3c110b9e9fd194",
+    "sts2lab/sampling.py": "fcbe7f3ecbe84ae03b4ffafc971fc3ab50f119a230a1f899081cb2baa2aef588",
+    "sts2lab/scenarios.py": "c05eec8073ae64c1065a0f306d97ea950e33954b2c03ac805e25895b900b68cc",
+    "sts2lab/server.py": "e1eb7fb46891ba0af8620400859bf4b37c92ce08b5d7a69cf8abb91c56776eb2",
+    "sts2lab/simulator.py": "b8d0ff3ca1a682fc758f79c914538694643e60738c4c46509d8da9952705df2e",
+    "sts2lab/source_integrity.py": "303696ed446ef4677de38ce6eb3a8b653e0d13ffddb8adb128d764b0cd244081",
+    "sts2lab/traces.py": "6bfa6d671a80fa4deba8b75881a0a0cc20771cb50b079bc8941361997b926be3",
+    "sts2lab/verification.py": "98c53fb3fcc239bfed64b7a29784ecb94dfdec3a4d0a46d08ea49b680290ecc3",
+    "sts2lab/vocabulary.py": "2f50a97e1bf9c4e8813f3c7c21a021a3b3b919161955c7c4783f77102b6a9458",
+    "vendor/bridge-manifest.json": "25948b2007277cac417479499c872e736480178c5f882770aa9711bdaf327922",
+    "vendor/manifest.json": "d6eb9e268c0149ca62f32942cacbb3b7602ebe78ed7e7899c61f7c78eb7ddde2",
+    "web/app.js": "aec37f4cfa25484c42f4d7b026f6be6ace0393e204b4d99f88b361999b603d2e",
+    "web/index.html": "deea1c9d9f0f798f3129ebd96a699df52813c643a766e013c01008265c54f7f1",
+    "web/style.css": "4af69add01a56110d271540df6371e9eff8177eb2d992642092ae1aac56c599f"
+  },
+  "comparison_exclusions": [
+    "localized_names",
+    "native_numeric_ids",
+    "transport_references",
+    "printed_card_damage_and_block",
+    "catalog_card_types_and_targets",
+    "unmeasured_card_modifiers",
+    "hidden_rng_and_pile_order",
+    "known_order_not_independently_exported",
+    "unshown_relic_counters"
+  ],
+  "terminal_unavailable_fields": [
+    "turn",
+    "hand",
+    "draw_pile",
+    "discard_pile",
+    "exhaust_pile",
+    "known_top",
+    "known_bottom",
+    "enemies",
+    "player.energy",
+    "player.max_energy"
+  ],
+  "local_evidence_note": "Summary of this operator checkout. Raw game captures remain private. A fresh clone must collect and audit its own evidence; this JSON does not unlock runtime verification."
+}

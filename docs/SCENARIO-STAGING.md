@@ -4,8 +4,8 @@ Status: repeated Nibbit seed-1 openings and complete battles across all three
 encounters have matched. The stricter settlement bridge is running in Windows.
 Live evidence also identified Nibbit block and victory-healing differences in
 the simulator; [explicit corrections](NATIVE-COMPATIBILITY.md) now reproduce the
-unchanged original traces. The 60-case reference campaign is in progress; see
-[current counts](../PHASE1-STATUS.json) and [live validation](LIVE-VALIDATION.md).
+unchanged original traces. All 60 required references and a separate loss/control probe have passed;
+see the [versioned summary](PHASE1-VALIDATION.json) and [live validation](LIVE-VALIDATION.md).
 
 The fixed phase-one benchmark remains Ironclad A0, floor 2, zero completed
 combats, the ten-card starter deck, Burning Blood, no potions, 80/80 HP and

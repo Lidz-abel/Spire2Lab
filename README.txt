@@ -2,12 +2,12 @@ Spire2Lab — 第一阶段实验环境
 
 项目目录：/user/chenzk/sts2-lab（GitHub：Lidz-abel/Spire2Lab）
 当前状态：Linux 环境与原版面板闭环可运行，三种遭遇已有完整战斗逐步对照通过。
-固定 60 场参考集正在采集，9 类边界已覆盖；计数以 PHASE1-STATUS.json 为准。
+固定 60/60 场参考及单独的战败/控制探针通过，9/9 类边界已覆盖；版本摘要见 docs/PHASE1-VALIDATION.json。
 实机响应丢失恢复、暂停、人工覆盖、战败及回放验证见 docs/LIVE-VALIDATION.md。
 完整验收清单见 PHASE1-STATUS.json。不得将模拟器自测视为本机原版一致性证明。
 整体架构、第一阶段建设顺序与后续路线见 ARCHITECTURE-PLAN.txt。
 当前采用 three-stage-v1：可信实验平台 → 搜索与分层决策 → 高效训练与原版评测。
-第一阶段按 P1-01 至 P1-08 验收；当前继续完成固定参考矩阵及交付，不需重复安装已核验的 Mod。
+第一阶段本地技术验收已通过，远程交付仍待 GitHub 连通与写认证恢复；无需再次安装 Mod。
 
 启动（Linux）
   cd /user/chenzk/sts2-lab
@@ -37,7 +37,7 @@ Windows 接入
      保持脚本窗口打开，即可在 Windows 浏览器访问面板。
   2. Linux 核对实际版本后构建：
      .venv/bin/python scripts/build_bridge.py
-     已使用 Steam public build 23811903 引用编译，发行版本 v0.107.1 与运行时指纹匹配；固定范围战斗逐场验收中。
+     已使用 Steam public build 23811903 引用编译，发行版本 v0.107.1 与运行时指纹匹配；固定 60 场与额外边界探针已通过。
      DLL 文件版本 0.1.0.0 不能当作 v0.107.1 的证明；编译成功也不等于实机行为验证通过。
   3. 将 scripts/Install-Windows-Mod.ps1 复制到 Windows，关闭游戏后执行：
      在另一个 PowerShell 窗口进入脚本目录，直接执行，无需再次调用 powershell 启动命令：
@@ -240,4 +240,4 @@ Windows 桥接超时：检查端口拥有者（以下为默认 15526，换端口
   核验实际 DLL 版本/哈希、Mod 构建、固定策略动作、原始捕获和模拟器重执行。
   通过只表示有限参考集已验证；修改代码、版本或证据后已有结论需重新核验。
   /api/acceptance 和面板显示该状态。当前矩阵计数见 PHASE1-STATUS.json。
-  额外实机 loss/recovery 探针只补边界覆盖，不计入 60 场。第一阶段尚未完整交付。
+  额外实机 loss/recovery 探针只补边界覆盖，不计入 60 场。本地技术验收通过，GitHub 同步单独跟踪。

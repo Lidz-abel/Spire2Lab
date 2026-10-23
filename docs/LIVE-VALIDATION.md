@@ -5,8 +5,10 @@ The live reference campaign runs against Steam public build `23811903`, release
 deck and Burning Blood, no potions, 80/80 HP, 99 gold, floor 2, and the three
 encounters in [the benchmark configuration](../config/phase1.json).
 
-The [machine-readable project status](../PHASE1-STATUS.json) records current
-counts. The required matrix is **60 independent complete battles**: three
+**Local technical acceptance passed on 2026-10-23:** 60/60 required battles,
+one additional loss/control probe and all nine boundary categories. The
+[versioned summary](PHASE1-VALIDATION.json) records case and source fingerprints;
+[project status](../PHASE1-STATUS.json) tracks remaining remote delivery. The required matrix is **60 independent complete battles**: three
 encounters, development seeds 1–10, and two baseline policies. Additional probes
 cover boundary behavior without replacing any of those battles. Held-out seeds
 1001–1010 are not used in this campaign. This is environment validation, not an

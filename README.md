@@ -30,7 +30,7 @@ Spire2Lab is an experimental foundation for researchers studying sequential deci
 
 The immediate goal is a trustworthy environment for later work on search, hierarchical decisions, and reinforcement learning. The platform separates player-visible information from hidden simulator state and keeps original-game evidence distinct from simulator tests. This makes it possible to investigate both **what an agent decided** and **whether the environment behaved as expected**.
 
-> **Development status — phase 1.** Complete original-game battles across all three supported encounters have matched independent simulator replays. Live pause, manual override, response-loss recovery and loss boundaries have also passed. The 60-case matrix is still being collected; see [current counts](PHASE1-STATUS.json) and [validation scope](docs/LIVE-VALIDATION.md). Search, hierarchical policies, RL training, and original-game imagery are planned capabilities.
+> **Development status — phase 1.** The local technical acceptance gate has passed: **60/60 original-game battles**, plus a separate loss/control probe, cover all **9 required boundary categories**. Live pause, manual override, response-loss recovery, export and replay have also passed. See the [versioned summary](docs/PHASE1-VALIDATION.json), [validation scope](docs/LIVE-VALIDATION.md) and [delivery status](PHASE1-STATUS.json). Search, hierarchical policies, RL training, and original-game imagery are planned capabilities.
 
 ## Key features
 
@@ -194,7 +194,7 @@ The current evidence is **engineering validation**, not a learned-agent performa
 | [Controlled openings](docs/SCENARIO-STAGING.md) | Independent initializations match public state, private draw order and repeatable RNG snapshots | Explicit repeated-opening check: Nibbit seed 1; each matrix case has a separate opening check |
 | [Settlement gate tests](tests/test_settlement_gate.py) | Busy execution cannot become confirmed merely because public fields stop changing | Synthetic timelines; corrected bridge also exercised in the first complete live battle |
 | [Live execution boundaries](docs/LIVE-VALIDATION.md#live-execution-and-browser-boundaries) | Real actions, GET-only response-loss recovery, duplicate/stale refusal, pause, manual override, loss and read-only browser replay | Controlled response loss; separately labeled probe, outside the 60-case count |
-| [Acceptance gate](config/acceptance.json) | 60 independent original reference battles plus nine required boundary categories | Matrix in progress; all nine categories covered. [Current counts](PHASE1-STATUS.json) |
+| [Acceptance gate](config/acceptance.json) | 60 independent original reference battles plus nine required boundary categories | **60/60 passed**, plus one boundary probe; **9/9 categories**. [Build-bound summary](docs/PHASE1-VALIDATION.json) |
 
 Run the project tests after installation:
 
@@ -218,7 +218,7 @@ Recompute the original-game gate with `.venv/bin/python scripts/audit_acceptance
 - **Preserve the information boundary.** Policies receive observations, not internal RNG or hidden draw order. `sample_world` is a branching primitive; a full history-conditioned belief model is still future work.
 - **Keep facts separate from rewards.** The current `terminal-win-v1` rule gives +1 for a win, −1 for a loss, and 0 otherwise. State changes remain available independently.
 - **Handle unavailable and unresolved data explicitly.** Unknown action outcomes are not fabricated terminal transitions. Masked invalid Gym actions are marked `training_transition=False` and must be excluded from training data.
-- **Report finite coverage.** The 60-case matrix covers three encounters, ten development seeds, and two baseline policies. It cannot establish correctness for every game mechanic. Complete references from all three encounters have matched; the remaining matrix is tracked in the status file. Original captures are immutable, failed comparisons are retained, and catalog-derived card values are excluded from claims of independent live measurement.
+- **Report finite coverage.** The 60-case matrix covers three encounters, ten development seeds, and two baseline policies. It cannot establish correctness for every game mechanic. All 60 required references have matched the current simulator, with a separate loss/control probe. This conclusion applies to the recorded comparison fields and builds. Original captures are immutable, failed comparisons are retained, and catalog-derived card values are excluded from claims of independent live measurement.
 
 ## Project structure
 
