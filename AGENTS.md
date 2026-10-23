@@ -3,6 +3,8 @@
 开始工作先阅读 `PROJECT-HANDOFF.md`、`CODE-PROVENANCE.md` 和 `PHASE1-STATUS.json`，
 再核对当前工作区。文档中的状态应以文件、运行结果和远程 Git 的实际证据为准。
 当前路线为 `three-stage-v1`：可信实验平台 → 搜索与分层决策 → 高效训练与原版评测。
+当前开发为第二阶段；同时读取 `PHASE2-STATUS.json` 和 `docs/PHASE2-PLAN.md`。
+第一阶段验收检查点保留，新的搜索策略不能自动继承原版验证结论。
 第一阶段执行 P1-01 至 P1-08，见 `ARCHITECTURE-PLAN.txt`；旧五阶段路线已被替代。
 编辑 README 或品牌素材前，读取 `PROJECT-IDENTITY.md` 中的持续设计要求与验收清单。
 

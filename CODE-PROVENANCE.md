@@ -1,6 +1,6 @@
 # Spire2Lab 代码来源说明
 
-更新时间：2026-10-23
+更新时间：2026-10-24
 
 本文件记录工程来源与依赖边界。“本项目新增实现”指在本项目中编写的代码，包括 AI 辅助编写的适配、验证和实验工具；这项分类本身不构成逐行原创性审计或科研创新结论。游戏内容、上游代码与参考资料各自记录来源。
 
@@ -28,7 +28,7 @@
 | O-02 Python 绑定与内容数据 | `simulator.py` 导入上游 `sts2_gym.native/names`；`catalog.py` 加载其名称与生成数据 | 先定义可替换的后端和内容目录边界，再独立实现调用层；卡牌事实、名称与测试素材继续标明来源 |
 | O-03 最小原版桥接 | `build_bridge.py` 复制并修改 STS2MCP，加载 `McpMod.Lab.cs` 扩展 | 取得本机 DLL 后，按公开状态、主线程执行、请求确认需求设计独立桥接；实机单步与完整战斗通过后切换 |
 | O-04 有限战斗引擎 | `native/Sts2Lab.csproj` 编译上游规则与本项目导出扩展 | 从第一阶段初始牌组和三个遭遇逐项建立规则规格，再实现独立状态转换；先验收模块，满足完整范围后才作为默认后端 |
-| O-05 搜索、分层与学习 | 当前有接口和基线策略，尚无完整搜索/分层/RL 训练 | 后续按路线图独立实现，报告所参考方法、实验预算、基线和消融结果 |
+| O-05 搜索、分层与学习 | 已新增公开历史粒子、预算 rollout 搜索、持续战术目标及评测；尚无 RL 训练 | 继续报告固定预算、消融及原版证据；不把工程实现称为算法创新 |
 
 替换验收必须覆盖合法动作、结算顺序、信息边界、快照/分支隔离、复现性、性能测量
 及原版参考轨迹。上游模拟器保留为对照后端；最终行为依据来自原版采集。
@@ -42,6 +42,28 @@ O-02 至 O-04 随实机证据逐步替换；阶段 2 实现搜索/层级核心�
 
 ## 来源分类
 
+### 第二阶段方法与阅读记录（2026-10-24）
+
+先在 `docs/PHASE2-PLAN.md` 记录输入、输出、预算、失败与隐藏信息边界，再实现本项目
+`belief.py`、`planning.py` 和 `hierarchy.py`；没有移植外部搜索框架源码。
+算法背景参考 Silver 与 Veness (2010) 的
+[Monte-Carlo Planning in Large POMDPs](https://proceedings.neurips.cc/paper/2010/hash/edfbe1afcf9246bb0d40eb4d8027d90f-Abstract.html)
+及 Sutton、Precup、Singh (1999) 的
+[Between MDPs and semi-MDPs](https://www.sciencedirect.com/science/article/pii/S0004370299000521)。
+前者用于理解粒子与部分可观测规划，后者用于理解持续目标与终止条件；当前实现为
+根动作 UCB 与固定启发式 rollout、规则战术控制器，不是论文算法的完整复现。
+
+实现前检查固定模拟器提交 `37e4264` 的 `Core/StateCloning.cs` 与
+`Interop/NativeExports.cs`：已有 `sample_world` 保留已知位置、重排未知抽牌区，
+并在原计数基础上重新播种若干 RNG 流，保留粒子已有敌人状态。该服务是上游派生
+后端能力，不属于本项目原创采样引擎。新策略只对独立生成并筛选的粒子调用它，
+禁止从实际执行环境复制隐藏状态。此审查和测试限于 starter 范围；例如上游
+EnergyCostRng 的克隆行为不能据此推广为所有卡牌的信息边界已验证。
+
+粒子保留相容的历史，但重新播种未来随机数只是近似，不称精确后验；有限粒子
+耗尽后显式回退。规划效用和战术阈值是本项目固定工程基线，非学习所得，也不构成
+科研创新证明。通用统计方法、规则引擎、卡牌事实与本项目控制代码分别归属。
+
 | 路径或内容 | 来源 | 可以怎样描述 |
 | --- | --- | --- |
 | `sts2lab/contracts.py` | 本项目 | 我们定义的版本化语义协议、观测/动作模型和比较投影 |
@@ -53,6 +75,7 @@ O-02 至 O-04 随实机证据逐步替换；阶段 2 实现搜索/层级核心�
 | `sts2lab/vocabulary.py`、`config/content-v1.json`、`tests/test_vocabulary.py` | 本项目词表实现和数字 token 分配；语义名称为游戏内容事实 | 按预先定义的公开边界、padding 与未知内容拒绝契约实现；名称来自现有适配器、固定上游内容表及既定种子的模拟器观测，不宣称名称或游戏规则由本项目原创。token 不采用上游 enum 数字，版本和 SHA-256 随实验记录 |
 | `sts2lab/sampling.py`、`scripts/benchmark_sampling.py` | 本项目 | 固定任务的进程隔离采样测量、轨迹一致性校验、资源回收与硬件/延迟/RSS 报告；规则仍由当前上游引擎执行 |
 | `sts2lab/policies.py` | 本项目 | 随机策略和可解释启发式策略 |
+| `sts2lab/belief.py`、`planning.py`、`hierarchy.py`、`planning_replay.py`、`scripts/benchmark_planning.py` | 本项目新增实现（AI 辅助编写），方法与后端依赖见下文 | 公开历史约束粒子、根动作 UCB rollout、持续战术目标、源码/模型绑定的策略重执行与固定预算评测；不宣称新算法或精确后验 |
 | `sts2lab/runtime.py`、`server.py` | 本项目 | 实验控制、异步执行、确认状态和 FastAPI 面板服务 |
 | `sts2lab/bridge.py`、`original.py` | 本项目 | 原版状态映射、动作提交、去重、重协调和未知结果处理 |
 | `sts2lab/bridge_check.py`、`scripts/check_bridge.py`、`tests/test_bridge_check.py` | 本项目 | 基于现有 BridgeClient 的只读主菜单验收；输入引用指纹，输出逐次 GET 证据与检查结果；合成测试覆盖版本/实例/状态变化与超时，不能替代原版战斗证据 |

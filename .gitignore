@@ -1,9 +1,9 @@
-.venv/
+.venv
 .tools/
-vendor/sts2/
+vendor/sts2
 vendor/sts2mcp/
 vendor/sts2mcp-evan/
-vendor/sts2mcp-v107/
+vendor/sts2mcp-v107
 native/generated/
 native/bin/
 native/obj/

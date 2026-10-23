@@ -1,25 +1,47 @@
 {
   "stage": 2,
-  "status": "implementation_started",
+  "status": "starter_planning_implemented_evaluation_pending",
   "started_at": "2026-10-24",
   "branch": "phase2/search-hierarchy",
   "phase_one_checkpoint": "f9faf0a",
   "plan": "docs/PHASE2-PLAN.md",
   "milestones": {
     "P2-01": "contract_recorded",
-    "P2-02": "planned",
-    "P2-03": "planned",
-    "P2-04": "planned",
-    "P2-05": "planned",
+    "P2-02": "implemented_simulator_tests_passed",
+    "P2-03": "implemented_simulator_tests_passed",
+    "P2-04": "implemented_simulator_ui_passed",
+    "P2-05": "pilot_passed_full_comparison_pending",
     "P2-06": "planned",
     "P2-07": "planned",
-    "P2-08": "planned"
+    "P2-08": "documentation_in_progress_remote_pending"
   },
   "implementation_scope": "starter combat belief, rollout search, tactical hierarchy, inspection and fixed-budget evaluation first; images and single-act support remain required later gates",
-  "evidence": {},
+  "evidence": {
+    "tests": {
+      "passed": 152,
+      "report": "artifacts/phase2-full-tests-corrected.xml",
+      "warning": "existing Starlette/httpx deprecation"
+    },
+    "ui": "artifacts/phase2-browser/report.json",
+    "development_pilot": {
+      "report": "artifacts/phase2-eval-pilot/report.json",
+      "episodes": 18,
+      "scope": "simulator_only; before provenance metadata addition"
+    },
+    "historical_regression": {
+      "passed": true,
+      "required_cases": 60,
+      "extra_probes": 1,
+      "report": "artifacts/acceptance/phase2-regression-copied-audit.json",
+      "scope": "replay of unchanged phase-one captures; before planner provenance metadata addition"
+    }
+  },
   "limitations": [
-    "No phase-two policy results yet.",
-    "Phase-one acceptance does not automatically certify the changed branch.",
+    "Full fixed-budget comparison is not yet complete.",
+    "Root rollout search and finite approximate particles are not full POMCP or an exact posterior.",
+    "No fresh original-game search captures or decision screenshots yet.",
+    "Single-act decisions and learning remain unimplemented.",
+    "Phase-one compatibility replays do not certify new policy actions.",
     "Historical GitHub delivery remains pending."
   ]
 }

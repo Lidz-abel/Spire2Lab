@@ -16,6 +16,7 @@ from .bridge import BridgeError, OutcomeUnknown
 from .acceptance import read_acceptance_status
 from .contracts import StepRequest, PROTOCOL_VERSION
 from .runtime import Lab
+from .planning import PlanningConfig
 from .simulator import CONFIG, ROOT
 from .traces import read_trace
 
@@ -100,6 +101,7 @@ def create_app(data_dir=None, *, original_factory=None):
         seed: int = Field(default=1, ge=0, lt=2**31)
         policy: str = "heuristic"
         policy_seed: int = 0
+        planning_config: PlanningConfig | None = None
 
     @app.post("/api/session")
     async def new_session(config: SessionConfig):

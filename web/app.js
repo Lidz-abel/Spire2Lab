@@ -22,7 +22,7 @@ function render(view) {
   const o=view.observation, d=view.decision;
   const selected=d?.selected_action_id, chosen=o.legal_actions.find(a=>a.action_id===selected);
   const missing=path=>(o.unavailable_fields||[]).includes(path);
-  const executing=['executing','reconciling'].includes(view.status);
+  const executing=['executing','reconciling','planning'].includes(view.status);
   const canPause=view.status==='running'||(executing&&view.resume_after_step);
   const original=view.metadata.backend==='original_game';
   $('backend-label').textContent=original?'Windows 原版游戏':'C# 原生模拟器';
@@ -37,7 +37,7 @@ function render(view) {
   $('archive').disabled=busy;
   if(view.status==='closed')$('source-note').textContent='本次实验已归档。显示的是最后确认的状态，可能与当前游戏不同；未决动作不会记为胜负。';
   $('mode').textContent = replay ? '轨迹回放' : '实时实验';
-  $('status').textContent = replay ? '只读' : ({paused:'已暂停',running:'运行中',executing:'执行中 · 等待结算',reconciling:'正在确认结果',awaiting_confirmation:'结果待确认',finished:'已结束',error:'执行异常',closed:'已归档 · 显示最后确认状态'}[view.status]||view.status);
+  $('status').textContent = replay ? '只读' : ({paused:'已暂停',running:'运行中',executing:'执行中 · 等待结算',planning:'规划中 · 可暂停后续执行',reconciling:'正在确认结果',awaiting_confirmation:'结果待确认',finished:'已结束',error:'执行异常',closed:'已归档 · 显示最后确认状态'}[view.status]||view.status);
   $('run').textContent=canPause?'Ⅱ 暂停':executing?'本步结束后暂停':'▶ 自动运行';
   $('run').disabled=!!replay||(!canPause&&(busy||view.status!=='paused'));
   $('step').disabled=!!replay||view.status!=='paused'||busy;
@@ -56,10 +56,17 @@ function render(view) {
   $('outcome').textContent={won:'战斗胜利 · 完整轨迹已记录',lost:'战斗失败 · 完整轨迹已记录',truncated:'达到实验步数上限 · 记录为截断'}[o.outcome]||'';
   $('observation-json').textContent=JSON.stringify(o,null,2);
   $('decision-id').textContent=`决策 ${o.decision_id}`;
+  const planning=view.planning, goal=planning?.goal, completed=view.goal_event;
+  const goalNames={survive_turn:'稳住当前回合',focus_enemy:'集中消灭目标',progress_combat:'推进战斗'};
+  const fallbackNames={zero_search_budget:'搜索预算为零',initialization_depleted:'没有匹配开局的粒子',history_particles_depleted:'历史筛选后粒子耗尽',unsupported_opening:'不支持从此状态初始化',time_limit_before_all_actions:'达到时限，尚未评估全部动作',budget_before_all_actions:'预算不足以评估全部动作'};
+  $('planning-panel').hidden=!planning&&!completed;
+  $('planning-summary').innerHTML=planning?`<p class="planning-metric">搜索 <strong>${planning.model_calls} / ${planning.config.search_calls}</strong> 模拟步 · ${planning.rollouts} 次 Rollout</p><p class="small muted">粒子 ${planning.belief.particles??0} / ${planning.config.particles} · 历史筛选 ${planning.belief.model_calls??0} 步 · 初始化 ${planning.belief.initializations??0} 次<br>规划 ${planning.elapsed_ms.toFixed(1)} ms</p>${planning.fallback_reason?`<p class="planning-fallback">启发式回退：${esc(fallbackNames[planning.fallback_reason]||planning.fallback_reason)}</p>`:'<p class="small muted">候选分数是采样效用估计，不是胜率。</p>'}`:'';
+  $('planning-goal').innerHTML=goal?`<p class="planning-goal"><strong>${esc(goalNames[goal.kind]||goal.kind)}</strong>${goal.target_type?` · ${esc(goal.target_type)}`:''}<br><span class="small muted">已执行 ${goal.duration} 步 · 最多 ${planning.config.goal_max_actions} 步后重选目标</span></p>`:'';
+  $('planning-completed').textContent=completed?`上个目标：${goalNames[completed.kind]||completed.kind} · ${completed.duration} 步 · ${completed.termination_reason}`:'';
   $('decision-meta').textContent=d?`${d.policy} · ${d.elapsed_ms.toFixed(2)} ms`:'当前没有待执行决策';
   const best=d?.candidates.find(c=>c.action_id===selected);
   $('proposal').innerHTML=chosen?`<div class="proposal"><span class="tag">当前选择</span><strong>${esc(chosen.label)}</strong><ul class="reasons">${best.reasons.map(r=>`<li>${esc(r)}</li>`).join('')}</ul></div>`:`<p class="empty">${view.status==='closed'?'实验已归档，不再生成动作。':'当前没有可执行的决策。'}</p>`;
-  $('candidates').innerHTML=(d?.candidates||[]).map(c=>`<button class="candidate ${c.action_id===selected?'chosen':''}" data-action="${esc(c.action_id)}" ${replay||view.status!=='paused'||busy?'disabled':''}><span>${esc(o.legal_actions.find(a=>a.action_id===c.action_id)?.label)}</span><span class="candidate-score">${c.score.toFixed(2)}</span></button>`).join('');
+  $('candidates').innerHTML=(d?.candidates||[]).map(c=>`<button class="candidate ${c.action_id===selected?'chosen':''}" data-action="${esc(c.action_id)}" ${replay||view.status!=='paused'||busy?'disabled':''}><span>${esc(o.legal_actions.find(a=>a.action_id===c.action_id)?.label)}</span><span class="candidate-score">${c.score.toFixed(2)}${planning?.candidates?.find(x=>x.action_ids.includes(c.action_id))?`<small class="visit-count">n=${planning.candidates.find(x=>x.action_ids.includes(c.action_id)).visits}</small>`:''}</span></button>`).join('');
   for(const b of $('candidates').querySelectorAll('button')) b.onclick=()=>step(b.dataset.action);
   $('history').innerHTML=[...view.history].reverse().map(h=>`<div class="history-row"><span class="number">${String(h.step).padStart(2,'0')}</span><span>${esc(h.label)}${h.manual?' · 人工干预':''}</span><span class="${h.hp_delta<0?'loss':'neutral'}">HP ${h.hp_delta>0?'+':''}${h.hp_delta}</span></div>`).join('')||'<p class="empty">执行第一步后，这里会出现实际状态变化。</p>';
   const r=view.last_result;
@@ -74,7 +81,7 @@ async function refreshRuns() {
 function step(actionId=null) { action(async()=>{ live=await api('/api/step',{request_id:crypto.randomUUID(),decision_id:live.observation.decision_id,action_id:actionId}); render(live); }); }
 $('step').onclick=()=>step();
 $('run').onclick=()=>{
-  const stop=live.status==='running'||['executing','reconciling'].includes(live.status);
+  const stop=live.status==='running'||['executing','reconciling','planning'].includes(live.status);
   const control=async()=>{live=await api('/api/control',{running:!stop,delay:Number($('speed').value)});render(live);};
   if(stop)control().catch(showError);else action(control);
 };
@@ -86,24 +93,27 @@ $('backend').onchange=()=>{
   $('new-session').textContent=original?'连接当前原版战斗':'新建实验';
   $('backend-hint').textContent=original?'请在原版中准备符合条件的首回合战斗。连接会核对版本与场景，不会重置游戏。':'新建固定初始条件的模拟战斗。';
 };
-$('scenario-form').onsubmit=e=>{e.preventDefault();action(async()=>{live=await api('/api/session',{backend:$('backend').value,encounter:$('encounter').value,seed:Number($('seed').value),policy:$('policy').value,policy_seed:Number($('policy-seed').value)});exitReplay();render(live);await refreshRuns();});};
+$('policy').onchange=()=>{$('planning-settings').hidden=!['rollout','hierarchical'].includes($('policy').value);};
+$('scenario-form').onsubmit=e=>{e.preventDefault();action(async()=>{live=await api('/api/session',{backend:$('backend').value,encounter:$('encounter').value,seed:Number($('seed').value),policy:$('policy').value,policy_seed:Number($('policy-seed').value),planning_config:['rollout','hierarchical'].includes($('policy').value)?{search_calls:Number($('search-budget').value),rollout_depth:Number($('rollout-depth').value)}:null});exitReplay();render(live);await refreshRuns();});};
 function exitReplay(){replay=null;$('replay-controls').hidden=true;$('back-live').hidden=true;}
 $('back-live').onclick=()=>{exitReplay();render(live);};
 $('load-replay').onclick=()=>action(async()=>{
-  if(live.status==='running')live=await api('/api/control',{running:false});
+  if(live.status==='running'||(['planning','executing','reconciling'].includes(live.status)&&live.resume_after_step))live=await api('/api/control',{running:false});
   const events=await api(`/api/runs/${$('run-list').value}`);
   replay={metadata:events[0].data.metadata};replayFrames=[];
-  let observation=events[0].data.observation, decision=null, history=[], last_result=null;
+  let observation=events[0].data.observation, decision=null, history=[], last_result=null, planning=null, goal_event=null;
   for(const event of events.slice(1)){
     if(event.kind==='decision')decision=event.data;
-    if(event.kind==='action_submitted')replayFrames.push({metadata:replay.metadata,observation,decision,history:[...history],last_result,status:'paused'});
+    if(event.kind==='planning_report')planning=event.data;
+    if(event.kind==='goal_completed')goal_event=event.data;
+    if(event.kind==='action_submitted')replayFrames.push({metadata:replay.metadata,observation,decision,planning,goal_event,history:[...history],last_result,status:'paused'});
     if(event.kind==='transition'){
       const t=event.data;
       history.push({step:history.length+1,label:t.action.label,hp_delta:t.facts.player_hp_delta,manual:t.facts.manual_intervention});
-      observation=t.observation;decision=null;last_result={action:t.action,facts:t.facts,execution_ms:t.execution_ms};
+      observation=t.observation;decision=null;planning=null;goal_event=null;last_result={action:t.action,facts:t.facts,execution_ms:t.execution_ms};
     }
   }
-  replayFrames.push({metadata:replay.metadata,observation,decision,history,last_result,status:observation.outcome==='ongoing'?'paused':'finished'});
+  replayFrames.push({metadata:replay.metadata,observation,decision,planning,goal_event,history,last_result,status:observation.outcome==='ongoing'?'paused':'finished'});
   $('replay-controls').hidden=false;$('back-live').hidden=false;
   $('replay-position').max=replayFrames.length-1;$('replay-position').value=0;
   renderReplay();

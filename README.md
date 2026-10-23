@@ -14,7 +14,7 @@ A research environment for autonomous agents in *Slay the Spire 2*.<br>
 Semantic actions · Live decision inspection · Simulator-to-game validation
 
 <p>
-  <a href="#roadmap"><img src="https://img.shields.io/badge/stage-1%20%C2%B7%20environment-B08438?style=flat-square&amp;labelColor=172B38" alt="Stage 1: environment"></a>
+  <a href="#roadmap"><img src="https://img.shields.io/badge/stage-2%20%C2%B7%20planning-B08438?style=flat-square&amp;labelColor=172B38" alt="Stage 2: planning in development"></a>
   <a href="pyproject.toml"><img src="https://img.shields.io/badge/python-3.12%2B-35606C?style=flat-square&amp;labelColor=172B38" alt="Python 3.12 or newer"></a>
   <a href="sts2lab/contracts.py"><img src="https://img.shields.io/badge/protocol-0.3.0-35606C?style=flat-square&amp;labelColor=172B38" alt="Semantic protocol 0.3.0"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-35606C?style=flat-square&amp;labelColor=172B38" alt="MIT license"></a>
@@ -26,11 +26,11 @@ Semantic actions · Live decision inspection · Simulator-to-game validation
 
 ## Overview
 
-Spire2Lab is an experimental foundation for researchers studying sequential decisions under partial observability. It provides a Linux combat simulator, random and heuristic policies, a browser dashboard, and a Windows game adapter behind a common semantic protocol. Each decision can be inspected through its observation, legal actions, candidate scores, selected action, and confirmed result.
+Spire2Lab is an experimental foundation for researchers studying sequential decisions under partial observability. It provides a Linux combat simulator, baseline and rollout-search policies, a browser dashboard, and a Windows game adapter behind a common semantic protocol. Each decision can be inspected through its observation, legal actions, candidate scores, selected action, and confirmed result.
 
-The immediate goal is a trustworthy environment for later work on search, hierarchical decisions, and reinforcement learning. The platform separates player-visible information from hidden simulator state and keeps original-game evidence distinct from simulator tests. This makes it possible to investigate both **what an agent decided** and **whether the environment behaved as expected**.
+The current focus is observable-history search and persistent tactical goals on a trustworthy experimental environment. The platform separates player-visible information from hidden simulator state and keeps original-game evidence distinct from simulator tests. This makes it possible to investigate both **what an agent decided** and **whether the environment behaved as expected**.
 
-> **Development status — phase 1.** The local technical acceptance gate has passed: **60/60 original-game battles**, plus a separate loss/control probe, cover all **9 required boundary categories**. Live pause, manual override, response-loss recovery, export and replay have also passed. See the [versioned summary](docs/PHASE1-VALIDATION.json), [validation scope](docs/LIVE-VALIDATION.md) and [delivery status](PHASE1-STATUS.json). Search, hierarchical policies, RL training, and original-game imagery are planned capabilities.
+> **Development status — phase 2 in progress.** Starter-combat rollout search, approximate history particles, persistent tactical goals and search inspection are implemented. See the [planning guide](docs/PLANNING.md) and [current evidence](PHASE2-STATUS.json). The phase-one checkpoint passed **60/60 original-game battles** and a separate loss/control probe across **9 boundary categories** ([scope](docs/LIVE-VALIDATION.md), [summary](docs/PHASE1-VALIDATION.json)). That evidence does not automatically validate new policies. Original-game search captures, game imagery, single-act decisions and RL training remain outstanding.
 
 ## Key features
 
@@ -38,6 +38,8 @@ The immediate goal is a trustworthy environment for later work on search, hierar
 | --- | --- |
 | **Semantic environment** | Typed observations, decision-scoped card/enemy references, legal actions, and versioned step results. A shared [backend contract](docs/ENVIRONMENT-CONTRACT.md) defines supported operations and explicit refusals. |
 | **Live decision inspection** | Single-step and automatic execution, pause, manual overrides, candidate scores with their meaning, and recorded trajectory replay. The current dashboard is in Chinese. |
+| **Observable-history planning** | Independent sampled worlds constrained by confirmed public history, bounded root rollout search, explicit depletion/fallback, and candidate visits. No acting-environment snapshot or hidden RNG enters the planner. |
+| **Tactical hierarchy** | Persistent survive/focus/progress goals with duration, termination and real reward accounting. Search shaping leaves the environment reward unchanged; goals are rule-based, not learned. |
 | **Simulator branching** | Exact snapshot/restore and independently sampled hidden worlds, with branch IDs and parent-decision provenance. Exact hidden-state snapshots are for debugging and regression; they must not become a policy oracle. |
 | **Learning interface** | Gymnasium wrapper with a versioned [content vocabulary](config/content-v1.json), entity encoding, action masks, termination/truncation handling, and process-isolated vector sampling tests. No training pipeline is included yet. |
 | **Execution accounting** | Request IDs, stale-decision rejection, confirmation after uncertain responses, and explicit archival of unresolved original-game actions. |
@@ -50,7 +52,9 @@ The platform code is developed here. The current mechanics engine, Python bindin
 ```mermaid
 flowchart TB
     subgraph linux["Linux · experiment host"]
-        P["Policy<br/>random / heuristic"] -->|decision| R["Experiment controller"]
+        P["Policy<br/>baseline / rollout / tactical hierarchy"] -->|decision| R["Experiment controller"]
+        B["Public-history particles<br/>independent simulator worlds"] --> P
+        R -->|confirmed public history| B
         R <-->|observation / action / result| C["Versioned semantic protocol"]
         C <--> S["Native simulator adapter<br/>upstream C# engine + lab exports"]
         C <--> O["Original-game adapter<br/>mapping / submit / confirm"]
@@ -71,7 +75,7 @@ flowchart TB
     style windows fill:transparent,stroke:#C69E51
 ```
 
-Linux runs simulation, policy execution, logs, and the dashboard. The separate Windows PC runs the game and bridge. Later search and training workloads belong on Linux; the Windows machine is reserved for real-game execution and capture.
+Linux runs simulation, search, policy execution, logs, and the dashboard. The separate Windows PC runs the game and bridge. Future training workloads also belong on Linux; the Windows machine is reserved for real-game execution and capture.
 
 One environment step is one player decision through settled execution. Animation waits and transport retries are not extra training steps. The dashboard renders observations and decisions; it does not implement game rules.
 
@@ -128,6 +132,8 @@ outcome after one action: ongoing
 This executes one legal action through the same simulator adapter used by the dashboard. To build a Gymnasium experiment, start with [`CombatEnv`](sts2lab/gym_env.py) and its [usage tests](tests/test_environment.py); the tensor layout is documented in [ENCODING.json](ENCODING.json).
 
 ## Configuration and evaluation
+
+For search and tactical goals, see the [phase-two guide](docs/PLANNING.md). It includes dashboard/API usage, the information boundary, fixed-budget comparison commands and reproducibility limits. The [evaluation recipe](config/phase2-planning.json) keeps development and held-out seeds separate and compares both search policies against the existing baselines.
 
 The supported inventory is defined in [config/phase1.json](config/phase1.json):
 
@@ -215,7 +221,7 @@ Recompute the original-game gate with `.venv/bin/python scripts/audit_acceptance
 
 - **Version the complete experiment.** Record the game build, simulator and Mod sources, native binary, protocol, encoding, configuration, policy, seeds, and reward rule. Relevant changes invalidate previous parity evidence.
 - **Keep encoding migrations explicit.** Protocol 0.3 removes backend numeric card IDs. Encoding v3 uses project-assigned tokens and records the vocabulary fingerprint; v2 tensors and protocol 0.2 traces require a declared migration, not relabeling.
-- **Preserve the information boundary.** Policies receive observations, not internal RNG or hidden draw order. `sample_world` is a branching primitive; a full history-conditioned belief model is still future work.
+- **Preserve the information boundary.** Policies receive observations, not internal RNG or hidden draw order. The planner uses `sample_world` only on independent particles, filters confirmed public history, and explicitly reports depletion. Its finite-particle belief is approximate, not an exact posterior.
 - **Keep facts separate from rewards.** The current `terminal-win-v1` rule gives +1 for a win, −1 for a loss, and 0 otherwise. State changes remain available independently.
 - **Handle unavailable and unresolved data explicitly.** Unknown action outcomes are not fabricated terminal transitions. Masked invalid Gym actions are marked `training_transition=False` and must be excluded from training data.
 - **Report finite coverage.** The 60-case matrix covers three encounters, ten development seeds, and two baseline policies. It cannot establish correctness for every game mechanic. All 60 required references have matched the current simulator, with a separate loss/control probe. This conclusion applies to the recorded comparison fields and builds. Original captures are immutable, failed comparisons are retained, and catalog-derived card values are excluded from claims of independent live measurement.
@@ -225,7 +231,7 @@ Recompute the original-game gate with `.venv/bin/python scripts/audit_acceptance
 ```text
 Spire2Lab/
 ├── assets/                 # original SVG identity, light and dark variants
-├── sts2lab/                # contracts, adapters, control, Gym, traces, acceptance
+├── sts2lab/                # adapters, belief/search/goals, control, Gym, traces
 ├── native/                 # lab observation exports and upstream engine build
 ├── bridge/                 # extensions to the pinned Windows Mod
 ├── web/                    # browser dashboard; no frontend build required
@@ -234,7 +240,8 @@ Spire2Lab/
 ├── config/                 # supported scope and acceptance matrix
 ├── CODE-PROVENANCE.md       # project code, dependencies, and source boundaries
 ├── ARCHITECTURE-PLAN.txt    # three-stage plan and phase-one milestones
-└── PHASE1-STATUS.json       # machine-readable progress and evidence
+├── PHASE1-STATUS.json       # phase-one evidence and delivery status
+└── PHASE2-STATUS.json       # search/hierarchy progress and remaining gates
 ```
 
 ## Roadmap
