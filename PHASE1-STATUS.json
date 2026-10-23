@@ -39,7 +39,7 @@
       {
         "id": "P1-03",
         "title": "最小实机闭环",
-        "status": "first_scoped_live_dashboard_battle_complete_and_replayed_disconnect_boundary_pending",
+        "status": "live_complete_battles_and_controlled_response_loss_recovery_passed",
         "depends_on": [
           "P1-01"
         ]
@@ -56,7 +56,7 @@
       {
         "id": "P1-05",
         "title": "面板与决策记录验收",
-        "status": "live_browser_baseline_steps_and_first_complete_trace_exercised_remaining_ui_acceptance_pending",
+        "status": "live_manual_auto_pause_readonly_replay_desktop_mobile_passed",
         "depends_on": [
           "P1-02",
           "P1-03"
@@ -65,7 +65,7 @@
       {
         "id": "P1-06",
         "title": "搜索训练接口与复现能力验收",
-        "status": "local_interface_boundaries_scaling_and_same_host_repro_verified_original_game_gate_pending",
+        "status": "current_native_interfaces_scaling_and_same_host_rebuild_reproduced",
         "depends_on": [
           "P1-02"
         ]
@@ -120,7 +120,7 @@
     "independent_backend_migration": "planned_not_implemented",
     "phase_one_scope": "existing_finite_scope_and_live_game_acceptance_preserved"
   },
-  "status": "in_progress_six_live_pilots_passed_remaining_matrix_running",
+  "status": "in_progress_live_reference_collection",
   "requirements": {
     "versioned_semantic_protocol": "implemented_v0.3.0_public_card_ids_semantic_only",
     "native_linux_simulator": "built_and_smoke_tested",
@@ -135,32 +135,33 @@
     "process_isolated_vector_sampling": "gym_two_workers_tested_and_semantic_sampling_one_two_four_workers_reproducible",
     "windows_game_version_and_bridge": "public_build_23811903_release_v0_107_1_commit_and_assembly_hash_verified_runtime_sha256_matches",
     "windows_ssh_command": "report_and_three_assemblies_received_live_gets_verified_through_18526_to_windows_21526",
-    "real_game_adapter": "live_scoped_attachment_and_four_dashboard_steps_exercised_failed_partial_trace_preserved",
-    "real_game_one_step": "live_floor2_bash_and_strike_matched_defend_revealed_early_settlement_capture",
+    "real_game_adapter": "live_scoped_complete_battles_and_browser_control_boundaries_verified",
+    "real_game_one_step": "live_card_and_end_turn_settlement_confirmed_with_current_mod",
     "real_game_full_battle": "seed1_all_three_encounters_both_policies_complete_and_replayed",
-    "cross_backend_step_parity": "six_complete_pilot_cases_replayed_with_current_native_compatibility_corrections",
-    "cross_backend_comparison_tool": "implemented_with_capture_hash_checks_and_candidate_reexecution_no_local_live_evidence",
-    "bridge_source_hooks": "live_card_and_end_turn_requests_seen_early_settlement_found_new_confirmation_gate_requires_live_validation",
+    "cross_backend_step_parity": "fixed_matrix_in_progress_current_native_reexecution_required_for_each_case",
+    "cross_backend_comparison_tool": "capture_hash_checks_and_independent_reexecution_exercised_on_complete_original_traces",
+    "bridge_source_hooks": "current_mod_execution_idle_gate_live_verified",
     "native_atomic_publish": "staged_binary_replacement_exercised",
     "windows_install_script": "successful_four_file_install_and_backup_directory_user_reported_on_windows_failure_and_rollback_paths_mock_tested",
     "pinned_source_integrity": "archive_hash_and_1417_source_files_verified_build_and_first_load_guarded",
-    "bootstrap": "same_host_fresh_checkout_2c25a99_bootstrap_succeeded_after_two_preserved_tls_failures_113_passed_one_optional_powershell_skip_300_simulator_trajectories_match",
+    "bootstrap": "independent_cold_install_at_2c25a99_upgraded_and_rebuilt_at_4f8447b_132_passed_one_optional_powershell_skip_300_trajectories_match",
     "native_build_history": "previous_binary_and_manifest_archive_verified",
     "unknown_action_archive": "tested_and_browser_verified_no_game_action_or_fabricated_outcome",
-    "reference_candidate_generation": "complete_original_capture_corroboration_private_opening_order_and_independent_reexecution_passed_first_case",
-    "scoped_reference_acceptance_gate": "implemented_60_case_matrix_and_boundary_coverage_no_live_cases_available",
-    "sampling_scaling_measurement": "protocol03_nine_rounds_2700_episodes_44100_decisions_equal_public_trajectory_hashes_worker_cleanup_verified",
+    "reference_candidate_generation": "immutable_complete_original_captures_and_independent_candidate_reexecution_passed_for_registered_cases",
+    "scoped_reference_acceptance_gate": "fixed_60_case_matrix_in_progress_all_nine_boundary_categories_covered",
+    "sampling_scaling_measurement": "commit_4f8447b_nine_rounds_2700_episodes_43875_decisions_public_trajectories_match_shared_host",
     "windows_bridge_listener": "21526_serving_root_and_main_menu_through_linux_18526_tunnel_protocol_1_reference_fingerprint_matches",
     "windows_main_menu_state": "corrected_mutable_model_mod_fingerprint_profile2_verified_then_two_successful_seed1_openings",
     "readonly_bridge_check": "implemented_live_main_menu_passed_synthetic_failure_tests_passed_no_combat_actions",
     "original_release_binding": "release_info_exact_version_commit_prefix_sha1_int32_compatibility_hash_and_full_dll_sha256_verified",
-    "controlled_scenario_staging": "repeated_seed1_nibbit_openings_matched_one_full_battle_other_cases_pending",
+    "controlled_scenario_staging": "repeated_nibbit_seed1_and_independent_openings_for_all_registered_matrix_cases",
     "shared_environment_contract": "observe_step_close_and_optional_operations_declared_native_reset_and_no_io_original_refusals_tested",
     "content_encoding_boundary": "native_id_removed_from_public_observations_semantic_benchmark_config_and_project_tokens_tested_old_versions_explicitly_refused",
     "branch_provenance": "immutable_branch_id_parent_branch_parent_decision_and_operation_tested_recorded_in_session_metadata_not_observations_original_backend_none",
     "training_transition_boundary": "real_simulator_invalid_noop_filtering_attempt_limit_truncation_and_win_loss_precedence_tested",
     "policy_version_records": "existing_random_v1_and_heuristic_v1_decision_records_verified_in_saved_trace",
-    "original_settlement_boundary": "new_mod_runtime_fingerprint_and_idle_flags_verified_11_live_steps_confirmed"
+    "original_settlement_boundary": "current_mod_runtime_fingerprint_execution_idle_and_complete_battle_capture_verified",
+    "original_response_loss": "actual_game_post_with_injected_lost_response_get_only_reconciliation_no_duplicate_action"
   },
   "evidence": {
     "local_tests": "artifacts/lab-tests.xml (47 passed, 1 existing dependency deprecation warning; 2026-10-22)",
@@ -262,15 +263,20 @@
     "victory_power_cleanup": "artifacts/live-cases/20261023T083121680034/report.json (random Sludge Spinner step 15 has no powers at rewards, previous simulator retained Weak 1); artifacts/acceptance/revalidated-20261023T083501459263 (all six complete originals revalidated with corrected native)",
     "victory_power_tests": "artifacts/victory-powers-regression.xml (133 passed, 1 existing dependency warning)",
     "live_matrix_batch": "artifacts/live-batches/20261023T083526929967/report.json (54 predeclared remaining cases; running, first mismatch stops; previous stopped batch retained)",
-    "current_dashboard_service": "PID 621175 / session 81683; restarted only after completed original session archive, loads native 1ef77a84..."
+    "current_dashboard_service": "PID 633440 / session 56479; standard service restored after live fault probe, current native 1ef77a84...",
+    "live_execution_boundaries": "artifacts/live-boundaries/20261023T085145678089/report.json (real game, injected response loss, GET-only recovery, duplicate/stale refusal, manual/auto/pause/loss/replay/mobile; 12 transitions, 12 game POSTs, zero JS errors; separate probe outside matrix)",
+    "current_native_sampling": "artifacts/sampling-live-compat-development.json (4f8447b, 1/2/4 workers, 3 repeats, 2700 episodes, 43875 decisions; public trajectories match; shared-host timing overlapped live capture/native compilation)",
+    "current_native_reproduction": "artifacts/live-compat-reproduction.json (independently installed same-host environment upgraded to 4f8447b and rebuilt; 132 passed, 1 optional PowerShell skip; 300 public trajectories match, 4875 decisions; binary hashes differ)",
+    "live_validation_documentation": "docs/LIVE-VALIDATION.md"
   },
   "next_external_step": "No Windows reinstall is currently needed. Keep the game and tunnel running while remaining declared cases are checked.",
   "completion_rule": "Do not mark complete until original-game behavior and declared supported scenario parity have been verified. Simulator-only tests do not prove local game parity.",
   "limitations": [
     "Installed release v0.107.1 is bound to local reference and runtime hashes; this checks file consistency, not a publisher signature.",
-    "Six seed-1 references cover all three encounters and both baseline policies; remaining seed matrix and loss boundary are incomplete.",
+    "The fixed 60-case matrix is still in progress; the separately labeled loss/control probe does not count toward those cases.",
     "Comparison excludes catalog-derived card values and hidden RNG. A matching finite trace never proves global game parity.",
-    "Previous simulator performance/reproduction results remain bound to their recorded native build; the intent export correction changes that fingerprint."
+    "Same-host rebuilds reproduce public trajectories; binaries differ. No second-machine installation or isolated throughput claim.",
+    "Response loss was deliberately injected around a real game request; no natural network outage is claimed."
   ],
   "architecture_plan": "ARCHITECTURE-PLAN.txt",
   "bridge_connection_plan": {
@@ -294,9 +300,9 @@
     "windows_config_evidence_source": "user_supplied_configuration_output",
     "windows_http_verified_user_transcript": true,
     "linux_http_verified": true,
-    "current_game_state": "profile2_nibbit_seed1_after_four_actions_failed_trace_archived_game_unchanged",
+    "current_game_state": "fixed_non_saving_reference_matrix_running_in_profile2",
     "linux_tunnel_listener_present": true,
-    "verification_scope": "two_live_openings_and_failed_four_step_dashboard_trace_no_full_battle_parity",
+    "verification_scope": "complete_live_references_and_controlled_loss_recovery_probe",
     "experiment_profile_id": 2
   },
   "blocking_conditions": [
@@ -317,9 +323,11 @@
     }
   ],
   "live_reference_progress": {
-    "accepted": 7,
+    "accepted": 24,
     "required": 60,
-    "covered_boundary_types": 8,
-    "required_boundary_types": 9
+    "covered_boundary_types": 9,
+    "required_boundary_types": 9,
+    "checked_at": "2026-10-23T09:00:11.250703+00:00",
+    "evidence": "artifacts/acceptance/status.json"
   }
 }

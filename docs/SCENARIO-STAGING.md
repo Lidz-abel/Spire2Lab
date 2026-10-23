@@ -1,10 +1,11 @@
 # Controlled original-game scenarios
 
-Status: repeated Nibbit seed-1 openings and the first complete 11-step heuristic
-battle have matched. The stricter settlement bridge is running in Windows.
+Status: repeated Nibbit seed-1 openings and complete battles across all three
+encounters have matched. The stricter settlement bridge is running in Windows.
 Live evidence also identified Nibbit block and victory-healing differences in
 the simulator; [explicit corrections](NATIVE-COMPATIBILITY.md) now reproduce the
-unchanged original trace. The 60-case reference set is still incomplete.
+unchanged original traces. The 60-case reference campaign is in progress; see
+[current counts](../PHASE1-STATUS.json) and [live validation](LIVE-VALIDATION.md).
 
 The fixed phase-one benchmark remains Ironclad A0, floor 2, zero completed
 combats, the ten-card starter deck, Burning Blood, no potions, 80/80 HP and
@@ -63,7 +64,7 @@ compatibility facts must be checked against the received local DLL. Record any
 copied or adapted upstream implementation in `CODE-PROVENANCE.md`; inspection
 alone is not a claim of independently implemented game mechanics.
 
-The current draft spans `bridge/ScenarioContract.cs`, `bridge/McpMod.Scenario.cs`,
+The implementation spans `bridge/ScenarioContract.cs`, `bridge/McpMod.Scenario.cs`,
 `sts2lab/scenarios.py` and `scripts/prepare_scenario.py`. It requests a non-saving
 run in profile 2 and records explicit debug setup, including a noncombat history
 anchor when needed and numeric run-stream initialization before entering combat.
@@ -107,8 +108,8 @@ the running game. From the Linux repository root:
 The tool verifies the local bundle and running game/Mod fingerprints, persists a
 request journal, sends one setup request, and waits for its matching settled
 opening. It compares that opening with an independently initialized simulator.
-It does not play cards or finish a battle. Nibbit seed 1 has opening evidence with
-the previous bridge; each new build and scenario still requires validation.
+It does not play cards or finish a battle. Current opening and full-battle
+evidence is build-bound; each new build and scenario still requires validation.
 
 Every attempt writes a new private `artifacts/windows/scenario-*.json` report and
 `.jsonl` journal. Keep failures. Exit code 0 means only the opening checks matched;

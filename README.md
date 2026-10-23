@@ -30,7 +30,7 @@ Spire2Lab is an experimental foundation for researchers studying sequential deci
 
 The immediate goal is a trustworthy environment for later work on search, hierarchical decisions, and reinforcement learning. The platform separates player-visible information from hidden simulator state and keeps original-game evidence distinct from simulator tests. This makes it possible to investigate both **what an agent decided** and **whether the environment behaved as expected**.
 
-> **Development status — phase 1.** The local simulator and dashboard are usable. The first complete original-game reference battle has passed: Nibbit, seed 1, heuristic policy, 11 decisions including victory healing. The 60-case acceptance matrix remains incomplete. Search, hierarchical policies, RL training, and original-game imagery are planned capabilities.
+> **Development status — phase 1.** Complete original-game battles across all three supported encounters have matched independent simulator replays. Live pause, manual override, response-loss recovery and loss boundaries have also passed. The 60-case matrix is still being collected; see [current counts](PHASE1-STATUS.json) and [validation scope](docs/LIVE-VALIDATION.md). Search, hierarchical policies, RL training, and original-game imagery are planned capabilities.
 
 ## Key features
 
@@ -59,7 +59,7 @@ flowchart TB
         T --> V["Replay and acceptance checks"]
     end
     subgraph windows["Windows · game host"]
-        G["Steam game + Mod bridge<br/>Combat validation pending"]
+        G["Steam game + Mod bridge<br/>Build-bound original captures"]
     end
     O <-->|SSH tunnel| G
     classDef default fill:#172B38,stroke:#688592,color:#EDF3F7
@@ -92,7 +92,7 @@ python3 scripts/bootstrap.py
 bash scripts/start.sh
 ```
 
-Bootstrap creates `.venv/`, downloads and verifies pinned upstream sources, installs a local .NET SDK when needed, builds the native library, and runs the project tests. A first build can take longer than five minutes. Protocol 0.3 at commit `2c25a99` passed a fresh-checkout installation on the same Linux host after transient download failures. The rebuilt simulator matched the previous build's public trajectories on 60 fixed cases repeated five times; the binaries were not byte-identical. Independent-machine installation remains unverified. Versioned evidence is recorded in [PHASE1-STATUS.json](PHASE1-STATUS.json).
+Bootstrap creates `.venv/`, downloads and verifies pinned upstream sources, installs a local .NET SDK when needed, builds the native library, and runs the project tests. A first build can take longer than five minutes. A fresh checkout at `2c25a99` passed installation on the same Linux host after transient download failures. That independent environment was later upgraded and rebuilt at `4f8447b`; its public trajectories matched on 60 fixed cases repeated five times. Binaries were not byte-identical, and installation on a second machine remains unverified. See the [versioned evidence](docs/LIVE-VALIDATION.md#reproduction-and-evidence-access).
 
 Open **http://127.0.0.1:8765** on the Linux host. For a remote server, forward port `8765` through SSH and open that address locally. API documentation is at `/docs`.
 
@@ -170,7 +170,7 @@ The original-game workflow is separate from the simulator quick start:
 2. On Linux, run `.venv/bin/python scripts/build_bridge.py` against those references.
 3. Close the game and run [`Install-Windows-Mod.ps1`](scripts/Install-Windows-Mod.ps1) with the same server, path and port, then launch through Steam and enable the Mod.
 4. Keep the game at its main menu and the tunnel open. On Linux, run `.venv/bin/python scripts/check_bridge.py`. It uses GET requests only and saves a separate report under `artifacts/windows/`.
-5. Resolve the version gate, then use the Linux dashboard to verify one settled battle state/action/result before attempting a full reference battle. A passing main-menu check does not certify combat.
+5. Resolve the version gate, select the dedicated experiment profile, and use [controlled scenario preparation](docs/SCENARIO-STAGING.md) to establish an eligible opening. Select the original-game backend in the dashboard to attach to that battle. The dashboard connects to the current state; it does not reset the game. A passing main-menu check does not certify combat.
 
 The helpers require an absolute remote path using letters, digits, `_`, `.`, `/`, and `-`; spaces are currently unsupported. Connection setup checks the remote checkout before uploading. The installer verifies fingerprints, preserves license/build records, and backs up managed files for rollback. These behaviors have mocked PowerShell tests. Steam public build `23811903` is verified as `v0.107.1`: its installation's `release_info.json` matches the received DLL's commit and assembly checksum, with full SHA-256 binding to the Windows report and runtime bridge. For DLLs exposing a generic version, copy that file separately into `artifacts/windows/`; the current connection helper does not upload it. Original reports remain unchanged. Detailed operator steps are in [README.txt](README.txt).
 
@@ -191,9 +191,10 @@ The current evidence is **engineering validation**, not a learned-agent performa
 | [Main-menu bridge check](scripts/check_bridge.py) | HTTP access, protocol, reference fingerprint, process and state stability | Live read-only check passed; no semantic release or combat validation |
 | [Release verification](sts2lab/release.py) | Release version, commit and assembly checksum bound to the received DLL | Local installation consistency, not a publisher signature |
 | Live card-play probe | Request acknowledgment, energy, block and pile changes after one Defend | First-floor diagnostic only; no benchmark or dashboard validation |
-| [Controlled openings](docs/SCENARIO-STAGING.md) | Two independent original-game initializations match public state, private draw order and repeatable RNG snapshots | Nibbit seed 1 only; no complete battle |
+| [Controlled openings](docs/SCENARIO-STAGING.md) | Independent initializations match public state, private draw order and repeatable RNG snapshots | Explicit repeated-opening check: Nibbit seed 1; each matrix case has a separate opening check |
 | [Settlement gate tests](tests/test_settlement_gate.py) | Busy execution cannot become confirmed merely because public fields stop changing | Synthetic timelines; corrected bridge also exercised in the first complete live battle |
-| [Acceptance gate](config/acceptance.json) | 60 independent original reference battles plus required boundary coverage | **Incomplete: first complete Nibbit seed-1 heuristic case accepted** |
+| [Live execution boundaries](docs/LIVE-VALIDATION.md#live-execution-and-browser-boundaries) | Real actions, GET-only response-loss recovery, duplicate/stale refusal, pause, manual override, loss and read-only browser replay | Controlled response loss; separately labeled probe, outside the 60-case count |
+| [Acceptance gate](config/acceptance.json) | 60 independent original reference battles plus nine required boundary categories | Matrix in progress; all nine categories covered. [Current counts](PHASE1-STATUS.json) |
 
 Run the project tests after installation:
 
@@ -217,7 +218,7 @@ Recompute the original-game gate with `.venv/bin/python scripts/audit_acceptance
 - **Preserve the information boundary.** Policies receive observations, not internal RNG or hidden draw order. `sample_world` is a branching primitive; a full history-conditioned belief model is still future work.
 - **Keep facts separate from rewards.** The current `terminal-win-v1` rule gives +1 for a win, −1 for a loss, and 0 otherwise. State changes remain available independently.
 - **Handle unavailable and unresolved data explicitly.** Unknown action outcomes are not fabricated terminal transitions. Masked invalid Gym actions are marked `training_transition=False` and must be excluded from training data.
-- **Report finite coverage.** The 60-case matrix covers three encounters, ten development seeds, and two baseline policies. It cannot establish correctness for every game mechanic. Repeated [controlled initialization](docs/SCENARIO-STAGING.md) and one full Nibbit seed-1 heuristic battle have matched. The other cases remain pending. Original captures are immutable; comparisons against earlier simulator builds retain their mismatches.
+- **Report finite coverage.** The 60-case matrix covers three encounters, ten development seeds, and two baseline policies. It cannot establish correctness for every game mechanic. Complete references from all three encounters have matched; the remaining matrix is tracked in the status file. Original captures are immutable, failed comparisons are retained, and catalog-derived card values are excluded from claims of independent live measurement.
 
 ## Project structure
 

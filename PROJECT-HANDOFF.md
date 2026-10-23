@@ -22,7 +22,26 @@ VS Code Git 凭据服务连接被拒绝，GitHub 拒绝匿名写入。远程核�
 本次 Logo 和 README 尚未上传。已请用户在本机 Git 客户端恢复登录，未索取令牌。
 项目目标：**完成第一阶段所有的内容**（用户于本轮重新设为 active；当前未完成）
 
-2026-10-23 六个先导用例均通过（最新）：三种遭遇 × 两种策略、seed 1，全部完成原版
+2026-10-23 当前交接摘要（优先于下方历史）：结算 Mod 已实机验证，游戏无需重装。
+当前 native 为 1ef77a847010c7c0590f2c610da26c711dc5d636649df5afea6f61e9c64a005d，
+源码检查点 4f8447b。固定 60 场矩阵正在继续；实时已通过数量见 PHASE1-STATUS.json
+的 live_reference_progress 和 artifacts/acceptance/status.json，不用下方历史计数。
+新增 12 步原版控制探针通过，所有 9 类覆盖已齐：受控丢弃一次真实动作回执后 GET-only
+恢复，重复请求缓存/旧决策拒绝无额外 game POST，执行中暂停阻止下一动作，人工覆盖
+有记录，真实 HP 0 战败不回血，桌面/手机回放无动作或 JS 错误。此探针不是自然断网，
+单独登记 probe:live-loss-recovery，不能替代 60 场中的任何一场。报告
+artifacts/live-boundaries/20261023T085145678089/report.json，说明 docs/LIVE-VALIDATION.md。
+第一次探针因开局无 Defend，在发动作前停止，失败报告保留；第二次选择实际存在的
+Strike 后完成。标准服务现 PID 633440 / session 56479，加载当前 native。固定批次
+PID 621267 / session 68770 在两个用例间暂停以进行此探针，完成后恢复；实际调度
+报告仍为 artifacts/live-batches/20261023T083526929967/report.json，首差异自动停止。
+当前版本独立复现已补齐：原独立安装目录升级 4f8447b 并重新构建，132 通过、1 可选
+PowerShell 跳过，300 场/4875 决策公开轨迹一致，二进制不同；不是另一次冷安装。
+主目录 133 测试通过。1/2/4 workers 九轮 2700 场/43875 决策一致，测量与实机采集
+及部分构建重叠，不作独占吞吐宣称。证据 artifacts/live-compat-reproduction.json。
+GitHub 写认证尚无恢复证据；本地 commit 不等于已上传。第一阶段暂不标完成。
+
+2026-10-23 六个先导用例均通过（历史检查点）：三种遭遇 × 两种策略、seed 1，全部完成原版
 捕获与独立重放。Sludge Spinner random 第 15 步曾暴露胜利后 Weak 1 未清除，失败
 报告 artifacts/live-cases/20261023T083121680034/report.json 保留；仅补 starter 胜利
 时清除战斗能力，没有改写捕获。最新 native 为
