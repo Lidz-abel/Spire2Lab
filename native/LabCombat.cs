@@ -15,5 +15,7 @@ public static partial class NativeExports
             state.PlayerHp = Math.Min(state.PlayerMaxHp, state.PlayerHp + 6);
         // At rewards, combat block has expired (also observed in the random trace).
         state.PlayerBlock = 0;
+        // The starter benchmark's combat powers also expire before rewards.
+        state.PlayerBuffs.Clear();
     }
 }

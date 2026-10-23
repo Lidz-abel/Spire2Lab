@@ -61,7 +61,7 @@ O-02 至 O-04 随实机证据逐步替换；阶段 2 实现搜索/层级核心�
 | `sts2lab/catalog.py` | 本项目代码 + 上游数据表 | 加载和转换上游名称/定义；名称和卡牌定义的事实来源是上游 |
 | `native/LabExports.cs` | 本项目观测导出，包含注明的上游行为映射 | 只读导出，不修改卡牌/敌人效果。Nibbit Slice 的 Defend 显示补全依据本机 v0.107.1 捕获和固定 EnemyAI 当前招式/格挡分支；上游已执行格挡但遗漏副意图，本项目仅补公开观测，未知数值保持不可用 |
 | `native/Sts2Lab.csproj` | 本项目构建文件 | 将我们的观测扩展与上游 C# 引擎一起编译 |
-| `native/LabCombat.cs`、生成的 `NativeExports.cs` 终局钩子 | 本项目生命周期适配，参考上游运行层行为；生成文件仍为派生代码 | 根据实机胜利捕获和固定 RunRewardGenerator 的 Burning Blood 行为，在单场 arena 胜利后补一次封顶 6 点回血，并按随机策略实机终局清除剩余格挡。复用原生胜利标志防止重复，失败/截断不支付；不调用完整奖励生成，不复制原版状态到模拟器，不宣称遗物规则为原创 |
+| `native/LabCombat.cs`、生成的 `NativeExports.cs` 终局钩子 | 本项目生命周期适配，参考上游运行层行为；生成文件仍为派生代码 | 根据实机胜利捕获和固定 RunRewardGenerator 的 Burning Blood 行为，在单场 arena 胜利后补一次封顶 6 点回血，并按随机策略实机终局清除剩余格挡及 starter 范围的战斗能力。复用原生胜利标志防止重复，失败/截断不支付；不调用完整奖励生成，不复制原版状态到模拟器，不宣称遗物规则为原创 |
 | `bridge/McpMod.Lab.cs`、`bridge/SettlementGate.cs` | 本项目适配与结算确认实现 | 对 STS2MCP 的状态、请求去重和实验桥接扩展；依赖上游 Mod API。按实机过早捕获失败定义空闲与稳定窗口契约，读取本机 DLL 的 ActionQueueSet、ActionExecutor、PlayPile 公开属性；只读元数据/调用检查确认接口，不移植游戏动作执行器 |
 | `bridge/ScenarioContract.cs`、`bridge/McpMod.Scenario.cs`、`sts2lab/scenarios.py`、`scripts/prepare_scenario.py` | 本项目受控初始化与验证实现，包含注明的上游 API 使用参考 | 需求先记录于 `docs/SCENARIO-STAGING.md`；接口签名来自收到的本机 DLL 元数据，兼容性参考固定上游 `NativeExports.ResetArena/SeedStreams`、`GameRng`、`EncounterRng`。首次实机失败后的 `EncounterModel.ToMutable()` 用法参考固定 `STS2MCP/McpMod.Debug.cs`，并由本机 DLL 元数据确认；使用游戏自身可变模型和 RNG 工厂，不独立实现游戏规则。修复后 Nibbit seed 1 两次独立实机初态匹配，完整战斗尚未通过 |
 | `tests/test_settlement_gate.py`、`tests/settlement_gate.cs` | 本项目测试 | 独立编译生产结算门，使用合成时钟验证持续忙碌、转为空闲、状态变化和忙碌中断；不加载游戏 DLL，不能代替新 Mod 的实机验收 |

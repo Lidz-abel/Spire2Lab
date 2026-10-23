@@ -58,3 +58,10 @@ Strike starts with 5 player block; the reward capture has 0. Clear player block
 at the same victory boundary, without clearing it early during combat. Evidence:
 `artifacts/live-cases/20261023T082235837426/report.json`, step 17. This correction
 changes the native build, so regenerate candidates and re-audit existing cases.
+
+Sludge Spinner seed 1 under the random policy supplies the combat-power cleanup
+case: after 14 matching decisions, the winning action reaches rewards with no
+player powers; the arena retained a combat power. Clear starter-scope player
+combat powers at victory too. Evidence:
+`artifacts/live-cases/20261023T083121680034/report.json`, step 15. This does not
+claim support for persistent effects in later run-level content.

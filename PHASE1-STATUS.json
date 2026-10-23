@@ -120,7 +120,7 @@
     "independent_backend_migration": "planned_not_implemented",
     "phase_one_scope": "existing_finite_scope_and_live_game_acceptance_preserved"
   },
-  "status": "in_progress_four_live_reference_cases_all_encounters_represented",
+  "status": "in_progress_six_live_pilots_passed_remaining_matrix_running",
   "requirements": {
     "versioned_semantic_protocol": "implemented_v0.3.0_public_card_ids_semantic_only",
     "native_linux_simulator": "built_and_smoke_tested",
@@ -137,8 +137,8 @@
     "windows_ssh_command": "report_and_three_assemblies_received_live_gets_verified_through_18526_to_windows_21526",
     "real_game_adapter": "live_scoped_attachment_and_four_dashboard_steps_exercised_failed_partial_trace_preserved",
     "real_game_one_step": "live_floor2_bash_and_strike_matched_defend_revealed_early_settlement_capture",
-    "real_game_full_battle": "seed1_heuristic_all_three_encounters_and_nibbit_random_complete_and_replayed",
-    "cross_backend_step_parity": "four_complete_original_cases_replayed_with_current_native_compatibility_corrections",
+    "real_game_full_battle": "seed1_all_three_encounters_both_policies_complete_and_replayed",
+    "cross_backend_step_parity": "six_complete_pilot_cases_replayed_with_current_native_compatibility_corrections",
     "cross_backend_comparison_tool": "implemented_with_capture_hash_checks_and_candidate_reexecution_no_local_live_evidence",
     "bridge_source_hooks": "live_card_and_end_turn_requests_seen_early_settlement_found_new_confirmation_gate_requires_live_validation",
     "native_atomic_publish": "staged_binary_replacement_exercised",
@@ -169,7 +169,7 @@
     "upstream_csharp": "artifacts/upstream-tests/upstream.trx (4801 passed, 1 skipped)",
     "upstream_python": "519 passed, 7 skipped, 1 known failure: test_display_amount_powers_are_compared_by_presence",
     "original_browser_contract": "artifacts/original-dashboard-synthetic/report.json (5 checks, synthetic transport only)",
-    "native_library_sha256": "cc60ed03d210843f76f35c565b20066a0cc8029e6b4fde74dce034bfbce16a66",
+    "native_library_sha256": "1ef77a847010c7c0590f2c610da26c711dc5d636649df5afea6f61e9c64a005d",
     "bootstrap": "artifacts/bootstrap-check.json",
     "windows_onboarding_package": "artifacts/installers/sts2-lab-windows.zip (scripts only; includes GameBridgePort support and existing-installation migration instructions; latest changes tested with mocked transport, Windows migration not verified)",
     "acceptance_audit": "artifacts/acceptance/status.json (release gate passes; empty cases index; all 60 reference battles and boundary coverage missing)",
@@ -254,17 +254,21 @@
     "nibbit_block_failure": "artifacts/live-dashboard/20261023T080937865967/report.json and artifacts/windows/nibbit-block-stability-20261023T081109970255.json (step 7 original block 5 vs old engine 6; later GET confirms idle and unchanged)",
     "native_compatibility": "docs/NATIVE-COMPATIBILITY.md; artifacts/windows/nibbit-model-calls.json and nibbit-ascension-values.json; artifacts/starter-victory-native-build.log (source-preserving generated corrections, new input/output/build fingerprints)",
     "victory_boundary_regression": "artifacts/starter-victory-regression.xml (131 passed, 1 existing dependency warning; actual native win healing, no repeated payout under snapshot/restore, no loss heal)",
-    "first_complete_audit": "artifacts/acceptance/status.json (4/60 accepted, missing only lost boundary, errors empty; incomplete)",
+    "first_complete_audit": "artifacts/acceptance/status.json (6/60 accepted at milestone; 8/9 coverage, only lost missing; errors empty)",
     "victory_cleanup": "artifacts/live-cases/20261023T082235837426/report.json (17-step random capture initially differs only in terminal block); artifacts/acceptance/victory-cleanup/*-comparison.json (both complete reference cases revalidated with new native)",
     "victory_cleanup_regression": "artifacts/victory-cleanup-regression.xml (132 passed, 1 existing dependency warning; win heal once and terminal block cleanup, snapshot/restore and no defeat healing)",
     "other_encounter_pilots": "artifacts/live-cases/20261023T082638297591/report.json (Slimes heuristic, 19 steps) and 20261023T082758051402/report.json (Sludge Spinner heuristic, 9 steps); complete traces/candidates independently audited",
-    "native_source_acceptance": "artifacts/native-acceptance-dependency-tests.xml (19 related tests passed; native extension inventory and generated source fingerprints included in evidence expiry)"
+    "native_source_acceptance": "artifacts/native-acceptance-dependency-tests.xml (19 related tests passed; native extension inventory and generated source fingerprints included in evidence expiry)",
+    "victory_power_cleanup": "artifacts/live-cases/20261023T083121680034/report.json (random Sludge Spinner step 15 has no powers at rewards, previous simulator retained Weak 1); artifacts/acceptance/revalidated-20261023T083501459263 (all six complete originals revalidated with corrected native)",
+    "victory_power_tests": "artifacts/victory-powers-regression.xml (133 passed, 1 existing dependency warning)",
+    "live_matrix_batch": "artifacts/live-batches/20261023T083526929967/report.json (54 predeclared remaining cases; running, first mismatch stops; previous stopped batch retained)",
+    "current_dashboard_service": "PID 621175 / session 81683; restarted only after completed original session archive, loads native 1ef77a84..."
   },
   "next_external_step": "No Windows reinstall is currently needed. Keep the game and tunnel running while remaining declared cases are checked.",
   "completion_rule": "Do not mark complete until original-game behavior and declared supported scenario parity have been verified. Simulator-only tests do not prove local game parity.",
   "limitations": [
     "Installed release v0.107.1 is bound to local reference and runtime hashes; this checks file consistency, not a publisher signature.",
-    "Four complete seed-1 reference cases cover all three encounters and both Nibbit policies; remaining cases and full-suite boundary coverage are incomplete.",
+    "Six seed-1 references cover all three encounters and both baseline policies; remaining seed matrix and loss boundary are incomplete.",
     "Comparison excludes catalog-derived card values and hidden RNG. A matching finite trace never proves global game parity.",
     "Previous simulator performance/reproduction results remain bound to their recorded native build; the intent export correction changes that fingerprint."
   ],
@@ -313,7 +317,7 @@
     }
   ],
   "live_reference_progress": {
-    "accepted": 4,
+    "accepted": 7,
     "required": 60,
     "covered_boundary_types": 8,
     "required_boundary_types": 9

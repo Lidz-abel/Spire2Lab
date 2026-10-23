@@ -22,6 +22,19 @@ VS Code Git 凭据服务连接被拒绝，GitHub 拒绝匿名写入。远程核�
 本次 Logo 和 README 尚未上传。已请用户在本机 Git 客户端恢复登录，未索取令牌。
 项目目标：**完成第一阶段所有的内容**（用户于本轮重新设为 active；当前未完成）
 
+2026-10-23 六个先导用例均通过（最新）：三种遭遇 × 两种策略、seed 1，全部完成原版
+捕获与独立重放。Sludge Spinner random 第 15 步曾暴露胜利后 Weak 1 未清除，失败
+报告 artifacts/live-cases/20261023T083121680034/report.json 保留；仅补 starter 胜利
+时清除战斗能力，没有改写捕获。最新 native 为
+1ef77a847010c7c0590f2c610da26c711dc5d636649df5afea6f61e9c64a005d，133 项全套测试通过。
+所有 6 条 candidate 已针对新库重新生成并审计，目录
+artifacts/acceptance/revalidated-20261023T083501459263；当前 6/60、覆盖 8/9（仅缺 lost）。
+先前批次已在首个差异停止，新的固定剩余 54 例在
+artifacts/live-batches/20261023T083526929967/report.json 逐场记录。服务在原版完成会话
+归档后重启为 PID 621175 / session 81683，已加载最新 native；游戏无需重装。
+独立检出目录已升级 e48eedb 并重建旧 cc60 修正对应版本，尚未升级本次 powers 修复，
+不得把那次独立构建当成最新版本复现通过。GitHub 写认证仍未恢复。
+
 2026-10-23 种子 1 先导对照完成：Nibbit heuristic/random、Slimes heuristic、Sludge Spinner
 heuristic 共 4/60 完整原版轨迹通过，覆盖 8/9，仅缺 lost。最新 native 为 cc60ed03...，
 132 项全套测试通过；补充原生源码清单/生成文件指纹验收失效检查，相关 19 项测试通过。

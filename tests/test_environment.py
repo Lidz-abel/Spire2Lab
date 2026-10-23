@@ -184,6 +184,23 @@ def test_starter_defeat_never_pays_victory_heal():
         assert env.observe().outcome == "lost" and env.observe().player.hp <= 0
 
 
+def test_starter_combat_powers_expire_at_victory():
+    # Original Sludge Spinner seed-1 random trace retains its combat power until
+    # the winning Strike, then reports an empty power list at rewards.
+    with Simulator("sludge-spinner", 1) as env:
+        policy = Policy("random", 773)
+        for _ in range(14):
+            before = env.observe()
+            env.step(policy.decide(before).selected_action_id, before.decision_id)
+        before = env.observe()
+        assert before.player.hp == 69 and before.player.powers
+        result = env.step(policy.decide(before).selected_action_id, before.decision_id)
+        assert result.observation.outcome == "won"
+        assert (
+            result.observation.player.hp == 75 and not result.observation.player.powers
+        )
+
+
 def test_gym_contract_and_masks():
     env = CombatEnv()
     try:

@@ -59,7 +59,7 @@ The existing `Decision.policy` already carries the baseline version, such as
 ## Training transition boundary
 
 A starter-benchmark terminal win is observed after Burning Blood's capped
-six-point heal and the expiry of combat block. The standalone arena adapter
+six-point heal and the expiry of combat block and starter-scope combat powers. The standalone arena adapter
 applies this boundary once on the winning transition, before exporting state.
 Loss, truncation, observation and checkpoint
 operations never award victory healing. The run reward-choice workflow remains
