@@ -92,6 +92,29 @@ def test_exact_clone_restore_and_branch_isolation():
         assert semantic_state(restored) == initial
 
 
+def test_nibbit_slice_exposes_observed_defend_intent_without_changing_effects():
+    # Minimal public facts from the local v0.107.1 capture after Bash, Strike,
+    # end-turn (2026-10-23). Private raw captures stay outside the repository.
+    with Simulator("nibbits-weak", 1) as env:
+        policy = Policy("heuristic", 773)
+        for _ in range(3):
+            obs = env.observe()
+            env.step(policy.decide(obs).selected_action_id, obs.decision_id)
+        obs = env.observe()
+        assert obs.turn == 1 and obs.player.hp == 68
+        enemy = obs.enemies[0]
+        assert enemy.hp == 25 and enemy.block == 0
+        assert [i.type for i in enemy.intents] == ["Attack", "Defend"]
+        assert enemy.intents[0].magnitude == 6
+        assert enemy.intents[1].magnitude is None and enemy.intents[1].hits is None
+        assert not enemy.intents[1].deals_damage
+        # Merely observing must not apply the announced effect.
+        assert env.observe() == obs
+        after = env.step("end_turn", obs.decision_id).observation
+        assert after.player.hp == 62 and after.enemies[0].block == 6
+        assert [i.type for i in after.enemies[0].intents] == ["Buff"]
+
+
 @pytest.mark.parametrize("encounter", CONFIG["encounters"])
 @pytest.mark.parametrize("policy_name", ["random", "heuristic"])
 def test_complete_legal_battle(encounter, policy_name):

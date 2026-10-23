@@ -58,6 +58,14 @@ The existing `Decision.policy` already carries the baseline version, such as
 
 ## Training transition boundary
 
+A confirmed original-game step requires an empty game action queue, an idle
+action executor with no current action, empty player play piles, and no hand
+play animation. After those conditions become true, require an unchanged state
+token for at least 250 ms. A briefly unchanged public state while an action is
+still executing is not settled. Readiness facts are private bridge metadata;
+they never enter policy observations. Keep a request unresolved while busy,
+poll with GETs only, and do not manufacture a training transition on timeout.
+
 An action outside the declared Gym action space raises before taking a step.
 A masked action inside that space is a no-op with zero reward,
 `invalid_action=True` and `training_transition=False`; it must be filtered from
@@ -119,6 +127,18 @@ the removed ID and protocol-version fields. Do not search seeds or modify game
 rules to obtain agreement. Preserve old traces and encodings as old-version data:
 they remain readable as raw records but are refused by current semantic replay
 until explicitly migrated. Never relabel old training tensors as version 3.
+
+### Visible intent projection
+
+The original v0.107.1 Nibbit exposes both Attack and Defend for its Slice move.
+The pinned engine already applies Slice's block, but omits that displayed Defend
+entry from `SecondaryIntent`. The lab's read-only native export must expose the
+missing intent for the currently selected Slice move, without changing the engine
+state, applying effects, reading future RNG or dropping original-game fields.
+The public Defend magnitude remains unavailable (`None`); no hidden block amount
+is supplied to policies. Other moves and existing secondary intents are preserved.
+This correction changes observed trajectories and the native build fingerprint;
+earlier simulator reports remain evidence for their recorded build only.
 
 The local migration check matched 120 fixed simulator battles and 2,180 decisions
 across the existing development and held-out seed lists, three encounters and two

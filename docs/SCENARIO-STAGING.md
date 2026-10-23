@@ -1,9 +1,11 @@
 # Controlled original-game scenarios
 
-Status: the first staging build loaded in the original game, but its first live
-initialization failed while creating the combat room. The mutable-encounter fix
-has compiled and related checks pass; its Windows installation and successful
-live initialization remain pending. No battle parity has been established.
+Status: two independent Nibbit seed-1 initializations matched the simulator's
+public opening and private draw order after the mutable-encounter fix. A live
+dashboard trace then exposed a missing displayed intent and premature action
+confirmation. The intent projection is corrected; a stricter settlement bridge
+has compiled and awaits Windows validation. No complete battle parity has been
+established; the 60-case reference set remains empty.
 
 The fixed phase-one benchmark remains Ironclad A0, floor 2, zero completed
 combats, the ten-card starter deck, Burning Blood, no potions, 80/80 HP and
@@ -74,11 +76,24 @@ declared numeric RNG streams, then failed before entering combat: the game's
 was validated, and the failed setup must not be retried in its partly initialized
 run. The model must be cloned through the game's `ToMutable()` API first.
 
-The initial build compiled with no errors and one upstream nullable warning,
-and its runtime fingerprint, main menu and profile 2 were verified after the
-Windows installation. That did not establish correct scene initialization.
-Install the corrected build after compilation and restart to the main menu before
-another setup attempt. Compilation and synthetic tests cannot replace this check.
+After installing the mutable-model correction, two independent requests produced
+matching public openings, private draw order and named RNG snapshots. The local
+comparison is `artifacts/windows/repeated-opening-seed1.json`. This establishes
+repeatability for that encounter and seed, not for every configured scenario.
+
+The following four-step dashboard trace is retained as failed evidence. At its
+first end turn, the simulator omitted Nibbit's displayed Defend secondary intent;
+the engine already applied its block. A read-only export correction matches the
+first three recorded steps. At the next Defend, the bridge captured five discard
+cards before the played card reached that pile; a later GET showed six. The
+trace was archived without further game actions and cannot enter acceptance.
+
+The new bridge requires idle game execution and empty play piles before starting
+its stable-state window; see the [environment contract](ENVIRONMENT-CONTRACT.md).
+It compiles against the installed game's references, but must be installed and
+tested in a fresh battle. Never repair an old capture by replacing its transient
+state with a later response. Compilation and synthetic tests cannot certify
+the corrected decision boundary.
 
 ## Operator workflow
 
@@ -93,8 +108,8 @@ the running game. From the Linux repository root:
 The tool verifies the local bundle and running game/Mod fingerprints, persists a
 request journal, sends one setup request, and waits for its matching settled
 opening. It compares that opening with an independently initialized simulator.
-It does not play cards or finish a battle. This first live path remains unverified;
-a successful compile or contract test is not a promised successful setup.
+It does not play cards or finish a battle. Nibbit seed 1 has opening evidence with
+the previous bridge; each new build and scenario still requires validation.
 
 Every attempt writes a new private `artifacts/windows/scenario-*.json` report and
 `.jsonl` journal. Keep failures. Exit code 0 means only the opening checks matched;

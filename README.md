@@ -30,7 +30,7 @@ Spire2Lab is an experimental foundation for researchers studying sequential deci
 
 The immediate goal is a trustworthy environment for later work on search, hierarchical decisions, and reinforcement learning. The platform separates player-visible information from hidden simulator state and keeps original-game evidence distinct from simulator tests. This makes it possible to investigate both **what an agent decided** and **whether the environment behaved as expected**.
 
-> **Development status — phase 1.** The local simulator and dashboard are usable. The Windows bridge has passed main-menu checks, installed-release verification, and one acknowledged card-play probe through the SSH tunnel. That probe used a first-floor battle, outside the fixed second-floor benchmark. Controlled reference battles, live dashboard validation, repeatable initialization, and real-game parity remain pending. Search, hierarchical policies, RL training, and original-game imagery are planned capabilities.
+> **Development status — phase 1.** The local simulator and dashboard are usable. Two independent controlled Nibbit openings matched the original game at the declared seed. Live dashboard steps then exposed an intent-display omission and premature settlement capture; corrections are implemented, with the new bridge awaiting Windows validation. No complete reference battle has passed. Search, hierarchical policies, RL training, and original-game imagery are planned capabilities.
 
 ## Key features
 
@@ -191,6 +191,8 @@ The current evidence is **engineering validation**, not a learned-agent performa
 | [Main-menu bridge check](scripts/check_bridge.py) | HTTP access, protocol, reference fingerprint, process and state stability | Live read-only check passed; no semantic release or combat validation |
 | [Release verification](sts2lab/release.py) | Release version, commit and assembly checksum bound to the received DLL | Local installation consistency, not a publisher signature |
 | Live card-play probe | Request acknowledgment, energy, block and pile changes after one Defend | First-floor diagnostic only; no benchmark or dashboard validation |
+| [Controlled openings](docs/SCENARIO-STAGING.md) | Two independent original-game initializations match public state, private draw order and repeatable RNG snapshots | Nibbit seed 1 only; no complete battle |
+| [Settlement gate tests](tests/test_settlement_gate.py) | Busy execution cannot become confirmed merely because public fields stop changing | Production C# gate with synthetic timelines; new bridge awaits Windows validation |
 | [Acceptance gate](config/acceptance.json) | 60 independent original reference battles plus required boundary coverage | **Incomplete: no local live-game cases** |
 
 Run the project tests after installation:
@@ -215,7 +217,7 @@ Recompute the original-game gate with `.venv/bin/python scripts/audit_acceptance
 - **Preserve the information boundary.** Policies receive observations, not internal RNG or hidden draw order. `sample_world` is a branching primitive; a full history-conditioned belief model is still future work.
 - **Keep facts separate from rewards.** The current `terminal-win-v1` rule gives +1 for a win, −1 for a loss, and 0 otherwise. State changes remain available independently.
 - **Handle unavailable and unresolved data explicitly.** Unknown action outcomes are not fabricated terminal transitions. Masked invalid Gym actions are marked `training_transition=False` and must be excluded from training data.
-- **Report finite coverage.** The 60-case matrix covers three encounters, ten development seeds, and two baseline policies. It cannot establish correctness for every game mechanic. The first live [controlled initialization](docs/SCENARIO-STAGING.md) failed because combat creation requires a mutable encounter model. A correction has compiled; successful initialization, RNG alignment and battle parity remain unverified.
+- **Report finite coverage.** The 60-case matrix covers three encounters, ten development seeds, and two baseline policies. It cannot establish correctness for every game mechanic. Repeated [controlled initialization](docs/SCENARIO-STAGING.md) has matched the Nibbit seed-1 opening, including private draw order and repeatable RNG snapshots. Full battles, the remaining scenarios and the new settlement bridge still require live validation. Failed partial traces remain excluded.
 
 ## Project structure
 

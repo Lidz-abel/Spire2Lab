@@ -22,8 +22,7 @@ public static partial class McpMod
     private static readonly Queue<string> LabRequestOrder = new();
     private static string? LabAssemblySha;
     private static string? LabModSha;
-    private static string? LabObservedToken;
-    private static long LabObservedAt;
+    private static readonly SettlementGate LabSettlement = new(Stopwatch.Frequency);
     private static string? LabPendingFrom;
     private static string? LabLastRequestId;
 
@@ -49,17 +48,26 @@ public static partial class McpMod
         state["lab_protocol"] = 1;
         state["game_assembly_sha256"] = LabAssemblySha;
         state["lab_mod_sha256"] = LabModSha;
-        state["lab_capabilities"] = new[] { "scenario_staging_v1" };
+        state["lab_capabilities"] = new[] { "scenario_staging_v1", "execution_idle_v1" };
         state["lab_profile_id"] = MegaCrit.Sts2.Core.Saves.SaveManager.Instance.CurrentProfileId;
         if (LabScenario != null) state["lab_scenario"] = LabScenario;
+        bool inRun = RunManager.Instance.IsInProgress;
+        bool queueEmpty = !inRun || RunManager.Instance.ActionQueueSet?.IsEmpty == true;
+        var executor = inRun ? RunManager.Instance.ActionExecutor : null;
+        bool executorIdle = !inRun || (executor != null && !executor.IsRunning && executor.CurrentlyRunningAction == null);
+        var run = inRun ? RunManager.Instance.DebugOnlyGetState() : null;
+        bool playPilesEmpty = !inRun || (run != null && run.Players.Count > 0 && run.Players.All(p =>
+            p.PlayerCombatState is { } combat ? combat.PlayPile.IsEmpty : !CombatManager.Instance.IsInProgress));
+        bool handIdle = NCombatRoom.Instance?.Ui?.Hand?.InCardPlay != true;
+        bool executionIdle = queueEmpty && executorIdle && playPilesEmpty && handIdle && !LabSetupBusy;
+        state["lab_execution"] = new Dictionary<string, object?> {
+            ["queue_empty"] = queueEmpty, ["executor_idle"] = executorIdle,
+            ["play_piles_empty"] = playPilesEmpty, ["hand_idle"] = handIdle,
+            ["setup_idle"] = !LabSetupBusy
+        };
         string token = LabHash(JsonSerializer.Serialize(state));
         long now = Stopwatch.GetTimestamp();
-        if (token != LabObservedToken)
-        {
-            LabObservedToken = token;
-            LabObservedAt = now;
-        }
-        bool settled = (now - LabObservedAt) / (double)Stopwatch.Frequency >= 0.25;
+        bool settled = LabSettlement.Observe(token, executionIdle, now);
         bool actionable = false;
         if (state.TryGetValue("battle", out var value) && value is Dictionary<string, object?> battle)
         {

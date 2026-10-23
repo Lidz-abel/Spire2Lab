@@ -58,10 +58,11 @@ O-02 至 O-04 随实机证据逐步替换；阶段 2 实现搜索/层级核心�
 | `sts2lab/release.py` | 本项目校验实现；兼容格式来自本机程序集元数据 | 将发行 JSON 的精确版本、提交号和兼容校验值关联到收到的 DLL；只读检查确认 AssemblyHasher 使用 SHA-1 的前 4 字节按有符号小端整数读取，使用标准库重算；另保留完整 SHA-256 绑定，不复制或执行游戏方法 |
 | `sts2lab/traces.py`、`parity.py`、`reference_replay.py`、`acceptance.py` | 本项目 | 轨迹哈希链、重执行、原版对照和有限验收门 |
 | `sts2lab/catalog.py` | 本项目代码 + 上游数据表 | 加载和转换上游名称/定义；名称和卡牌定义的事实来源是上游 |
-| `native/LabExports.cs` | 本项目 | 只读观测导出扩展；不新增卡牌效果或敌人规则 |
+| `native/LabExports.cs` | 本项目观测导出，包含注明的上游行为映射 | 只读导出，不修改卡牌/敌人效果。Nibbit Slice 的 Defend 显示补全依据本机 v0.107.1 捕获和固定 EnemyAI 当前招式/格挡分支；上游已执行格挡但遗漏副意图，本项目仅补公开观测，未知数值保持不可用 |
 | `native/Sts2Lab.csproj` | 本项目构建文件 | 将我们的观测扩展与上游 C# 引擎一起编译 |
-| `bridge/McpMod.Lab.cs` | 本项目适配扩展 | 对 STS2MCP 的状态、请求去重和实验桥接扩展；依赖上游 Mod API |
-| `bridge/ScenarioContract.cs`、`bridge/McpMod.Scenario.cs`、`sts2lab/scenarios.py`、`scripts/prepare_scenario.py` | 本项目受控初始化与验证实现，包含注明的上游 API 使用参考 | 需求先记录于 `docs/SCENARIO-STAGING.md`；接口签名来自收到的本机 DLL 元数据，兼容性参考固定上游 `NativeExports.ResetArena/SeedStreams`、`GameRng`、`EncounterRng`。首次实机失败后的 `EncounterModel.ToMutable()` 用法参考固定 `STS2MCP/McpMod.Debug.cs`，并由本机 DLL 元数据确认；使用游戏自身可变模型和 RNG 工厂，不独立实现游戏规则。客户端/契约测试通过，实机初始化尚未成功 |
+| `bridge/McpMod.Lab.cs`、`bridge/SettlementGate.cs` | 本项目适配与结算确认实现 | 对 STS2MCP 的状态、请求去重和实验桥接扩展；依赖上游 Mod API。按实机过早捕获失败定义空闲与稳定窗口契约，读取本机 DLL 的 ActionQueueSet、ActionExecutor、PlayPile 公开属性；只读元数据/调用检查确认接口，不移植游戏动作执行器 |
+| `bridge/ScenarioContract.cs`、`bridge/McpMod.Scenario.cs`、`sts2lab/scenarios.py`、`scripts/prepare_scenario.py` | 本项目受控初始化与验证实现，包含注明的上游 API 使用参考 | 需求先记录于 `docs/SCENARIO-STAGING.md`；接口签名来自收到的本机 DLL 元数据，兼容性参考固定上游 `NativeExports.ResetArena/SeedStreams`、`GameRng`、`EncounterRng`。首次实机失败后的 `EncounterModel.ToMutable()` 用法参考固定 `STS2MCP/McpMod.Debug.cs`，并由本机 DLL 元数据确认；使用游戏自身可变模型和 RNG 工厂，不独立实现游戏规则。修复后 Nibbit seed 1 两次独立实机初态匹配，完整战斗尚未通过 |
+| `tests/test_settlement_gate.py`、`tests/settlement_gate.cs` | 本项目测试 | 独立编译生产结算门，使用合成时钟验证持续忙碌、转为空闲、状态变化和忙碌中断；不加载游戏 DLL，不能代替新 Mod 的实机验收 |
 | `tests/test_scenarios.py`、`tests/test_scenario_contract.py`、`tests/scenario_contract.cs` | 本项目测试 | 合成 HTTP 与临时文件覆盖未知结果、指纹/初态拒绝及中断恢复；独立编译生产 C# 请求解析器并检查 36 组合成输入，不载入游戏程序集，不作为原版运行证据 |
 | `scripts/*.py`、`scripts/*.ps1` | 本项目 | 构建、来源校验、Windows 接入、安装、回放、审计和浏览器检查 |
 | `tests/*.py`、`config/*.json`、`web/*` | 本项目新增实现；部分测试依赖上游素材 | 测试、实验范围、验收规则和面板；`test_original.py` 读取上游 A8 捕获，不属于本机实机证据 |

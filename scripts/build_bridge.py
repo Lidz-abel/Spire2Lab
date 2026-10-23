@@ -164,7 +164,7 @@ manifest.update(
             str(path.relative_to(ROOT)): hashlib.sha256(path.read_bytes()).hexdigest()
             for path in extension_sources
         },
-        "capabilities": ["scenario_staging_v1"],
+        "capabilities": ["scenario_staging_v1", "execution_idle_v1"],
     }
 )
 (compiled_output / "build.json").write_text(json.dumps(manifest, indent=2) + "\n")

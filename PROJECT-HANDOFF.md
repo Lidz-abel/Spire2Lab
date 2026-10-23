@@ -22,6 +22,42 @@ VS Code Git 凭据服务连接被拒绝，GitHub 拒绝匿名写入。远程核�
 本次 Logo 和 README 尚未上传。已请用户在本机 Git 客户端恢复登录，未索取令牌。
 项目目标：**完成第一阶段所有的内容**（用户于本轮重新设为 active；当前未完成）
 
+2026-10-23 可重复开局与逐步实机验收（最新状态，优先于下方历史）：用户再次重启后，
+已确认 Mod 93e1cc5c... 正在运行、游戏指纹匹配、主菜单/实验槽位 2 正确。可变模型
+修复已实机生效。nibbits-weak / seed 1 两次独立初始化均达到固定第 2 层开局，公开
+观测、私有牌序及命名 RNG 前后快照重复一致；证据 repeated-opening-seed1.json 和
+scenario-20261023T073425321785.json、scenario-20261023T073740714856.json 在
+artifacts/windows/。这只证明该种子/遭遇的开局，不能扩展为全套 RNG 或战斗一致性。
+
+随后通过真实浏览器面板执行 Bash、Strike、end_turn、Defend，共 4 步；原版 run_id
+为 33c7740c8a904cd394a58e3f7e1e3faf。前两步匹配，第三步发现 Nibbit Slice 在原版
+显示 Attack + Defend，而固定模拟器仅导出 Attack；上游已执行对应格挡，故仅在
+native/LabExports.cs 补公开副意图，不改规则、RNG 或隐藏数值。新 native SHA 为
+1a24569fc418c34e3cd5427dc94eb8afe8ea1289ae79ace7a7c58729a88c7140，旧库已归档；
+独立重放前三步匹配，但因不完整仍拒绝通过。证据 artifacts/windows/nibbit-intent-analysis.json
+和 artifacts/live-dashboard/20261023T074035521068/corrected-partial-comparison.json。
+
+第四步 Defend 暴露桥接过早确认：捕获弃牌堆 5 张，稍后同一请求的 GET 已为 6 张。
+立即停止并保留中间态，没有改写原始捕获；整条四步轨迹已 archive，不能计入参考集。
+证据 artifacts/live-dashboard/20261023T074617146880/report.json、artifacts/windows/
+after-defend-settling-20261023T074708346882.json 与 early-settlement-archive.json。
+
+新增结算门：游戏队列为空、执行器空闲且无当前动作、出牌区为空、手牌动画结束，
+之后状态 token 继续稳定至少 250 ms 才确认。忙碌期间的静止时间不计入；执行事实
+仅为私有桥接元数据。SettlementGate.cs 是本项目实现，实际生产类通过合成时间线
+测试；API 及 IsRunning getter 用本机 DLL 只读元数据核实，未在 Linux 执行游戏代码。
+新 Mod SHA 60d7f563611013b31d46438c5b03cfb99765b6ef00fecd28f0732bb62a38257a，
+编译 0 错误、1 项既有上游警告，构建/来源/发行绑定验证通过；125 项全套测试通过、
+1 项既有依赖警告。证据 artifacts/windows/settlement-build-verification.json 与
+artifacts/settlement-regression-tests.xml。新 Mod 尚未实机验证，已请用户关闭游戏、
+运行原安装脚本并 Steam 重启到主菜单/槽位 2。下一步核对上述 SHA 和 execution_idle_v1，
+重新初始化并采集新完整战斗，不能恢复已归档的失败轨迹。上一次安装操作本身成功。
+
+服务在归档后已安全重启，PID 603656 / exec session 44151，加载新 native，默认暂停
+模拟器；证据 artifacts/settlement-service-restart.json。验收仍 0/60、9 类覆盖全缺，
+errors=[]，见 artifacts/acceptance/settlement-status.json。旧性能/复现报告保留原构建
+绑定，不自动继承到新库。GitHub 写入认证仍无恢复证据，未声称远程更新成功。
+
 2026-10-23 新 Mod 实机接入与首次初始化失败（优先于下方历史）：用户报告安装并
 重启后，直接读取确认运行 DLL 为 6de822b9db90892337ff0c00f08aae023f2fd4d192b12c8292315e5dd723268c，
 游戏指纹匹配，进程已更换，主菜单/槽位 2/场景能力正确；7 项只读菜单检查通过。
