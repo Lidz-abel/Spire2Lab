@@ -111,7 +111,7 @@ def test_nibbit_slice_exposes_observed_defend_intent_without_changing_effects():
         # Merely observing must not apply the announced effect.
         assert env.observe() == obs
         after = env.step("end_turn", obs.decision_id).observation
-        assert after.player.hp == 62 and after.enemies[0].block == 6
+        assert after.player.hp == 62 and after.enemies[0].block == 5
         assert [i.type for i in after.enemies[0].intents] == ["Buff"]
 
 
@@ -129,6 +129,59 @@ def test_complete_legal_battle(encounter, policy_name):
             obs = env.step(decision.selected_action_id, obs.decision_id).observation
         assert obs.outcome in ("won", "lost")
         assert not obs.legal_actions
+
+
+def test_starter_victory_includes_one_relic_heal_and_survives_restore():
+    # Live seed-1 Nibbit trace: 68 HP before winning Strike, 74 at rewards.
+    with Simulator("nibbits-weak", 1) as env:
+        policy = Policy("heuristic", 773)
+        for _ in range(10):
+            before = env.observe()
+            env.step(policy.decide(before).selected_action_id, before.decision_id)
+        before = env.observe()
+        assert before.player.hp == 68 and before.outcome == "ongoing"
+        with env.snapshot() as pre_win:
+            result = env.step(
+                policy.decide(before).selected_action_id, before.decision_id
+            )
+            assert result.terminated and result.observation.outcome == "won"
+            assert result.observation.player.hp == 74
+            assert result.facts["player_hp_delta"] == 6
+            assert env.observe() == result.observation
+            with env.snapshot() as terminal:
+                assert terminal.observe().player.hp == 74
+                env.restore(terminal)
+                assert env.observe().player.hp == 74
+                with pytest.raises(ValueError, match="illegal_action"):
+                    env.step("end_turn", env.decision_id)
+            restored = env.restore(pre_win)
+            again = env.step(
+                policy.decide(restored).selected_action_id, restored.decision_id
+            )
+            assert again.observation.player.hp == 74
+
+
+def test_random_victory_clears_block_only_after_winning_action():
+    # Original seed-1 random policy: 64 HP and 5 block before the final Strike.
+    with Simulator("nibbits-weak", 1) as env:
+        policy = Policy("random", 773)
+        for _ in range(16):
+            before = env.observe()
+            env.step(policy.decide(before).selected_action_id, before.decision_id)
+        before = env.observe()
+        assert before.player.hp == 64 and before.player.block == 5
+        result = env.step(policy.decide(before).selected_action_id, before.decision_id)
+        assert result.observation.outcome == "won"
+        assert (
+            result.observation.player.hp == 70 and result.observation.player.block == 0
+        )
+
+
+def test_starter_defeat_never_pays_victory_heal():
+    with Simulator("nibbits-weak", 1) as env:
+        while env.observe().outcome == "ongoing":
+            env.step("end_turn", env.decision_id)
+        assert env.observe().outcome == "lost" and env.observe().player.hp <= 0
 
 
 def test_gym_contract_and_masks():

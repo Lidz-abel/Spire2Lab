@@ -39,7 +39,7 @@
       {
         "id": "P1-03",
         "title": "最小实机闭环",
-        "status": "scoped_dashboard_card_and_end_turn_requests_exercised_partial_trace_failed_settlement_full_battle_pending",
+        "status": "first_scoped_live_dashboard_battle_complete_and_replayed_disconnect_boundary_pending",
         "depends_on": [
           "P1-01"
         ]
@@ -47,7 +47,7 @@
       {
         "id": "P1-04",
         "title": "可重复场景与随机性对齐",
-        "status": "two_independent_live_nibbit_seed1_openings_matched_other_cases_and_full_rng_trajectory_pending",
+        "status": "repeated_seed1_nibbit_opening_and_complete_trajectory_matched_remaining_cases_pending",
         "depends_on": [
           "P1-03"
         ],
@@ -56,7 +56,7 @@
       {
         "id": "P1-05",
         "title": "面板与决策记录验收",
-        "status": "live_dashboard_four_steps_captured_failed_intent_and_early_settlement_evidence_preserved_new_bridge_validation_pending",
+        "status": "live_browser_baseline_steps_and_first_complete_trace_exercised_remaining_ui_acceptance_pending",
         "depends_on": [
           "P1-02",
           "P1-03"
@@ -73,7 +73,7 @@
       {
         "id": "P1-07",
         "title": "原版参考集验收",
-        "status": "incomplete_no_live_cases",
+        "status": "first_complete_reference_accepted_full_matrix_pending",
         "depends_on": [
           "P1-03",
           "P1-04",
@@ -120,7 +120,7 @@
     "independent_backend_migration": "planned_not_implemented",
     "phase_one_scope": "existing_finite_scope_and_live_game_acceptance_preserved"
   },
-  "status": "repeated_live_seed1_openings_matched_partial_battle_failed_settlement_fix_compiled_awaiting_windows_validation",
+  "status": "in_progress_four_live_reference_cases_all_encounters_represented",
   "requirements": {
     "versioned_semantic_protocol": "implemented_v0.3.0_public_card_ids_semantic_only",
     "native_linux_simulator": "built_and_smoke_tested",
@@ -137,8 +137,8 @@
     "windows_ssh_command": "report_and_three_assemblies_received_live_gets_verified_through_18526_to_windows_21526",
     "real_game_adapter": "live_scoped_attachment_and_four_dashboard_steps_exercised_failed_partial_trace_preserved",
     "real_game_one_step": "live_floor2_bash_and_strike_matched_defend_revealed_early_settlement_capture",
-    "real_game_full_battle": "not_verified",
-    "cross_backend_step_parity": "first_three_recorded_steps_match_after_readonly_intent_correction_no_complete_reference",
+    "real_game_full_battle": "seed1_heuristic_all_three_encounters_and_nibbit_random_complete_and_replayed",
+    "cross_backend_step_parity": "four_complete_original_cases_replayed_with_current_native_compatibility_corrections",
     "cross_backend_comparison_tool": "implemented_with_capture_hash_checks_and_candidate_reexecution_no_local_live_evidence",
     "bridge_source_hooks": "live_card_and_end_turn_requests_seen_early_settlement_found_new_confirmation_gate_requires_live_validation",
     "native_atomic_publish": "staged_binary_replacement_exercised",
@@ -147,20 +147,20 @@
     "bootstrap": "same_host_fresh_checkout_2c25a99_bootstrap_succeeded_after_two_preserved_tls_failures_113_passed_one_optional_powershell_skip_300_simulator_trajectories_match",
     "native_build_history": "previous_binary_and_manifest_archive_verified",
     "unknown_action_archive": "tested_and_browser_verified_no_game_action_or_fabricated_outcome",
-    "reference_candidate_generation": "live_seed1_opening_and_three_step_partial_replay_match_with_declared_seed_incomplete_trace_rejected",
+    "reference_candidate_generation": "complete_original_capture_corroboration_private_opening_order_and_independent_reexecution_passed_first_case",
     "scoped_reference_acceptance_gate": "implemented_60_case_matrix_and_boundary_coverage_no_live_cases_available",
     "sampling_scaling_measurement": "protocol03_nine_rounds_2700_episodes_44100_decisions_equal_public_trajectory_hashes_worker_cleanup_verified",
     "windows_bridge_listener": "21526_serving_root_and_main_menu_through_linux_18526_tunnel_protocol_1_reference_fingerprint_matches",
     "windows_main_menu_state": "corrected_mutable_model_mod_fingerprint_profile2_verified_then_two_successful_seed1_openings",
     "readonly_bridge_check": "implemented_live_main_menu_passed_synthetic_failure_tests_passed_no_combat_actions",
     "original_release_binding": "release_info_exact_version_commit_prefix_sha1_int32_compatibility_hash_and_full_dll_sha256_verified",
-    "controlled_scenario_staging": "two_independent_seed1_nibbit_openings_matched_public_state_private_draw_order_and_repeatable_rng_snapshots",
+    "controlled_scenario_staging": "repeated_seed1_nibbit_openings_matched_one_full_battle_other_cases_pending",
     "shared_environment_contract": "observe_step_close_and_optional_operations_declared_native_reset_and_no_io_original_refusals_tested",
     "content_encoding_boundary": "native_id_removed_from_public_observations_semantic_benchmark_config_and_project_tokens_tested_old_versions_explicitly_refused",
     "branch_provenance": "immutable_branch_id_parent_branch_parent_decision_and_operation_tested_recorded_in_session_metadata_not_observations_original_backend_none",
     "training_transition_boundary": "real_simulator_invalid_noop_filtering_attempt_limit_truncation_and_win_loss_precedence_tested",
     "policy_version_records": "existing_random_v1_and_heuristic_v1_decision_records_verified_in_saved_trace",
-    "original_settlement_boundary": "idle_queue_executor_play_piles_and_hand_gate_compiled_synthetic_clock_tests_passed_new_windows_validation_pending"
+    "original_settlement_boundary": "new_mod_runtime_fingerprint_and_idle_flags_verified_11_live_steps_confirmed"
   },
   "evidence": {
     "local_tests": "artifacts/lab-tests.xml (47 passed, 1 existing dependency deprecation warning; 2026-10-22)",
@@ -169,7 +169,7 @@
     "upstream_csharp": "artifacts/upstream-tests/upstream.trx (4801 passed, 1 skipped)",
     "upstream_python": "519 passed, 7 skipped, 1 known failure: test_display_amount_powers_are_compared_by_presence",
     "original_browser_contract": "artifacts/original-dashboard-synthetic/report.json (5 checks, synthetic transport only)",
-    "native_library_sha256": "1a24569fc418c34e3cd5427dc94eb8afe8ea1289ae79ace7a7c58729a88c7140",
+    "native_library_sha256": "cc60ed03d210843f76f35c565b20066a0cc8029e6b4fde74dce034bfbce16a66",
     "bootstrap": "artifacts/bootstrap-check.json",
     "windows_onboarding_package": "artifacts/installers/sts2-lab-windows.zip (scripts only; includes GameBridgePort support and existing-installation migration instructions; latest changes tested with mocked transport, Windows migration not verified)",
     "acceptance_audit": "artifacts/acceptance/status.json (release gate passes; empty cases index; all 60 reference battles and boundary coverage missing)",
@@ -247,15 +247,24 @@
     "settlement_regression": "artifacts/settlement-regression-tests.xml and .log (125 passed, 1 existing Starlette/httpx deprecation warning; includes production C# gate with synthetic time/execution facts)",
     "settlement_acceptance": "artifacts/acceptance/settlement-status.json (expected exit 1; errors empty; 0/60 complete cases and all 9 coverage types missing)",
     "settlement_service": "artifacts/settlement-service-restart.json (failed original session archived before shutdown; PID 603656 serves paused simulator with corrected native library; no Windows actions)",
-    "settlement_documentation": "artifacts/settlement-doc-checks.json (48 local paths/anchors valid; structured status valid; git diff whitespace check passed)"
+    "settlement_documentation": "artifacts/settlement-doc-checks.json (48 local paths/anchors valid; structured status valid; git diff whitespace check passed)",
+    "settlement_mod_live": "artifacts/windows/settlement-reloaded-20261023T080740976086.json (current Mod SHA 60d7f563..., profile 2 main menu and execution_idle_v1 verified)",
+    "settlement_fresh_opening": "artifacts/windows/scenario-20261023T080752516781.json (new Mod opening matched)",
+    "first_complete_reference": "artifacts/acceptance/references/nibbits-weak-1-heuristic.jsonl; artifacts/live-dashboard/20261023T081506924270/victory-comparison.json (11 steps, won, original raw captures corroborated, simulator independently reexecuted, no seed search or state overrides)",
+    "nibbit_block_failure": "artifacts/live-dashboard/20261023T080937865967/report.json and artifacts/windows/nibbit-block-stability-20261023T081109970255.json (step 7 original block 5 vs old engine 6; later GET confirms idle and unchanged)",
+    "native_compatibility": "docs/NATIVE-COMPATIBILITY.md; artifacts/windows/nibbit-model-calls.json and nibbit-ascension-values.json; artifacts/starter-victory-native-build.log (source-preserving generated corrections, new input/output/build fingerprints)",
+    "victory_boundary_regression": "artifacts/starter-victory-regression.xml (131 passed, 1 existing dependency warning; actual native win healing, no repeated payout under snapshot/restore, no loss heal)",
+    "first_complete_audit": "artifacts/acceptance/status.json (4/60 accepted, missing only lost boundary, errors empty; incomplete)",
+    "victory_cleanup": "artifacts/live-cases/20261023T082235837426/report.json (17-step random capture initially differs only in terminal block); artifacts/acceptance/victory-cleanup/*-comparison.json (both complete reference cases revalidated with new native)",
+    "victory_cleanup_regression": "artifacts/victory-cleanup-regression.xml (132 passed, 1 existing dependency warning; win heal once and terminal block cleanup, snapshot/restore and no defeat healing)",
+    "other_encounter_pilots": "artifacts/live-cases/20261023T082638297591/report.json (Slimes heuristic, 19 steps) and 20261023T082758051402/report.json (Sludge Spinner heuristic, 9 steps); complete traces/candidates independently audited",
+    "native_source_acceptance": "artifacts/native-acceptance-dependency-tests.xml (19 related tests passed; native extension inventory and generated source fingerprints included in evidence expiry)"
   },
-  "next_external_step": "Previous mutable-model install/restart succeeded. Close the current non-saving experiment, install the new settlement bundle with the same Install-Windows-Mod.ps1 command, restart Steam to the main menu/profile 2 with the tunnel open. Verify Mod SHA 60d7f563611013b31d46438c5b03cfb99765b6ef00fecd28f0732bb62a38257a and execution_idle_v1 before a fresh seed-1 setup and battle; never resume or rewrite the archived early-settlement trace.",
+  "next_external_step": "No Windows reinstall is currently needed. Keep the game and tunnel running while remaining declared cases are checked.",
   "completion_rule": "Do not mark complete until original-game behavior and declared supported scenario parity have been verified. Simulator-only tests do not prove local game parity.",
   "limitations": [
     "Installed release v0.107.1 is bound to local reference and runtime hashes; this checks file consistency, not a publisher signature.",
-    "Two independent Nibbit seed-1 openings matched; this does not establish all seeds, encounters or full RNG trajectories.",
-    "Four live dashboard actions were captured, but the trace failed intent projection and premature confirmation. Read-only intent correction matches the first three steps; no complete battle is accepted.",
-    "The new settlement bridge is compiled and tested with synthetic execution timelines; Windows installation and runtime decision-boundary validation remain pending.",
+    "Four complete seed-1 reference cases cover all three encounters and both Nibbit policies; remaining cases and full-suite boundary coverage are incomplete.",
     "Comparison excludes catalog-derived card values and hidden RNG. A matching finite trace never proves global game parity.",
     "Previous simulator performance/reproduction results remain bound to their recorded native build; the intent export correction changes that fingerprint."
   ],
@@ -289,16 +298,10 @@
   "blocking_conditions": [
     {
       "id": "windows_settlement_mod_installation",
-      "state": "mutable_model_fix_live_verified_new_settlement_build_installation_pending",
+      "state": "resolved_current_settlement_mod_runtime_verified",
       "evidence": "artifacts/windows/settlement-build-verification.json",
-      "required_action": "Previous mutable-model install/restart succeeded. Close the current non-saving experiment, install the new settlement bundle with the same Install-Windows-Mod.ps1 command, restart Steam to the main menu/profile 2 with the tunnel open. Verify Mod SHA 60d7f563611013b31d46438c5b03cfb99765b6ef00fecd28f0732bb62a38257a and execution_idle_v1 before a fresh seed-1 setup and battle; never resume or rewrite the archived early-settlement trace.",
-      "blocks": [
-        "P1-03",
-        "P1-04",
-        "P1-05 live acceptance",
-        "P1-07",
-        "P1-08"
-      ]
+      "required_action": "None: Windows installation succeeded; continue live reference collection.",
+      "blocks": []
     },
     {
       "id": "github_write_authentication",
@@ -308,5 +311,11 @@
         "P1-08 remote synchronization"
       ]
     }
-  ]
+  ],
+  "live_reference_progress": {
+    "accepted": 4,
+    "required": 60,
+    "covered_boundary_types": 8,
+    "required_boundary_types": 9
+  }
 }

@@ -58,6 +58,14 @@ The existing `Decision.policy` already carries the baseline version, such as
 
 ## Training transition boundary
 
+A starter-benchmark terminal win is observed after Burning Blood's capped
+six-point heal and the expiry of combat block. The standalone arena adapter
+applies this boundary once on the winning transition, before exporting state.
+Loss, truncation, observation and checkpoint
+operations never award victory healing. The run reward-choice workflow remains
+outside this benchmark. See [native compatibility](NATIVE-COMPATIBILITY.md) for
+the original-game evidence, upstream behavior reference and build transformation.
+
 A confirmed original-game step requires an empty game action queue, an idle
 action executor with no current action, empty player play piles, and no hand
 play animation. After those conditions become true, require an unchanged state

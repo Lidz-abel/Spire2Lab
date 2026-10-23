@@ -1,11 +1,10 @@
 # Controlled original-game scenarios
 
-Status: two independent Nibbit seed-1 initializations matched the simulator's
-public opening and private draw order after the mutable-encounter fix. A live
-dashboard trace then exposed a missing displayed intent and premature action
-confirmation. The intent projection is corrected; a stricter settlement bridge
-has compiled and awaits Windows validation. No complete battle parity has been
-established; the 60-case reference set remains empty.
+Status: repeated Nibbit seed-1 openings and the first complete 11-step heuristic
+battle have matched. The stricter settlement bridge is running in Windows.
+Live evidence also identified Nibbit block and victory-healing differences in
+the simulator; [explicit corrections](NATIVE-COMPATIBILITY.md) now reproduce the
+unchanged original trace. The 60-case reference set is still incomplete.
 
 The fixed phase-one benchmark remains Ironclad A0, floor 2, zero completed
 combats, the ten-card starter deck, Burning Blood, no potions, 80/80 HP and
@@ -90,10 +89,10 @@ trace was archived without further game actions and cannot enter acceptance.
 
 The new bridge requires idle game execution and empty play piles before starting
 its stable-state window; see the [environment contract](ENVIRONMENT-CONTRACT.md).
-It compiles against the installed game's references, but must be installed and
-tested in a fresh battle. Never repair an old capture by replacing its transient
-state with a later response. Compilation and synthetic tests cannot certify
-the corrected decision boundary.
+It has now been installed and exercised in a fresh 11-step battle, including the
+previously failing Defend and terminal rewards. Never repair an old capture by
+replacing its transient state with a later response. The original early-capture
+trace remains excluded; the later complete capture has valid settled states.
 
 ## Operator workflow
 

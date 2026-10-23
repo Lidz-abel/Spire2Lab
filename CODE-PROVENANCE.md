@@ -47,7 +47,8 @@ O-02 至 O-04 随实机证据逐步替换；阶段 2 实现搜索/层级核心�
 | `sts2lab/contracts.py` | 本项目 | 我们定义的版本化语义协议、观测/动作模型和比较投影 |
 | `sts2lab/environment.py`、`docs/ENVIRONMENT-CONTRACT.md`、`tests/test_environment_contract.py` | 本项目 | 后端调用协议、可选能力显式拒绝及生命周期契约；分支/父决策来源作为不可变元数据，模拟器真实 reset，控制器统一同步/异步 step 调用。原版不支持能力的测试确认零 HTTP 请求 |
 | `tests/test_training_boundary.py` | 本项目测试 | 按预先记录的 Gym 转换契约验证非法动作过滤、截断与真实胜负优先级；运行现有模拟器，不改写游戏状态或规则，不作为原版证据 |
-| `sts2lab/simulator.py` | 本项目封装 + 上游引擎 | 我们编写生命周期、快照、分支和 Python 适配；战斗规则由固定上游 C# 引擎执行 |
+| `sts2lab/simulator.py` | 本项目封装 + 上游引擎 | 我们编写生命周期、快照、分支和 Python 适配；战斗规则由固定上游 C# 引擎及下述显式兼容修正执行 |
+| `sts2lab/native_compat.py`、构建生成的 `native/generated/EnemyAI.cs` | 本项目构建转换；输出为上游派生实现 | 保留固定 EnemyAI 的执行流程，仅按 v0.107.1 实机证据修正 Nibbit Slice 格挡：A0 为 5，ToughEnemies 阈值 8 起为 6。阈值与参数由本机 DLL 只读属性/枚举元数据确认，数值来自游戏事实，不宣称独立规则引擎。生成副本和转换脚本指纹进入清单，原始 vendor 文件不修改；规范见 docs/NATIVE-COMPATIBILITY.md |
 | `sts2lab/gym_env.py` | 本项目 | Gymnasium 封装、动作掩码和 `combat-entities-v3` 编码；只从公开观测与项目词表编码，不读取后端名称表 |
 | `sts2lab/vocabulary.py`、`config/content-v1.json`、`tests/test_vocabulary.py` | 本项目词表实现和数字 token 分配；语义名称为游戏内容事实 | 按预先定义的公开边界、padding 与未知内容拒绝契约实现；名称来自现有适配器、固定上游内容表及既定种子的模拟器观测，不宣称名称或游戏规则由本项目原创。token 不采用上游 enum 数字，版本和 SHA-256 随实验记录 |
 | `sts2lab/sampling.py`、`scripts/benchmark_sampling.py` | 本项目 | 固定任务的进程隔离采样测量、轨迹一致性校验、资源回收与硬件/延迟/RSS 报告；规则仍由当前上游引擎执行 |
@@ -60,6 +61,7 @@ O-02 至 O-04 随实机证据逐步替换；阶段 2 实现搜索/层级核心�
 | `sts2lab/catalog.py` | 本项目代码 + 上游数据表 | 加载和转换上游名称/定义；名称和卡牌定义的事实来源是上游 |
 | `native/LabExports.cs` | 本项目观测导出，包含注明的上游行为映射 | 只读导出，不修改卡牌/敌人效果。Nibbit Slice 的 Defend 显示补全依据本机 v0.107.1 捕获和固定 EnemyAI 当前招式/格挡分支；上游已执行格挡但遗漏副意图，本项目仅补公开观测，未知数值保持不可用 |
 | `native/Sts2Lab.csproj` | 本项目构建文件 | 将我们的观测扩展与上游 C# 引擎一起编译 |
+| `native/LabCombat.cs`、生成的 `NativeExports.cs` 终局钩子 | 本项目生命周期适配，参考上游运行层行为；生成文件仍为派生代码 | 根据实机胜利捕获和固定 RunRewardGenerator 的 Burning Blood 行为，在单场 arena 胜利后补一次封顶 6 点回血，并按随机策略实机终局清除剩余格挡。复用原生胜利标志防止重复，失败/截断不支付；不调用完整奖励生成，不复制原版状态到模拟器，不宣称遗物规则为原创 |
 | `bridge/McpMod.Lab.cs`、`bridge/SettlementGate.cs` | 本项目适配与结算确认实现 | 对 STS2MCP 的状态、请求去重和实验桥接扩展；依赖上游 Mod API。按实机过早捕获失败定义空闲与稳定窗口契约，读取本机 DLL 的 ActionQueueSet、ActionExecutor、PlayPile 公开属性；只读元数据/调用检查确认接口，不移植游戏动作执行器 |
 | `bridge/ScenarioContract.cs`、`bridge/McpMod.Scenario.cs`、`sts2lab/scenarios.py`、`scripts/prepare_scenario.py` | 本项目受控初始化与验证实现，包含注明的上游 API 使用参考 | 需求先记录于 `docs/SCENARIO-STAGING.md`；接口签名来自收到的本机 DLL 元数据，兼容性参考固定上游 `NativeExports.ResetArena/SeedStreams`、`GameRng`、`EncounterRng`。首次实机失败后的 `EncounterModel.ToMutable()` 用法参考固定 `STS2MCP/McpMod.Debug.cs`，并由本机 DLL 元数据确认；使用游戏自身可变模型和 RNG 工厂，不独立实现游戏规则。修复后 Nibbit seed 1 两次独立实机初态匹配，完整战斗尚未通过 |
 | `tests/test_settlement_gate.py`、`tests/settlement_gate.cs` | 本项目测试 | 独立编译生产结算门，使用合成时钟验证持续忙碌、转为空闲、状态变化和忙碌中断；不加载游戏 DLL，不能代替新 Mod 的实机验收 |
@@ -107,7 +109,13 @@ O-02 至 O-04 随实机证据逐步替换；阶段 2 实现搜索/层级核心�
 
 ## 构建时的来源边界
 
-`native/Sts2Lab.csproj` 会把 `vendor/sts2/src/Sts2Emulator/**/*.cs` 和我们的 `native/LabExports.cs` 一起编译。生成的 `.so` 因此是上游规则引擎与本项目观测扩展的组合产物。`scripts/build_native.py` 会在构建前校验上游归档和扩展源文件；`sts2lab/source_integrity.py` 会拒绝被修改的上游文件和额外的构建源文件。
+`native/Sts2Lab.csproj` 编译上游规则、本项目观测扩展，以及明确列出的生成副本。
+`NativeExports.cs` 的副本增加 partial 声明和两个单场 step 的终局钩子，调用本项目
+`LabCombat.cs` 补齐初始遗物的胜利回血；`EnemyAI.cs` 的副本应用有实机依据的
+Nibbit 格挡兼容修正。原始文件从编译列表排除，防止重复定义；生成代码仍属于上游
+派生实现。`scripts/build_native.py` 校验固定归档、拒绝未知转换上下文，并记录输入、
+生成输出及构建脚本指纹。`source_integrity.py` 继续拒绝 vendor 修改和额外源码。
+`.so` 是上游规则、兼容修正与本项目观测扩展的组合，不能描述为完全独立引擎。
 
 同样，`scripts/build_bridge.py` 会准备上游 STS2MCP 文件，并应用 `bridge/*.cs` 中的本项目扩展。当前工作区构建清单记录全部扩展源文件指纹。生成的 Windows Mod 仍然包含上游依赖，必须保留上游许可证和实际构建报告。
 

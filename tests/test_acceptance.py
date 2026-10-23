@@ -229,6 +229,16 @@ def test_complete_matrix_is_cached_only_until_evidence_changes(
     vocabulary.write_bytes(original_vocabulary + b"\n")
     assert a.read_acceptance_status(status, root=root)["status"] == "stale_evidence"
     vocabulary.write_bytes(original_vocabulary)
+    terminal_source = root / "native/LabCombat.cs"
+    terminal_bytes = terminal_source.read_bytes()
+    terminal_source.write_bytes(terminal_bytes + b"\n")
+    assert a.read_acceptance_status(status, root=root)["status"] == "stale_evidence"
+    terminal_source.write_bytes(terminal_bytes)
+    new_native_source = root / "native/Unexpected.cs"
+    new_native_source.write_text("// changed native source inventory")
+    assert a.read_acceptance_status(status, root=root)["status"] == "invalid_report"
+    new_native_source.unlink()
+    assert a.read_acceptance_status(status, root=root)["verified"] is True
     if with_release_info:
         release_path = root / "artifacts/windows/release_info.json"
         previous = release_path.read_bytes()

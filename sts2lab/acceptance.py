@@ -42,6 +42,7 @@ def source_paths(root=ROOT):
     ]
     paths = [root / name for name in fixed]
     for directory, patterns in [
+        ("native", ["*.cs"]),
         ("bridge", ["*.cs"]),
         ("sts2lab", ["*.py"]),
         ("web", ["*.js", "*.html", "*.css"]),
@@ -293,6 +294,9 @@ def audit_acceptance(index_path=DEFAULT_INDEX, *, root=ROOT):
         track(root / ".tools/native/build.json")
         if track(root / ".tools/native/Sts2Emulator.so") != native["library_sha256"]:
             raise ValueError("Native build hash differs")
+        for relative, expected_hash in native.get("extension_sources", {}).items():
+            if track(contained(root, relative)) != expected_hash:
+                raise ValueError(f"Native source changed after compilation: {relative}")
         track(index_path)
         index = json.loads(index_path.read_text())
         if index.get("suite_version") != suite["suite_version"]:

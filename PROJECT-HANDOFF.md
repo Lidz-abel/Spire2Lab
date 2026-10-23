@@ -22,6 +22,42 @@ VS Code Git 凭据服务连接被拒绝，GitHub 拒绝匿名写入。远程核�
 本次 Logo 和 README 尚未上传。已请用户在本机 Git 客户端恢复登录，未索取令牌。
 项目目标：**完成第一阶段所有的内容**（用户于本轮重新设为 active；当前未完成）
 
+2026-10-23 种子 1 先导对照完成：Nibbit heuristic/random、Slimes heuristic、Sludge Spinner
+heuristic 共 4/60 完整原版轨迹通过，覆盖 8/9，仅缺 lost。最新 native 为 cc60ed03...，
+132 项全套测试通过；补充原生源码清单/生成文件指纹验收失效检查，相关 19 项测试通过。
+剩余 56 例已按既定矩阵排队，逐步比对、单次提交、首个差异停止；当前私有运行器为
+artifacts/windows/run_remaining_cases.py，进度记录 artifacts/live-batches/。不可自动
+把批次启动或模拟器测试视为完成。
+
+2026-10-23 结算修复实机生效与首场完整对照（最新进度）：用户报告重新加载后，
+已核实实际 Mod 为 60d7f563...、新实例 e1b21206ada744d48766562b005c9043、实验槽位 2，
+execution_idle_v1 正常。证据 artifacts/windows/settlement-reloaded-20261023T080740976086.json。
+新开局 scenario-20261023T080752516781.json 匹配，浏览器前 6 步通过，之前 Defend
+过早结算已不再发生。第 7 步原版 Nibbit 格挡 5、上游模拟器 6；后续 GET 仍稳定为 5。
+已按 docs/NATIVE-COMPATIBILITY.md 规格修正生成副本，原始 vendor 未改；本机 DLL
+只读 getter/枚举确认该招 A0 为 5，ToughEnemies（8）起为 6。修正是上游派生兼容工作，
+不能称为独立规则引擎。原始输入、生成输出、转换/构建脚本指纹均随 native 清单记录。
+
+同一原版轨迹继续到第 11 步胜利，发现 arena API 没有运行层 Burning Blood 回血：
+原版 68→74，模拟器保持 68。新增 native/LabCombat.cs 胜利生命周期适配，参考原版捕获
+及固定 RunRewardGenerator，只在胜利 transition 补一次封顶回血，不触发奖励选择/RNG，
+不改写原版捕获或按原版 HP 赋值。11 步重新独立重放通过；不可变参考文件
+artifacts/acceptance/references/nibbits-weak-1-heuristic.jsonl 已登记，证明报告
+artifacts/live-dashboard/20261023T081506924270/victory-comparison.json。首次 audit 为
+1/60、覆盖 5/9、errors=[]；第 1 场的原版 run_id 为 50c9dc0a33c745f59fef3f0fcc5e84d1。
+首次胜利边界版本 native d0fe8859...，131 项回归测试通过；失败报告仍保留，七步旧
+报告对应的原始 trace 前缀已按 SHA 精确保存，没有替换中间态。
+
+随后固定 random / seed 1 / policy_seed 773 的原版战斗完成 17 步；前 16 步匹配，
+终局原版剩余格挡清零，arena 仍为 5。证据 artifacts/live-cases/20261023T082235837426/report.json，
+run_id a79d9f1762c44e469b996c6d35bc137f。胜利清格挡修复已完成，新 native 为
+cc60ed03d210843f76f35c565b20066a0cc8029e6b4fde74dce034bfbce16a66。两场 candidate
+均重新生成、完整对照通过，验收 index 原子更新为 2/60、覆盖 5/9；证据
+artifacts/acceptance/victory-cleanup/*-comparison.json。132 项回归通过、1 项既有警告。
+Windows 无需重装。服务 PID 614003 / session 53679 在第一场之后重启，仍加载 d0fe...；
+原版会话可继续，下一次切换模拟器前需归档并重启加载 cc60...。两场已归档，继续核对
+Slimes 固定开局。GitHub 写认证无恢复证据。
+
 2026-10-23 可重复开局与逐步实机验收（最新状态，优先于下方历史）：用户再次重启后，
 已确认 Mod 93e1cc5c... 正在运行、游戏指纹匹配、主菜单/实验槽位 2 正确。可变模型
 修复已实机生效。nibbits-weak / seed 1 两次独立初始化均达到固定第 2 层开局，公开
