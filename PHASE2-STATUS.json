@@ -1,19 +1,19 @@
 {
   "stage": 2,
-  "status": "starter_planning_implemented_evaluation_pending",
+  "status": "in_progress_starter_planning_baseline_evaluated",
   "started_at": "2026-10-24",
   "branch": "phase2/search-hierarchy",
   "phase_one_checkpoint": "f9faf0a",
   "plan": "docs/PHASE2-PLAN.md",
   "milestones": {
-    "P2-01": "contract_recorded",
+    "P2-01": "contract_and_recipe_frozen",
     "P2-02": "implemented_simulator_tests_passed",
     "P2-03": "implemented_simulator_tests_passed",
     "P2-04": "implemented_simulator_ui_passed",
-    "P2-05": "pilot_passed_full_comparison_pending",
-    "P2-06": "planned",
+    "P2-05": "fixed_comparison_complete_no_gain_over_heuristic",
+    "P2-06": "one_live_search_smoke_passed_images_and_broader_coverage_pending",
     "P2-07": "planned",
-    "P2-08": "documentation_in_progress_remote_pending"
+    "P2-08": "local_docs_and_evidence_recorded_remote_and_independent_reproduction_pending"
   },
   "implementation_scope": "starter combat belief, rollout search, tactical hierarchy, inspection and fixed-budget evaluation first; images and single-act support remain required later gates",
   "evidence": {
@@ -22,26 +22,63 @@
       "report": "artifacts/phase2-full-tests-corrected.xml",
       "warning": "existing Starlette/httpx deprecation"
     },
-    "ui": "artifacts/phase2-browser/report.json",
-    "development_pilot": {
-      "report": "artifacts/phase2-eval-pilot/report.json",
-      "episodes": 18,
-      "scope": "simulator_only; before provenance metadata addition"
+    "ui": {
+      "report": "artifacts/phase2-browser-frozen/report.json",
+      "scope": "simulator desktop/mobile complete battle, override, pause and read-only replay"
     },
-    "historical_regression": {
+    "evaluation": {
+      "summary": "docs/PHASE2-VALIDATION.json",
+      "discussion": "docs/PLANNING-RESULTS.md",
+      "development": "artifacts/phase2-eval-development/report.json",
+      "heldout": "artifacts/phase2-eval-heldout/report.json",
+      "episodes": 360,
+      "actor_replays_passed": 360,
+      "policy_replays_passed": 24,
+      "performance_improvement_demonstrated": false
+    },
+    "historical_phase1_regression": {
       "passed": true,
       "required_cases": 60,
       "extra_probes": 1,
-      "report": "artifacts/acceptance/phase2-regression-copied-audit.json",
-      "scope": "replay of unchanged phase-one captures; before planner provenance metadata addition"
+      "report": "artifacts/acceptance/status.json",
+      "scope": "unchanged historical references; not new captures"
+    },
+    "new_live_search": {
+      "passed": true,
+      "report": "artifacts/phase2-live/20261023T170930347979/report.json",
+      "encounter": "nibbits-weak",
+      "seed": 1,
+      "policy": "hierarchical",
+      "search_budget": 256,
+      "depth": 8,
+      "confirmed_actions": 9,
+      "fallbacks": 0,
+      "final_hp": 68,
+      "policy_replay_passed": true,
+      "images_captured": false,
+      "browser_replay": "artifacts/phase2-live/20261023T170930347979/browser-replay.json"
+    },
+    "remote_delivery": {
+      "status": "pending_tls_failure",
+      "attempted_commit": "2f36503",
+      "report": "artifacts/phase2-github-delivery.json"
     }
   },
   "limitations": [
-    "Full fixed-budget comparison is not yet complete.",
-    "Root rollout search and finite approximate particles are not full POMCP or an exact posterior.",
-    "No fresh original-game search captures or decision screenshots yet.",
-    "Single-act decisions and learning remain unimplemented.",
-    "Phase-one compatibility replays do not certify new policy actions.",
-    "Historical GitHub delivery remains pending."
+    "Search did not improve heldout mean final HP over heuristic in this fixed starter matrix.",
+    "Slimes often depletes particles; heuristic fallback is explicit and included in results.",
+    "Root rollout search and finite particles are not full POMCP or an exact posterior.",
+    "One new original-game search battle does not establish broad live-policy coverage.",
+    "Original images, single-act decisions and learning remain unimplemented.",
+    "Phase-two independent installation/reproduction has not been performed.",
+    "GitHub delivery remains pending after a TLS handshake failure."
+  ],
+  "implementation_commit": "2f365032b082857b59647be66727a5a784812de6",
+  "next_actions": [
+    "Improve public-state-conditioned proposals on development cases; measure particle survival and initialization cost.",
+    "Separate rollout-value and tactical-goal ablations; preregister new heldout seeds before the next iteration.",
+    "Specify and implement original decision-boundary screenshot association, then validate the changed bridge on Windows.",
+    "Add single-act decision contracts/content/reference cases incrementally.",
+    "Complete independent phase-two reproduction and verified GitHub synchronization."
   ]
 }

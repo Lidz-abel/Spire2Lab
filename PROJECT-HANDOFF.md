@@ -4,7 +4,41 @@
 
 项目地址：<https://github.com/Lidz-abel/Spire2Lab>
 
-本地目录：`/user/chenzk/sts2-lab`
+当前开发目录：`/user/chenzk/sts2-lab-phase2`（`phase2/search-hierarchy`）。
+第一阶段保留目录：`/user/chenzk/sts2-lab`（`main`，`f9faf0a`）。
+
+2026-10-24 最新交接（优先于下方历史）：第二阶段首个 starter 搜索/分层基线已实现并评测，
+整个第二阶段尚未完成。实现与评测配方冻结提交 2f36503；计划提交 3ca7dc4。
+新增 belief/planning/hierarchy/planning_replay、运行器与面板，源码/模型指纹随轨迹记录。
+152 项全套测试通过；桌面/手机、完整战斗、覆盖动作终止目标、暂停及零变更回放通过。
+完整 development 180 + heldout 180 场全部完成；360 轨迹重执行、24 搜索策略重执行通过。
+所有配置每个 split 都赢 30/30，但没有优于 heuristic：heldout heuristic HP 76.50；
+分层 64/256 预算 HP 71.53/71.67。Slimes 粒子常耗尽，回退计入统计；不能宣传搜索提升。
+公开完整摘要 docs/PHASE2-VALIDATION.json，讨论 docs/PLANNING-RESULTS.md。
+已看过的 heldout 1001–1010 不再作为下一次调参的未触碰保留集；新迭代预登记新 split。
+
+新增原版分层搜索冒烟通过：Nibbit / seed 1 / policy_seed 773 / 256 calls / depth 8 /
+无墙钟截止，9 步全对齐，68 HP 获胜，零回退，9 次决策重执行一致。使用原有已验证 Mod，
+只在实验槽位 2 的不保存场景执行，未改写游戏/规则/随机数来拟合结果；未采集原版截图。
+证据 artifacts/phase2-live/20261023T170930347979/report.json；不会并入第一阶段 60 场索引。
+同一工作树还重审通过旧 60 场+1 探针，artifacts/acceptance/status.json；有限旧证据与新
+冒烟分开，不等于全部搜索动作已原版验证。第一阶段目录/源码/服务未改动。
+
+原版 9 步语义/搜索回放另已通过浏览器检查：零变更请求、零 JS 错误；首次检查脚本
+误用 #runs 选择器，失败记录保留，改为实际 #run-list 后通过；未修改产品代码。
+
+当前第二阶段面板 PID 981147，端口 8766，exec session 67980，日志
+artifacts/phase2-dashboard-frozen.log。最新原版会话已归档，无未决动作/自动执行；可以在
+面板回放 9 步原版搜索轨迹。Windows 无需再次安装 Mod。第一阶段仍为 8765 / PID 633440。
+完整评测已退出；没有后台采集循环。以上 PID 仅为交接快照，重启后须核对。
+GitHub 分支推送 2f36503 退出 128：gnutls_handshake / TLS connection non-properly
+terminated，未进入有效上传/远程 HEAD 确认；日志 artifacts/phase2-github-push.log。
+当前各里程碑是本地提交，不能报告已上传；没有索取或记录令牌。
+
+下一步优先解决公开条件采样的命中率/粒子存活，再用 development 单独消融 rollout
+效用与目标控制；同时按 P2-06 准备决策边界原版画面绑定，随后增量单幕契约与参考例。
+P2-07 单幕、P2-08 独立复现/远程交付仍待完成，训练属于第三阶段。不要重新做第一阶段
+60 场采集或把本轮工程可运行称为整个第二阶段验收通过。详细入口 docs/PLANNING.md。
 
 当前 Git 检查点：本地 `main` 已包含 README、转接文档和远程 LICENSE 的合并提交。
 

@@ -30,7 +30,7 @@ Spire2Lab is an experimental foundation for researchers studying sequential deci
 
 The current focus is observable-history search and persistent tactical goals on a trustworthy experimental environment. The platform separates player-visible information from hidden simulator state and keeps original-game evidence distinct from simulator tests. This makes it possible to investigate both **what an agent decided** and **whether the environment behaved as expected**.
 
-> **Development status — phase 2 in progress.** Starter-combat rollout search, approximate history particles, persistent tactical goals and search inspection are implemented. See the [planning guide](docs/PLANNING.md) and [current evidence](PHASE2-STATUS.json). The phase-one checkpoint passed **60/60 original-game battles** and a separate loss/control probe across **9 boundary categories** ([scope](docs/LIVE-VALIDATION.md), [summary](docs/PHASE1-VALIDATION.json)). That evidence does not automatically validate new policies. Original-game search captures, game imagery, single-act decisions and RL training remain outstanding.
+> **Development status — phase 2 in progress.** Starter-combat rollout search, approximate history particles, persistent tactical goals and search inspection are implemented. See the [planning guide](docs/PLANNING.md) and [current evidence](PHASE2-STATUS.json). The phase-one checkpoint passed **60/60 original-game battles** and a separate loss/control probe across **9 boundary categories** ([scope](docs/LIVE-VALIDATION.md), [summary](docs/PHASE1-VALIDATION.json)). One new search-policy live battle has also passed. Broader search-policy coverage, game imagery, single-act decisions and RL training remain outstanding.
 
 ## Key features
 
@@ -183,6 +183,8 @@ The helpers require an absolute remote path using letters, digits, `_`, `.`, `/`
 ## Validation
 
 The current evidence is **engineering validation**, not a learned-agent performance result. [PHASE1-STATUS.json](PHASE1-STATUS.json) records local test results and evidence paths; generated reports are kept under ignored `artifacts/` and are not bundled with this repository.
+
+The first [planning evaluation](docs/PLANNING-RESULTS.md) covers **360 simulator battles**, **24 complete policy replays**, **152 tests** and one fresh original-game search battle. All benchmark configurations won their starter battles, but search finished with less HP than the heuristic baseline. This is a reproducible baseline with explicit limitations, not evidence of a performance gain. Full case counts, compute settings and build bindings are in the [phase-two summary](docs/PHASE2-VALIDATION.json).
 
 | Check | What it establishes | Boundary |
 | --- | --- | --- |

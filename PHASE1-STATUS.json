@@ -4,7 +4,7 @@
   "repository_slug": "Spire2Lab",
   "roadmap": {
     "version": "three-stage-v1",
-    "updated_at": "2026-10-22",
+    "updated_at": "2026-10-24",
     "plan": "ARCHITECTURE-PLAN.txt",
     "stages": [
       {
@@ -277,7 +277,13 @@
     "final_service_check": "artifacts/acceptance/final-service-check.json (acceptance API verified_scope, health original_game_verified true with global parity false, actual browser badge verified; archived last run, no pending action, no mutating browser requests or JS errors)",
     "final_documentation_check": "artifacts/final-phase1-doc-checks.json (73 relative links/anchors valid; 61-case public summary, current source hashes and audit hash match; no private address in public README/report)",
     "github_latest_read": "artifacts/github-final-read.log (HTTPS read succeeded; remote main still 0a5c8698ce7ee0da15072603507b79bc0c01d71a before final push; SSH probe separately failed DNS)",
-    "github_final_delivery": "artifacts/github-final-delivery.json (ac59b44 push twice failed with TLS handshake termination, exit 128; HTTP/1.1 did not resolve; current attempts did not establish authentication; HTTPS read previously confirmed remote 0a5c869)"
+    "github_final_delivery": "artifacts/github-final-delivery.json (ac59b44 push twice failed with TLS handshake termination, exit 128; HTTP/1.1 did not resolve; current attempts did not establish authentication; HTTPS read previously confirmed remote 0a5c869)",
+    "phase_two_historical_regression": {
+      "report": "artifacts/acceptance/status.json",
+      "scope": "same 60 original references plus one probe replayed in isolated phase-two worktree",
+      "passed": true,
+      "does_not_expand_phase_one_scope": true
+    }
   },
   "next_external_step": "Restore GitHub push connectivity, then authenticate if needed and run git push origin main from the checkout. Local technical acceptance is complete; no Windows reinstall or further reference capture is required.",
   "completion_rule": "Do not mark complete until original-game behavior and declared supported scenario parity have been verified. Simulator-only tests do not prove local game parity.",

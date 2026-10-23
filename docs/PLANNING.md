@@ -4,6 +4,8 @@ Phase two adds `rollout` and `hierarchical` policies for the three starter
 encounters. These are project-authored, non-learning baselines. The mechanics
 engine remains the pinned upstream simulator with the lab's recorded fixes.
 The full phase-two plan and remaining gates are in [PHASE2-PLAN.md](PHASE2-PLAN.md).
+The [first fixed-budget results](PLANNING-RESULTS.md) include negative findings:
+the current planner does not outperform the heuristic baseline.
 
 ## Run and inspect
 
@@ -130,10 +132,12 @@ model fingerprints. This checks reproducibility, not calibrated belief quality.
 ## Evidence boundaries
 
 Historical phase-one reference replays test compatibility of recorded baseline
-behavior with this branch. They do not certify the actions that new search
-policies will choose. New original-game search captures, synchronized
-decision-boundary game images, single-act map/reward/rest/shop support and
-learned policies are still outstanding. See [PHASE2-STATUS.json](../PHASE2-STATUS.json).
+behavior with this branch. One fresh nine-step hierarchical-search battle has
+also matched the original game; see the [result scope](PLANNING-RESULTS.md).
+This does not certify all actions the new policies may choose. Broader live
+search coverage, synchronized decision-boundary game images, single-act
+map/reward/rest/shop support and learned policies are still outstanding.
+See [PHASE2-STATUS.json](../PHASE2-STATUS.json).
 
 Method references and implementation ownership are recorded in
 [CODE-PROVENANCE.md](../CODE-PROVENANCE.md). There is no algorithmic novelty or
