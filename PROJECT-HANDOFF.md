@@ -7,6 +7,13 @@
 当前开发目录：`/user/chenzk/sts2-lab-phase2`（`phase2/search-hierarchy`）。
 第一阶段保留目录：`/user/chenzk/sts2-lab`（`main`，`f9faf0a`）。
 
+2026-10-25 截图实现检查点 54eec85 已提交本地。已向用户发送 Windows 安装指令，
+RemoteRoot 必须使用 /user/chenzk/sts2-lab-phase2，等待安装并重启；读回仍为旧
+Mod 60d7f563...，没有真实截图验收。8766 已加载新代码，PID 1484278 / exec95091，
+启动的模拟会话已归档，无未决请求；8767 合成测试服务已停止。私有状态记录
+artifacts/phase2-v2/image-service-check.json。第一阶段8765保持原样。
+GitHub 登录恢复请求也仍待用户回复，不能称本地提交已推送。
+
 2026-10-25 第3项实现已编译，等待 Windows 安装验收：新 Mod b6c1a3ab...，
 完整 SHA 在 PHASE2-STATUS.json。新增只读 post-draw 截图、进程/版本/token 绑定、
 PNG 限额/CRC/解压校验、run/decision/公开观测摘要关联，以及实时/回放显示。
