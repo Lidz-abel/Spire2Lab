@@ -1,6 +1,6 @@
 {
   "stage": 2,
-  "status": "in_progress_single_act_implemented_pending_live",
+  "status": "blocked_pending_windows_mod_and_game_tunnel_for_original_act",
   "started_at": "2026-10-24",
   "branch": "phase2/search-hierarchy",
   "phase_one_checkpoint": "f9faf0a",
@@ -116,7 +116,7 @@
       "freeze_commit": "a8a861c1a7eff58d4f3d617ad7c47eb80f78d1d7",
       "offline_audit_tests": 4,
       "transport_followup_tests": 26,
-      "latest_connection_check": "artifacts/single-act/continuation-1.json"
+      "latest_connection_check": "artifacts/single-act/continuation-2-check.json"
     }
   },
   "limitations": [
@@ -143,6 +143,14 @@
       "3_original_images": "verified_live_12_bound_images_and_replay",
       "4_single_act": "implemented_pending_mod_install_tunnel_and_original_act_acceptance"
     },
-    "complete": false
+    "complete": false,
+    "status": "blocked",
+    "blocked_audit": {
+      "consecutive_goal_turns": 3,
+      "previous_turn": "progress",
+      "current_turn": "no_progress_external_blocker_revalidated",
+      "report": "artifacts/single-act/continuation-2-check.json",
+      "reason": "Windows Mod installation cannot be verified and the required game reverse tunnel has no listener; original single-act acceptance cannot proceed."
+    }
   }
 }
