@@ -48,7 +48,7 @@ public static partial class McpMod
         state["lab_protocol"] = 1;
         state["game_assembly_sha256"] = LabAssemblySha;
         state["lab_mod_sha256"] = LabModSha;
-        state["lab_capabilities"] = new[] { "scenario_staging_v1", "execution_idle_v1", "decision_images_v1" };
+        state["lab_capabilities"] = new[] { "scenario_staging_v1", "execution_idle_v1", "decision_images_v1", "single_act_v1" };
         state["lab_profile_id"] = MegaCrit.Sts2.Core.Saves.SaveManager.Instance.CurrentProfileId;
         if (LabScenario != null) state["lab_scenario"] = LabScenario;
         bool inRun = RunManager.Instance.IsInProgress;
@@ -65,9 +65,17 @@ public static partial class McpMod
             ["play_piles_empty"] = playPilesEmpty, ["hand_idle"] = handIdle,
             ["setup_idle"] = !LabSetupBusy
         };
+        string? actBoundary = BuildActState(state, executionIdle);
+        state["lab_act_boundary"] = actBoundary;
         string token = LabHash(JsonSerializer.Serialize(state));
         long now = Stopwatch.GetTimestamp();
         bool settled = LabSettlement.Observe(token, executionIdle, now);
+        bool actSettled = LabActSettlement.Observe(token, actBoundary != null, now);
+        if (LabActPendingFrom != null && token != LabActPendingFrom && actSettled
+            && LabLastRequestId == LabActPendingId && LabActPendingId != null
+            && LabActRequests.TryGetValue(LabActPendingId, out var receipt)
+            && Equals(receipt.Result.GetValueOrDefault("status"), "ok"))
+            LabActPendingFrom = null;
         bool actionable = false;
         if (state.TryGetValue("battle", out var value) && value is Dictionary<string, object?> battle)
         {
@@ -85,11 +93,18 @@ public static partial class McpMod
         // Transport provenance is added AFTER hashing; acknowledging a request must
         // not by itself look like a changed game state.
         state["lab_last_request_id"] = LabLastRequestId;
+        state["lab_act_settled"] = actSettled;
+        state["lab_act_ready"] = actSettled && LabActPendingFrom == null && LabPendingFrom == null
+            && LabAct?.GetValueOrDefault("status") as string == "active"
+            && state.GetValueOrDefault("lab_act_choices") is List<ActChoice> choices && choices.Count > 0;
         return state;
     }
 
     private static Dictionary<string, object?> ExecuteLabAction(string action, Dictionary<string, JsonElement> data)
     {
+        if (action == "lab_start_act") return ExecuteLabStartAct(data);
+        if (action == "lab_act") return ExecuteLabAct(data);
+        if (LabActOwned) return Error("single_act_controller_owns_run");
         if (action == "lab_prepare") return ExecuteLabPrepare(data);
         if (LabSetupBusy) return Error("lab_scenario_setup_pending");
         if (action != "play_card" && action != "end_turn")

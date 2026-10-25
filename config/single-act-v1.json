@@ -1,0 +1,20 @@
+{
+  "version": "normal-single-act-acceptance-v1",
+  "backend": "original_game",
+  "character": "IRONCLAD",
+  "ascension": 0,
+  "profile_id": 2,
+  "should_save": false,
+  "initializer": "normal_seeded_non_saving",
+  "policy": "public-act-heuristic-v1",
+  "seeds_in_attempt_order": ["SPIRE2LABACT001", "SPIRE2LABACT002", "SPIRE2LABACT003"],
+  "max_confirmed_actions": 1200,
+  "minimum_action_delay_seconds": 1.0,
+  "reward": "first-act-terminal-v1",
+  "success": "continuous_normal_route_observed_first_act_boss_defeated",
+  "required_families_in_successful_run": ["map", "reward", "rest_operation", "shop_operation", "combat"],
+  "unsupported_state": "pause_and_preserve_evidence",
+  "failed_attempts": "retain_all_in_attempt_order",
+  "scope": "execution_and_observability_acceptance_not_policy_performance_benchmark",
+  "frozen_before_original_attempts": true
+}

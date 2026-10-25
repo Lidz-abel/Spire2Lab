@@ -1,6 +1,6 @@
 {
   "stage": 2,
-  "status": "in_progress_images_live_verified_single_act_next",
+  "status": "in_progress_single_act_implemented_pending_live",
   "started_at": "2026-10-24",
   "branch": "phase2/search-hierarchy",
   "phase_one_checkpoint": "f9faf0a",
@@ -12,10 +12,10 @@
     "P2-04": "implemented_simulator_ui_passed",
     "P2-05": "v2_development_and_new_heldout_complete_limited_hp_gain_no_hierarchy_gain",
     "P2-06": "live_search_and_decision_images_verified_starter_scope",
-    "P2-07": "planned",
+    "P2-07": "implemented_synthetic_tests_and_ui_passed_pending_original_act",
     "P2-08": "local_docs_and_evidence_recorded_remote_and_independent_reproduction_pending"
   },
-  "implementation_scope": "starter combat belief, rollout search, tactical hierarchy, inspection and fixed-budget evaluation first; images and single-act support remain required later gates",
+  "implementation_scope": "starter combat search and original decision images verified within declared scope; normal single-act controller implemented, awaiting live acceptance",
   "evidence": {
     "tests": {
       "passed": 152,
@@ -103,6 +103,14 @@
       "confirmed_actions": 11,
       "all_replay_frames_checked": true,
       "stale_image_requests_rejected": true
+    },
+    "single_act": {
+      "summary": "docs/SINGLE-ACT-VALIDATION.json",
+      "normal_act_attempts": 0,
+      "completed": false,
+      "required_mod_sha256": "ff144ee812218f9a3ffbb7dbdb2f5b1c4d6b750a189180d836b6092f85db41bd",
+      "live_connection": "reverse_tunnel_unavailable_at_last_check",
+      "service_check": "artifacts/single-act/service-check.json"
     }
   },
   "limitations": [
@@ -116,7 +124,8 @@
   ],
   "implementation_commit": "2f365032b082857b59647be66727a5a784812de6",
   "next_actions": [
-    "Implement and verify an end-to-end original single-act controller.",
+    "Install the single-act Mod on Windows, restart at profile-2 main menu, restore the SSH tunnel.",
+    "Execute the frozen normal-act recipe, preserve all attempts and verify continuous route/family coverage/replay.",
     "Complete independent phase-two reproduction and verified GitHub synchronization."
   ],
   "active_user_goal": {
@@ -126,7 +135,7 @@
       "1_sampling": "verified_development_gate_29_of_975_depleted",
       "2_search": "verified_660_simulator_episodes_and_four_live_battles",
       "3_original_images": "verified_live_12_bound_images_and_replay",
-      "4_single_act": "in_progress_contract_design"
+      "4_single_act": "implemented_pending_mod_install_tunnel_and_original_act_acceptance"
     },
     "complete": false
   }

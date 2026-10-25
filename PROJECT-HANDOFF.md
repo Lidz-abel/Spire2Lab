@@ -2,6 +2,24 @@
 
 更新时间：2026-10-25
 
+2026-10-25 第4项实现检查点：普通单幕控制、公开协议 single-act-v1、全动作保护与
+去重、独立选牌边界、地图/奖励/休息/商店/事件/宝箱/战斗适配、固定公开启发式和
+持续目标、轨迹/原版图片/面板回放已实现。规格 docs/SINGLE-ACT.md；配方
+config/single-act-v1.json 预登记 ACT001/002/003，冻结后再实机。188 项完整测试通过；
+桌面/手机两帧合成图片回放通过，零变更请求/JS错误。公共摘要
+ docs/SINGLE-ACT-VALIDATION.json。当前正常原版单幕尝试数为0，不能称完成。
+新 Mod SHA ff144ee812218f9a3ffbb7dbdb2f5b1c4d6b750a189180d836b6092f85db41bd
+已编译并通过清单验证；需安装 phase2/artifacts/windows/mod 后重启，保留21526配置。
+去掉生成副本 GET 自动开商店/宝箱副作用，改为显式动作；未改 vendor 或原版规则。
+Windows刚安装的 b6c1a3ab... 属于已验收截图版本，不含本次新单幕接口。
+8766已重新加载：PID1525929 / exec6538；启动模拟会话已归档，act idle，无动作。
+8765 第一阶段仍为 closed，未改。临时8767合成服务已停止。
+最新只读检查18526连接被拒绝，服务器无该监听，需恢复SSH反向隧道；记录
+artifacts/single-act/service-check.json。未向游戏提交任何第4项动作。
+下一步先提交冻结，发送Windows安装/隧道指令；用户完成后核验哈希、main/profile2、
+正常不保存开局，再执行连续单幕并记录失败。整幕策略目前是可解释启发式，0模型步，
+不把starter搜索结论推广到整幕。GitHub写认证仍无恢复证据，不能称已推送。
+
 项目地址：<https://github.com/Lidz-abel/Spire2Lab>
 
 当前开发目录：`/user/chenzk/sts2-lab-phase2`（`phase2/search-hierarchy`）。

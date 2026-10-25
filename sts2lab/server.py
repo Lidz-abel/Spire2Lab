@@ -19,15 +19,20 @@ from .runtime import Lab
 from .planning import PlanningConfig
 from .simulator import CONFIG, ROOT
 from .traces import read_trace
+from .act_runtime import ActLab
+from .act_server import install_act_routes
 
 
-def create_app(data_dir=None, *, original_factory=None):
+def create_app(data_dir=None, *, original_factory=None, act_factory=None):
     lab = Lab(data_dir, original_factory=original_factory)
+    act = ActLab(lab.data_dir.parent / "act-runs", factory=act_factory)
+    owner_lock = asyncio.Lock()
 
     @asynccontextmanager
     async def lifespan(app):
         await lab.new_session()
         task = asyncio.create_task(lab.worker())
+        act_task = asyncio.create_task(act.worker())
         yield
         task.cancel()
         try:
@@ -35,9 +40,17 @@ def create_app(data_dir=None, *, original_factory=None):
         except asyncio.CancelledError:
             pass
         await lab.close()
+        act_task.cancel()
+        try:
+            await act_task
+        except asyncio.CancelledError:
+            pass
+        await act.close()
 
     app = FastAPI(title="STS2 Lab", version=PROTOCOL_VERSION, lifespan=lifespan)
     app.state.lab = lab
+    app.state.act = act
+    install_act_routes(app, act, lab, owner_lock)
 
     @app.middleware("http")
     async def same_origin(request: Request, call_next):
@@ -105,7 +118,10 @@ def create_app(data_dir=None, *, original_factory=None):
 
     @app.post("/api/session")
     async def new_session(config: SessionConfig):
-        return await lab.new_session(**config.model_dump())
+        async with owner_lock:
+            if config.backend == "original_game" and act.active:
+                raise ValueError("The single-act controller owns the original game")
+            return await lab.new_session(**config.model_dump())
 
     @app.post("/api/step")
     async def step(command: StepRequest):

@@ -39,4 +39,26 @@ Refuses(() => gate.Validate(missing, false));
 DecisionImageBoundary.ValidateFrame(10, 11); passed++;
 Refuses(() => DecisionImageBoundary.ValidateFrame(10, 10));
 Refuses(() => DecisionImageBoundary.ValidateFrame(10, 0));
+var actGate = new DecisionImageBoundary("instance", "token", "game", "mod", true);
+Dictionary<string, object?> Choice() {
+    var s = State(); s["lab_settled"] = false; s["lab_act_settled"] = true;
+    s["lab_act_boundary"] = "player_choice"; s["state_type"] = "hand_select";
+    s["lab_choice_visible"] = true; s["lab_choice_interactive"] = true;
+    ((Dictionary<string, object?>)s["lab_execution"]!)["executor_idle"] = false;
+    return s;
+}
+actGate.Validate(Choice(), false); passed++;
+Refuses(() => gate.Validate(Choice(), false));
+foreach (string key in new[] { "lab_act_settled", "lab_choice_visible", "lab_choice_interactive" }) {
+    var s = Choice(); s[key] = false; Refuses(() => actGate.Validate(s, false));
+}
+var settingUp = Choice(); ((Dictionary<string, object?>)settingUp["lab_execution"]!)["setup_idle"] = false;
+Refuses(() => actGate.Validate(settingUp, false));
+var wrongPhase = Choice(); wrongPhase["state_type"] = "monster";
+Refuses(() => actGate.Validate(wrongPhase, false));
+Refuses(() => actGate.Validate(Choice(), true));
+var actIdle = State(); actIdle["lab_act_settled"] = true; actIdle["lab_act_boundary"] = "execution_idle";
+actGate.Validate(actIdle, false); passed++;
+actIdle["lab_act_boundary"] = "unknown";
+Refuses(() => actGate.Validate(actIdle, false));
 Console.WriteLine(passed);

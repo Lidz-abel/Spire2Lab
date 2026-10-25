@@ -91,8 +91,10 @@ class BridgeClient:
             "Game did not reach an actionable decision before the deadline"
         )
 
-    async def capture_image(self, expected):
+    async def capture_image(self, expected, *, mode="combat"):
         async with self.lock:
+            if mode not in ("combat", "act"):
+                raise BridgeError("Unknown image boundary mode")
             if self.pending is not None:
                 raise BridgeError("Cannot capture an unresolved game action")
             current = await self.read_state()
@@ -105,7 +107,7 @@ class BridgeClient:
                 if current.get(key) != expected.get(key):
                     raise BridgeError(f"Image observation is stale: {key}")
             if not current.get(
-                "lab_settled"
+                "lab_act_settled" if mode == "act" else "lab_settled"
             ) or "decision_images_v1" not in current.get("lab_capabilities", []):
                 raise BridgeError("Settled image capture is unavailable on this bridge")
             content = bytearray()
@@ -115,6 +117,7 @@ class BridgeClient:
                 params={
                     "instance": expected["lab_instance_id"],
                     "token": expected["lab_state_token"],
+                    **({"mode": "act"} if mode == "act" else {}),
                 },
                 timeout=7,
             ) as response:

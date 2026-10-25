@@ -92,6 +92,60 @@ text = text.replace(
     needle,
     "catch { throw; } // Lab: never report an incomplete power list as authoritative",
 )
+# Upstream state reads open shops/chests. Keep observation and mutation separate
+# in the generated copy; the pinned vendor source remains byte-for-byte intact.
+for old, new in [
+    (
+        "merchUI.OpenInventory();",
+        "// Spire2Lab: opening inventory requires a recorded action.",
+    ),
+    (
+        "merchantButton.ForceClick();",
+        "{ /* Spire2Lab: fake merchant is unsupported; GET must not click. */ }",
+    ),
+    (
+        'chestButton.ForceClick();\n            state["message"] = "Opening chest...";',
+        'state["lab_can_open"] = chestButton.IsVisibleInTree();\n            state["message"] = "Chest is closed.";',
+    ),
+    (
+        '["was_chosen"] = opt.WasChosen',
+        '["was_chosen"] = opt.WasChosen,\n                    ["lab_enabled"] = button.IsEnabled && button.IsVisibleInTree()',
+    ),
+]:
+    if text.count(old) != 1:
+        raise SystemExit(f"Pinned read-only state hook changed: {old}")
+    text = text.replace(old, new, 1)
+start = text.index("private static Dictionary<string, object?> BuildShopState")
+end = text.index("private static Dictionary<string, object?> BuildMapState", start)
+section = text[start:end]
+needle = "var state = new Dictionary<string, object?>();"
+assert section.count(needle) == 1
+section = section.replace(
+    needle,
+    needle + """
+        bool inventoryOpen = NMerchantRoom.Instance?.Inventory?.IsOpen == true;
+        state["lab_inventory_open"] = inventoryOpen;
+        state["lab_can_open"] = NMerchantRoom.Instance?.Inventory != null && !inventoryOpen
+            && NMerchantRoom.Instance.MerchantButton.IsEnabled;
+        var labShopBack = NMerchantRoom.Instance != null ? FindFirst<NBackButton>(NMerchantRoom.Instance) : null;
+        state["lab_can_close"] = inventoryOpen && labShopBack?.IsEnabled == true && labShopBack.IsVisibleInTree();
+        if (!inventoryOpen) {
+            state["items"] = new List<Dictionary<string, object?>>();
+            state["can_proceed"] = NMerchantRoom.Instance?.ProceedButton?.IsEnabled ?? false;
+            return state;
+        }
+""",
+)
+assert section.count('["index"] = index,') == 4
+section = section.replace(
+    '["index"] = index,', '["index"] = inventory.AllEntries.ToList().IndexOf(entry),', 3
+)
+section = section.replace(
+    '["index"] = index,',
+    '["index"] = inventory.AllEntries.ToList().IndexOf(removal),',
+    1,
+)
+text = text[:start] + section + text[end:]
 builder.write_text(text)
 if args.prepare_only:
     print(
@@ -169,7 +223,12 @@ manifest.update(
             str(path.relative_to(ROOT)): hashlib.sha256(path.read_bytes()).hexdigest()
             for path in extension_sources
         },
-        "capabilities": ["scenario_staging_v1", "execution_idle_v1"],
+        "capabilities": [
+            "scenario_staging_v1",
+            "execution_idle_v1",
+            "decision_images_v1",
+            "single_act_v1",
+        ],
     }
 )
 (compiled_output / "build.json").write_text(json.dumps(manifest, indent=2) + "\n")

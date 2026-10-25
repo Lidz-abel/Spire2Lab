@@ -237,4 +237,4 @@ def test_production_csharp_image_gate_rejects_changed_state_busy_execution_and_o
         timeout=10,
     )
     assert result.returncode == 0, result.stderr
-    assert result.stdout.strip() == "16"
+    assert result.stdout.strip() == "26"
