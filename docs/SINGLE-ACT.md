@@ -167,3 +167,26 @@ that its input handler uses that field. Shop opening disables the proceed
 button, so closing the inventory is a separate recorded action; the policy
 remembers closing it and proceeds instead of reopening forever. No game method
 was executed during this metadata inspection.
+
+## Offline acceptance audit
+
+After recording, audit the hash chain, every private capture's SHA-256 and
+instance/build/startup binding, the public projection, one matching submitted
+request per transition, route continuation, deterministic policy decisions and
+stored image associations. The auditor must not contact the game. A passing
+primary run needs observed boss combat and act completion, no unresolved action
+or manual override, successful shop payment/inventory change and an observed
+rest heal or card upgrade. Missing images are reported and fail the complete
+visual-run gate. Failed and incomplete runs remain useful diagnostic records;
+neither a compiled Mod nor a synthetic record establishes original acceptance.
+
+```bash
+.venv/bin/python scripts/audit_act.py artifacts/act-runs/RUN_ID.jsonl \
+  --output artifacts/single-act/RUN_ID-audit.json
+```
+
+Replace `RUN_ID` with the archived run ID from the dashboard. A structurally
+valid but incomplete attempt writes a failing report and exits 1. A changed
+capture, invalid transition or policy mismatch raises an error; preserve that
+failure alongside the trace. The current source fingerprints must match the
+run's frozen implementation before deterministic policy replay is claimed.

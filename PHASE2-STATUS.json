@@ -59,9 +59,11 @@
       "browser_replay": "artifacts/phase2-live/20261023T170930347979/browser-replay.json"
     },
     "remote_delivery": {
-      "status": "pending_write_authentication_failure",
-      "attempted_commit": "f94a5c0",
-      "report": "artifacts/phase2-v2/github-step1.json"
+      "status": "pending_latest_push_timed_out_prior_write_auth_failure",
+      "attempted_commit": "a8a861c1a7eff58d4f3d617ad7c47eb80f78d1d7",
+      "report": "artifacts/single-act/github-push.json",
+      "exit_code": 143,
+      "remote_head_verified": false
     },
     "conditioned_belief": {
       "summary": "docs/BELIEF-V2-VALIDATION.json",
@@ -110,7 +112,9 @@
       "completed": false,
       "required_mod_sha256": "ff144ee812218f9a3ffbb7dbdb2f5b1c4d6b750a189180d836b6092f85db41bd",
       "live_connection": "reverse_tunnel_unavailable_at_last_check",
-      "service_check": "artifacts/single-act/service-check.json"
+      "service_check": "artifacts/single-act/service-check.json",
+      "freeze_commit": "a8a861c1a7eff58d4f3d617ad7c47eb80f78d1d7",
+      "offline_audit_tests": 4
     }
   },
   "limitations": [

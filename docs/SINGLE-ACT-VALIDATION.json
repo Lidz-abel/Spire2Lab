@@ -42,6 +42,15 @@
     "sts2lab/act_contracts.py": "f8c1de6f04f8dac3e70e54f4e6b0b813edbd82cb5c681694f715253f182bbde2",
     "sts2lab/act_policy.py": "fc167464a34a3313c0963ae00c7de768e17706c4045e6079af1baa221579b373",
     "sts2lab/act_runtime.py": "bf684845f68d05c75c748ec11f8a7b156b4a42449ea882575ea35682b46a9a4a",
-    "sts2lab/act_server.py": "8aa1ef983576827700a158077dae872c7ad508aa9facc3891ff3a8b1d4dc134a"
+    "sts2lab/act_server.py": "8aa1ef983576827700a158077dae872c7ad508aa9facc3891ff3a8b1d4dc134a",
+    "sts2lab/act_replay.py": "17f9ec7c79d74c3348f0f0381fe08fabc6ed4abc103b554e41a884bd8d694531",
+    "scripts/audit_act.py": "9399c1aeb7747cdd9ec321b5fb87720c4d70ed5cb447efa7a57ab8be47ca4698"
+  },
+  "freeze_commit": "a8a861c1a7eff58d4f3d617ad7c47eb80f78d1d7",
+  "offline_audit": {
+    "implemented": true,
+    "tests_passed": 4,
+    "report": "artifacts/single-act/replay-tests.xml",
+    "scope": "synthetic rejection and integrity tests; no original act audited yet"
   }
 }
