@@ -1,0 +1,123 @@
+{
+  "version": "planning-v2-selected-evaluation",
+  "scope": "simulator_only",
+  "policy_seed": 773,
+  "development_seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+  ],
+  "heldout_seeds": [
+    2001,
+    2002,
+    2003,
+    2004,
+    2005,
+    2006,
+    2007,
+    2008,
+    2009,
+    2010,
+    2011,
+    2012,
+    2013,
+    2014,
+    2015,
+    2016,
+    2017,
+    2018,
+    2019,
+    2020,
+    2021,
+    2022,
+    2023,
+    2024,
+    2025,
+    2026,
+    2027,
+    2028,
+    2029,
+    2030
+  ],
+  "conditions": [
+    {
+      "id": "random",
+      "policy": "random",
+      "planning_config": null
+    },
+    {
+      "id": "heuristic",
+      "policy": "heuristic",
+      "planning_config": null
+    },
+    {
+      "id": "flat-depth32-256",
+      "policy": "rollout",
+      "planning_config": {
+        "version": "rollout-config-v1",
+        "particles": 8,
+        "init_attempts": 512,
+        "update_attempts": 128,
+        "max_wall_ms": null,
+        "exploration": 0.7,
+        "goal_max_actions": 3,
+        "belief_proposal": "public_opening",
+        "rollout_depth": 32,
+        "search_calls": 256,
+        "utility_version": "starter-public-leaf-v1"
+      }
+    },
+    {
+      "id": "flat-hp32-1024",
+      "policy": "rollout",
+      "planning_config": {
+        "version": "rollout-config-v1",
+        "particles": 8,
+        "init_attempts": 512,
+        "update_attempts": 128,
+        "max_wall_ms": null,
+        "exploration": 0.7,
+        "goal_max_actions": 3,
+        "belief_proposal": "public_opening",
+        "rollout_depth": 32,
+        "search_calls": 1024,
+        "utility_version": "terminal-hp-leaf-v2"
+      }
+    },
+    {
+      "id": "hierarchical-hp32-1024",
+      "policy": "hierarchical",
+      "planning_config": {
+        "version": "rollout-config-v1",
+        "particles": 8,
+        "init_attempts": 512,
+        "update_attempts": 128,
+        "max_wall_ms": null,
+        "exploration": 0.7,
+        "goal_max_actions": 3,
+        "belief_proposal": "public_opening",
+        "rollout_depth": 32,
+        "search_calls": 1024,
+        "utility_version": "terminal-hp-leaf-v2"
+      }
+    }
+  ],
+  "selection_rule": "development only: wins/no truncations, then mean terminal HP, then model work",
+  "timing": "policy decide including belief; excludes actor steps, render and trace IO; shared host",
+  "replay": "all actor traces; first seed each encounter/condition policy replay",
+  "selection": {
+    "primary": "flat-hp32-1024",
+    "hierarchy_ablation": "hierarchical-hp32-1024",
+    "lower_compute_reference": "flat-depth32-256",
+    "selected_using": "development seeds 1-10 only, 210 episodes",
+    "heldout_was_unseen_at_selection": true,
+    "tie_rule": "flat and hierarchical tie on HP and model work; flat is the primary result, hierarchy remains a separate ablation"
+  }
+}

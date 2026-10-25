@@ -1,6 +1,6 @@
 {
   "stage": 2,
-  "status": "in_progress_starter_planning_baseline_evaluated",
+  "status": "in_progress_v2_search_selected_pending_heldout_and_live",
   "started_at": "2026-10-24",
   "branch": "phase2/search-hierarchy",
   "phase_one_checkpoint": "f9faf0a",
@@ -59,9 +59,9 @@
       "browser_replay": "artifacts/phase2-live/20261023T170930347979/browser-replay.json"
     },
     "remote_delivery": {
-      "status": "pending_tls_failure",
-      "attempted_commit": "2f36503",
-      "report": "artifacts/phase2-github-delivery.json"
+      "status": "pending_write_authentication_failure",
+      "attempted_commit": "f94a5c0",
+      "report": "artifacts/phase2-v2/github-step1.json"
     },
     "conditioned_belief": {
       "summary": "docs/BELIEF-V2-VALIDATION.json",
@@ -70,6 +70,14 @@
       "tests_passed": 164,
       "additional_noninterference": "artifacts/phase2-v2/proposal-noninterference.xml",
       "historical_regression": "artifacts/acceptance/status.json"
+    },
+    "search_v2": {
+      "development": "docs/SEARCH-V2-VALIDATION.json",
+      "discussion": "docs/PLANNING-V2-RESULTS.md",
+      "selected_recipe": "config/phase2-search-selected.json",
+      "tests_passed": 168,
+      "tests": "artifacts/phase2-v2/full-search-tests.xml",
+      "heldout_status": "not_started"
     }
   },
   "limitations": [
@@ -79,14 +87,13 @@
     "One new original-game search battle does not establish broad live-policy coverage.",
     "Original images, single-act decisions and learning remain unimplemented.",
     "Phase-two independent installation/reproduction has not been performed.",
-    "GitHub delivery remains pending after a TLS handshake failure."
+    "GitHub delivery remains pending after a write-authentication failure; TLS failure is historical."
   ],
   "implementation_commit": "2f365032b082857b59647be66727a5a784812de6",
   "next_actions": [
-    "Improve public-state-conditioned proposals on development cases; measure particle survival and initialization cost.",
-    "Separate rollout-value and tactical-goal ablations; preregister new heldout seeds before the next iteration.",
-    "Specify and implement original decision-boundary screenshot association, then validate the changed bridge on Windows.",
-    "Add single-act decision contracts/content/reference cases incrementally.",
+    "Evaluate the frozen v2 selection on preregistered seeds 2001-2030 and validate fresh original execution.",
+    "Implement and validate original decision-boundary screenshot association.",
+    "Implement and verify an end-to-end original single-act controller.",
     "Complete independent phase-two reproduction and verified GitHub synchronization."
   ],
   "active_user_goal": {
@@ -94,7 +101,7 @@
     "plan": "docs/PHASE2-EXECUTION.md",
     "ordered_items": {
       "1_sampling": "verified_development_gate_29_of_975_depleted",
-      "2_search": "in_progress_development_ablations",
+      "2_search": "development_210_complete_selected_pending_new_heldout",
       "3_original_images": "pending_after_2",
       "4_single_act": "pending_after_3"
     },

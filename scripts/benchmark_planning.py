@@ -91,9 +91,24 @@ def conditions_for(recipe, selected=None):
     return [c for c in conditions if not selected or c["id"] in selected]
 
 
+def seeds_for(recipe, split, pilot=False, shard_index=0, shard_count=1):
+    """Partition the preregistered inventory without selecting by outcomes."""
+    seeds = recipe.get(f"{split}_seeds", CONFIG[f"{split}_seeds"])
+    if len(seeds) != len(set(seeds)) or not seeds:
+        raise ValueError("Seeds must be a nonempty unique inventory")
+    if not 1 <= shard_count <= len(seeds) or not 0 <= shard_index < shard_count:
+        raise ValueError("Invalid seed shard")
+    if pilot and (split == "heldout" or shard_count != 1):
+        raise ValueError("Pilot evaluation is development-only and unsharded")
+    return seeds[:1] if pilot else seeds[shard_index::shard_count]
+
+
 async def run(args):
     recipe = json.loads(args.recipe.read_text())
     conditions = conditions_for(recipe, args.conditions)
+    seeds = seeds_for(
+        recipe, args.split, args.pilot, args.shard_index, args.shard_count
+    )
     output = args.output
     output.mkdir(parents=True, exist_ok=False)  # preserve every prior attempt
     source_paths = subprocess.check_output(
@@ -126,6 +141,8 @@ async def run(args):
         "recipe": recipe,
         "recipe_sha256": sha(args.recipe),
         "selected_conditions": [c["id"] for c in conditions],
+        "selected_seeds": seeds,
+        "seed_shard": {"index": args.shard_index, "count": args.shard_count},
         "source_sha256": source,
         "commit": subprocess.check_output(
             ["git", "rev-parse", "HEAD"], cwd=ROOT, text=True
@@ -156,13 +173,6 @@ async def run(args):
         temp.write_text(json.dumps(report, indent=2) + "\n")
         temp.replace(output / "report.json")
 
-    seeds = (
-        recipe.get(f"{args.split}_seeds", CONFIG[f"{args.split}_seeds"])[:1]
-        if args.pilot
-        else recipe.get(f"{args.split}_seeds", CONFIG[f"{args.split}_seeds"])
-    )
-    if args.pilot and args.split == "heldout":
-        raise ValueError("Pilot evaluation is development-only")
     lab = Lab(output / "traces")
     save()
     try:
@@ -277,5 +287,7 @@ if __name__ == "__main__":
         "--recipe", type=Path, default=ROOT / "config/phase2-planning.json"
     )
     parser.add_argument("--conditions", nargs="+")
+    parser.add_argument("--shard-index", type=int, default=0)
+    parser.add_argument("--shard-count", type=int, default=1)
     parser.add_argument("--output", type=Path, required=True)
     asyncio.run(run(parser.parse_args()))

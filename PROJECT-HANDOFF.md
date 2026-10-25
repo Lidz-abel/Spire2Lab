@@ -7,6 +7,17 @@
 当前开发目录：`/user/chenzk/sts2-lab-phase2`（`phase2/search-hierarchy`）。
 第一阶段保留目录：`/user/chenzk/sts2-lab`（`main`，`f9faf0a`）。
 
+2026-10-25 搜索开发对照已完成：7 条件 × 30 场 = 210 场，全部获胜，210 次环境
+重放、15 次完整策略重放通过。固定实现 075f47b。HP：heuristic 76.53，depth8/256
+71.27，depth32/256 77.97，depth32/1024 78.33，HP 效用平坦/分层均 78.57。
+选择 HP 效用、depth32、1024 calls 的平坦搜索为主要配置；分层保留为独立消融，
+目前没有额外收益证据。低预算 depth32/256 作为成本对照。新配方
+config/phase2-search-selected.json；公共开发摘要 docs/SEARCH-V2-VALIDATION.json。
+168 项全套测试通过。新保留集 2001–2030 尚未运行；先提交冻结再运行。
+评测脚本新增预登记种子的确定性分片，减少等待；不改策略/规则，合并时必须覆盖每例
+且不重复。阶段 2/四项目标仍未完成。第一阶段 8765 服务归档、Windows 为实验奖励
+页面且已结算；阶段 2 的 8766 仍停止，下一次启动将使用新 native。
+
 2026-10-25 第 2 项开发实验已登记：config/phase2-search-ablation.json 共 7 条件，固定
 public_opening，对比 depth 8/32、预算 256/1024、旧效用/HP 连续尺度效用、平坦/分层。
 新效用针对旧评分“已获胜”与“未到终局”之间过大的跳变，不据此先宣称有效。开发

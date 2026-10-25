@@ -4,10 +4,26 @@ import json
 
 import pytest
 
-from scripts.benchmark_planning import conditions_for, summarize
+from scripts.benchmark_planning import conditions_for, seeds_for, summarize
 from sts2lab.hierarchy import leaf_utility
 from sts2lab.planning import PlanningConfig, PlanningPolicy
 from sts2lab.simulator import ROOT, Simulator
+
+
+def test_seed_shards_cover_the_frozen_inventory_once_and_reject_invalid_splits():
+    recipe = json.loads((ROOT / "config/phase2-search-ablation.json").read_text())
+    shards = [seeds_for(recipe, "heldout", shard_index=i, shard_count=3) for i in range(3)]
+    flattened = [seed for shard in shards for seed in shard]
+    assert len(flattened) == len(set(flattened)) == 30
+    assert sorted(flattened) == recipe["heldout_seeds"]
+    assert seeds_for(recipe, "development", pilot=True) == [1]
+    for index, count in ((0, 0), (-1, 3), (3, 3), (0, 31)):
+        with pytest.raises(ValueError):
+            seeds_for(recipe, "heldout", shard_index=index, shard_count=count)
+    with pytest.raises(ValueError):
+        seeds_for(recipe, "heldout", pilot=True)
+    with pytest.raises(ValueError):
+        seeds_for(recipe, "development", pilot=True, shard_count=3)
 
 
 def test_evaluation_does_not_merge_distinct_conditions_at_the_same_budget():
