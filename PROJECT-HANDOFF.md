@@ -7,6 +7,16 @@
 当前开发目录：`/user/chenzk/sts2-lab-phase2`（`phase2/search-hierarchy`）。
 第一阶段保留目录：`/user/chenzk/sts2-lab`（`main`，`f9faf0a`）。
 
+2026-10-25 第 2 项开发实验已登记：config/phase2-search-ablation.json 共 7 条件，固定
+public_opening，对比 depth 8/32、预算 256/1024、旧效用/HP 连续尺度效用、平坦/分层。
+新效用针对旧评分“已获胜”与“未到终局”之间过大的跳变，不据此先宣称有效。开发
+仍用 1–10；新保留集预登记为 2001–2030，当前未运行。选择优先胜负/无截断，再看平均
+终局 HP，最后同效时比较模型工作量。新实验脚本支持条件筛选且不会合并同预算的不同
+深度/效用条件；23 项相关测试通过。先导正在 artifacts/phase2-v2/search-pilot/。
+第 1 项提交 f94a5c0；推送已越过此前 TLS 故障，但现为 GitHub 写认证失败：
+No anonymous write access / Authentication failed；SSH 只读探测另为 DNS 失败。
+证据 artifacts/phase2-v2/github-step1.json/log 和 github-ssh-check.log。不能称已上传。
+
 2026-10-25 第 1 项已达到预登记开发回归门：新增独立公开条件开局工厂，仅条件化已知
 敌人初始 HP 与手牌，未知牌序另采样，未改动 actor 或转换后结果。60 条固定公开历史、
 975 决策的成对回放：旧方法开局 44/60、耗尽 309/975；新方法开局 60/60、耗尽 29/975

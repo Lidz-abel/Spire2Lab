@@ -105,8 +105,12 @@ class TacticalHierarchy:
         return event
 
 
-def leaf_utility(root, obs, goal=None):
+def leaf_utility(root, obs, goal=None, *, version="starter-public-leaf-v1"):
     """Fixed planning utility; never modifies the environment reward."""
+    if version == "terminal-hp-leaf-v2":
+        return _hp_leaf_utility(root, obs, goal)
+    if version != "starter-public-leaf-v1":
+        raise ValueError("Unknown planning utility")
     hp = obs.player.hp / max(1, obs.player.max_hp)
     if obs.outcome == "won":
         return 1.0 + 0.5 * hp
@@ -132,4 +136,38 @@ def leaf_utility(root, obs, goal=None):
             None,
         )
         value += 0.2 * (1 - (target.hp / target.max_hp if target else 0))
+    return value
+
+
+def _hp_leaf_utility(root, obs, goal):
+    """HP-scale terminal and nonterminal estimates; no victory bonus cliff.
+
+    This is an uncalibrated continuation estimate, not expected win probability.
+    A finite-horizon branch that has not won yet is not automatically worth less
+    than every terminal win, irrespective of HP. Loss and truncation stay explicit.
+    """
+    hp = obs.player.hp / max(1, obs.player.max_hp)
+    if obs.outcome == "won":
+        return hp
+    if obs.outcome == "lost":
+        return -1.0
+    if obs.outcome == "truncated":
+        return hp - 1.0
+    remaining = sum(e.hp for e in obs.enemies) / max(
+        1, sum(e.max_hp for e in root.enemies)
+    )
+    risk = max(0, incoming_damage(obs) - obs.player.block) / max(1, obs.player.max_hp)
+    value = hp - 0.1 * remaining - 0.5 * risk
+    if goal and goal.kind == "survive_turn":
+        value -= 0.05 * risk
+    elif goal and goal.kind == "focus_enemy":
+        target = next(
+            (
+                e
+                for e in obs.enemies
+                if (e.type_id, e.max_hp) == (goal.target_type, goal.target_max_hp)
+            ),
+            None,
+        )
+        value += 0.025 * (1 - (target.hp / target.max_hp if target else 0))
     return value

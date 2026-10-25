@@ -66,3 +66,20 @@ acting environment or overwrite a recorded transition to make it agree.
 Archive the native library and re-audit historical traces if a native factory is
 added. That audit establishes unchanged execution behavior only; new policy or
 single-act mechanics need fresh original-game evidence.
+
+## Search comparison design (before evaluation)
+
+Keep the public-opening proposal fixed. Compare depth 8 versus 32 at 256 calls;
+then 256 versus 1024 calls at depth 32; then legacy leaf utility versus an HP-scale
+leaf; finally flat versus hierarchical planning with that same HP-scale leaf.
+Include random and heuristic baselines. The legacy leaf has a large discontinuity
+between winning and nonterminal leaves, which may reward a shallow early win over
+a healthier continuation. The new leaf removes that discontinuity, preserves
+explicit loss/truncation penalties and keeps goal shaping small. This hypothesis
+must be evaluated, not assumed true.
+
+Selection uses development seeds 1–10 only: prioritize wins/no truncation, then
+mean terminal HP, then less model work on a tie. Compare all declared conditions
+before selecting. New held-out seeds are **2001–2030**, not the already inspected
+1001–1010. Freeze chosen conditions and implementation before opening those
+results. Report all evaluated conditions and separate simulator/live evidence.

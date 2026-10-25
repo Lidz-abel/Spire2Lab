@@ -31,6 +31,9 @@ class PlanningConfig(StrictModel):
     exploration: float = Field(default=0.7, ge=0, le=10, allow_inf_nan=False)
     goal_max_actions: int = Field(default=3, ge=1, le=20, strict=True)
     belief_proposal: Literal["seed_rejection", "public_opening"] = "seed_rejection"
+    utility_version: Literal["starter-public-leaf-v1", "terminal-hp-leaf-v2"] = (
+        "starter-public-leaf-v1"
+    )
 
 
 class PlanningPolicy:
@@ -145,7 +148,7 @@ class PlanningPolicy:
             "decision_id": obs.decision_id,
             "algorithm": "root-ucb-observable-rollout-v1",
             "config": self.config.model_dump(),
-            "utility_version": "starter-public-leaf-v1",
+            "utility_version": self.config.utility_version,
             "goal": goal.to_dict() if goal else None,
             "model_calls": 0,
             "rollouts": 0,
@@ -232,7 +235,9 @@ class PlanningPolicy:
                     if current.outcome != "ongoing":
                         break
                 if complete:
-                    totals[selected] += leaf_utility(obs, current, goal)
+                    totals[selected] += leaf_utility(
+                        obs, current, goal, version=self.config.utility_version
+                    )
                     visits[selected] += 1
                     report["rollouts"] += 1
             if not complete:
