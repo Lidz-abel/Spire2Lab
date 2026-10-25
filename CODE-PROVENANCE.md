@@ -49,7 +49,8 @@ RenderingServer 文档及 Godot 4.5 RenderingServerDefault 的 post-draw 分发�
 固定 STS2MCP 的 HTTP 分发与主线程队列。新增 bridge/McpMod.Images.cs、
 DecisionImageBoundary.cs、sts2lab/images.py 与面板/控制集成均为本项目编写；没有
 复制 Godot 实现。桥接仍编译固定 STS2MCP，保留上游许可证。图片来自运行时视口，
-不由平台绘制或冒充原版；目前仅编译和合成测试通过，实机安装/截图证据待补。
+不由平台绘制或冒充原版；安装后已验证一场原版战斗的12张决策画面与实时/回放关联，
+证据见 docs/DECISION-IMAGES-VALIDATION.json，范围不外推为全游戏验证。
 PNG 格式检查使用 Python 标准库，校验 CRC、尺寸、解压边界和哈希。源码与测试按
 合成/实机证据分开，图片和游戏 DLL 不入 Git。
 

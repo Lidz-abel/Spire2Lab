@@ -7,6 +7,19 @@
 当前开发目录：`/user/chenzk/sts2-lab-phase2`（`phase2/search-hierarchy`）。
 第一阶段保留目录：`/user/chenzk/sts2-lab`（`main`，`f9faf0a`）。
 
+2026-10-25 第3项实机验收通过：用户已安装并重启，实际 Mod b6c1a3ab...、实例
+070a3a1965674ae1816b044992a1a55b、游戏SHA/实验槽位2正确。主菜单3072×1728
+PNG可读取。Nibbit/seed1/新分层配置完整11步、12张决策边界画面，最终74HP获胜；
+每张图与原始捕获token、实例、版本、run/decision、公开观测摘要和文件SHA一致。
+状态逐步对照及策略重放通过；实时桌面/手机和全部12帧回放通过，零变更请求/JS错误。
+旧状态token及错误实例请求均409，原版状态和最后动作未变化。
+公共摘要 docs/DECISION-IMAGES-VALIDATION.json，私有证据
+artifacts/phase2-v2/image-live-battle/20261025T065715193624/。已目视检查主菜单与开局
+真实画面；开局可能包含回合横幅，不能称动画完全静止。该战斗已归档，8766仍运行
+PID1484278、无未决动作，Windows在实验奖励页。第1、2、3项完成有限门，继续第4项
+完整单幕；不把这场调试战斗代替普通单幕验证。前一goal轮属于实质进展，本轮Windows
+安装阻塞已解除。GitHub写认证仍无恢复证据。
+
 2026-10-25 截图实现检查点 54eec85 已提交本地。已向用户发送 Windows 安装指令，
 RemoteRoot 必须使用 /user/chenzk/sts2-lab-phase2，等待安装并重启；读回仍为旧
 Mod 60d7f563...，没有真实截图验收。8766 已加载新代码，PID 1484278 / exec95091，

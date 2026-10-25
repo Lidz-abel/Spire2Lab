@@ -1,8 +1,8 @@
 # Original-game decision images
 
 Implementation contract, 2026-10-25. Transport, storage and live/replay UI are
-implemented and synthetically tested. The new Windows Mod is compiled; actual
-installation and original-image verification are still pending.
+implemented and tested. The installed Windows Mod and a fresh original battle
+with 12 bound images are now verified; see [the evidence](DECISION-IMAGES-VALIDATION.json).
 
 ## Association and information boundary
 
@@ -93,3 +93,20 @@ and [post-draw signal](https://docs.godotengine.org/en/stable/classes/class_rend
 The [Godot 4.5 rendering server source](https://github.com/godotengine/godot/blob/4.5/servers/rendering/rendering_server_default.cpp)
 was inspected to check post-draw dispatch; no engine code was copied. Compilation
 against the user's GodotSharp DLL checks API availability, not live capture.
+
+## Installed verification
+
+The user installed and restarted the image-enabled Mod. Its actual hash matched
+`b6c1a3ab...`; the game assembly and experiment profile also matched. A fresh
+Nibbit seed-1 hierarchical-search battle completed 11 actions at 74 HP, with
+12 original 3072×1728 viewport images including the terminal reward screen.
+Every image matched its private capture token, instance/build, laboratory run,
+decision, public-observation digest, dimensions and content hash. Actor-state
+comparison and policy replay passed. All twelve browser replay frames matched;
+desktop/mobile and live checks recorded zero mutation requests and JS errors.
+Old-token and wrong-instance image requests returned 409 without changing game
+state or the last action. These are real Windows captures, kept private.
+
+The opening image was visually inspected and includes a turn-start banner.
+Semantic settlement does not promise cosmetic animations have finished. This
+verification is one debug-staged starter battle, not a full-act reference.

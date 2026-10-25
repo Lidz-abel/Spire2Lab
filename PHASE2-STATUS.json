@@ -1,6 +1,6 @@
 {
   "stage": 2,
-  "status": "in_progress_images_compiled_pending_windows_install",
+  "status": "in_progress_images_live_verified_single_act_next",
   "started_at": "2026-10-24",
   "branch": "phase2/search-hierarchy",
   "phase_one_checkpoint": "f9faf0a",
@@ -11,7 +11,7 @@
     "P2-03": "implemented_simulator_tests_passed",
     "P2-04": "implemented_simulator_ui_passed",
     "P2-05": "v2_development_and_new_heldout_complete_limited_hp_gain_no_hierarchy_gain",
-    "P2-06": "four_v2_live_battles_passed_original_images_pending",
+    "P2-06": "live_search_and_decision_images_verified_starter_scope",
     "P2-07": "planned",
     "P2-08": "local_docs_and_evidence_recorded_remote_and_independent_reproduction_pending"
   },
@@ -91,12 +91,18 @@
       "original_replay_ui": "artifacts/phase2-v2/browser/replay-report.json"
     },
     "decision_images": {
-      "status": "compiled_not_live_verified",
+      "status": "live_verified_one_starter_battle",
       "mod_sha256": "b6c1a3ab3ca649be06a3ec0aeb2a995d4aa82daedf5d95b51ce87a8773e5c61b",
       "tests_passed": 175,
       "tests": "artifacts/phase2-v2/full-image-tests.xml",
       "synthetic_browser": "artifacts/phase2-v2/image-fixture/browser-report.json",
-      "original_images_captured": false
+      "original_images_captured": true,
+      "public_summary": "docs/DECISION-IMAGES-VALIDATION.json",
+      "live_report": "artifacts/phase2-v2/image-live-battle/20261025T065715193624/report.json",
+      "images": 12,
+      "confirmed_actions": 11,
+      "all_replay_frames_checked": true,
+      "stale_image_requests_rejected": true
     }
   },
   "limitations": [
@@ -105,12 +111,11 @@
     "No additional hierarchy benefit was demonstrated; no learned agent or full-game performance claim.",
     "Public-conditioned particles remain approximate and can deplete; fallbacks are included in reports.",
     "Four live search battles do not establish broad original-game or single-act coverage.",
-    "Image implementation is compiled and synthetically tested, pending Windows installation and real captures; single-act control is pending.",
+    "Original images are verified for one staged battle; single-act control is still pending.",
     "Independent phase-two installation/reproduction and GitHub delivery remain pending."
   ],
   "implementation_commit": "2f365032b082857b59647be66727a5a784812de6",
   "next_actions": [
-    "Implement and validate original decision-boundary screenshot association.",
     "Implement and verify an end-to-end original single-act controller.",
     "Complete independent phase-two reproduction and verified GitHub synchronization."
   ],
@@ -120,8 +125,8 @@
     "ordered_items": {
       "1_sampling": "verified_development_gate_29_of_975_depleted",
       "2_search": "verified_660_simulator_episodes_and_four_live_battles",
-      "3_original_images": "implemented_synthetic_tests_passed_pending_windows_install",
-      "4_single_act": "pending_after_3"
+      "3_original_images": "verified_live_12_bound_images_and_replay",
+      "4_single_act": "in_progress_contract_design"
     },
     "complete": false
   }
