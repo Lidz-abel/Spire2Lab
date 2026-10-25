@@ -282,7 +282,10 @@
       "report": "artifacts/acceptance/status.json",
       "scope": "same 60 original references plus one probe replayed in isolated phase-two worktree",
       "passed": true,
-      "does_not_expand_phase_one_scope": true
+      "does_not_expand_phase_one_scope": true,
+      "native_sha256": "6321ca69c3ac6024d069f00b683d698523d8b22819609ee0044f078492856131",
+      "checked_at": "2026-10-25",
+      "candidate_regeneration": "artifacts/phase2-v2/revalidated/comparisons.json"
     }
   },
   "next_external_step": "Restore GitHub push connectivity, then authenticate if needed and run git push origin main from the checkout. Local technical acceptance is complete; no Windows reinstall or further reference capture is required.",

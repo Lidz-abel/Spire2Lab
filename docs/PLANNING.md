@@ -45,6 +45,15 @@ costs, not part of the `search_calls` allowance.
 
 ## Data flow and information boundary
 
+The optional `planning_config.belief_proposal="public_opening"` uses the new
+independent public-conditioned opening factory. It constrains already visible HP
+and hand membership and samples unknown order, while retaining/rejecting the
+independently sampled AI state. No post-transition result is patched. On 60 fixed
+development histories, depleted decision points fell from 309/975 to 29/975;
+see [the paired evidence](BELIEF-V2-VALIDATION.json). This remains approximate and
+does not eliminate depletion. The original recipe still explicitly resolves to
+`seed_rejection`; a changed proposal is a different experiment.
+
 ```mermaid
 flowchart LR
     O[Public observation and confirmed actions] --> B[Independent history particles]

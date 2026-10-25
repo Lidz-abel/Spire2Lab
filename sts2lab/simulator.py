@@ -6,6 +6,7 @@ import ctypes
 from functools import lru_cache
 import json
 import os
+import random
 from pathlib import Path
 import sys
 import threading
@@ -148,6 +149,84 @@ class Simulator:
     @property
     def decision_id(self):
         return f"{self.epoch}:{self.sequence}"
+
+    @classmethod
+    def from_public_opening(cls, encounter, observation, proposal_seed):
+        """Independent hypothetical starter world, or None if constraints reject it.
+
+        Only public inputs enter this factory. Never call a conditioning setter on
+        an actor or clone an actor's hidden state. Full matching is enforced after
+        the narrow native HP/hand proposal, before the world can reach a planner.
+        """
+        from .belief import public_hash
+        from .catalog import catalog
+
+        if (
+            observation.turn != 0
+            or observation.phase != "combat"
+            or observation.outcome != "ongoing"
+            or observation.unavailable_fields
+            or len(observation.hand) != 5
+            or observation.discard_pile
+            or observation.exhaust_pile
+            or observation.known_top
+            or observation.known_bottom
+        ):
+            return None
+        world = cls(encounter, proposal_seed)
+        keep = False
+        try:
+            with LOCK:
+                names = {name: key for key, name in world.names.enemies().items()}
+                if any(
+                    e.type_id not in names or e.hp != e.max_hp
+                    for e in observation.enemies
+                ):
+                    return None
+                if any(c.type_id not in catalog()["cards"] for c in observation.hand):
+                    return None
+                hand = (ctypes.c_int * 5)(
+                    *[catalog()["cards"][c.type_id].card_id for c in observation.hand]
+                )
+                count = len(observation.enemies)
+                enemy_ids = (ctypes.c_int * count)(
+                    *[names[e.type_id] for e in observation.enemies]
+                )
+                hps = (ctypes.c_int * count)(*[e.max_hp for e in observation.enemies])
+                function = world.native._lib.Sts2Lab_ConditionOpening
+                function.argtypes = [
+                    ctypes.c_int,
+                    ctypes.POINTER(ctypes.c_int),
+                    ctypes.c_int,
+                    ctypes.POINTER(ctypes.c_int),
+                    ctypes.POINTER(ctypes.c_int),
+                    ctypes.c_int,
+                    ctypes.c_int,
+                ]
+                function.restype = ctypes.c_int
+                result = function(
+                    world.handle,
+                    hand,
+                    5,
+                    enemy_ids,
+                    hps,
+                    count,
+                    random.Random(proposal_seed ^ 0x5A17).randrange(2**31),
+                )
+                if result < 0:
+                    raise RuntimeError(f"Public-opening proposal failed: {result}")
+                keep = result == 1 and public_hash(world.observe()) == public_hash(
+                    observation
+                )
+                if not keep:
+                    return None
+                world.branch_provenance = BranchProvenance(
+                    branch_id=world.epoch, operation="public_opening"
+                )
+                return world
+        finally:
+            if not keep:
+                world.close()
 
     def _raw(self, *, debug=False):
         if self.handle < 0:

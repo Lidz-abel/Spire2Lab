@@ -9,6 +9,7 @@ import math
 import hashlib
 import random
 import time
+from typing import Literal
 
 from pydantic import Field
 
@@ -29,6 +30,7 @@ class PlanningConfig(StrictModel):
     max_wall_ms: int | None = Field(default=2000, ge=1, le=30000, strict=True)
     exploration: float = Field(default=0.7, ge=0, le=10, allow_inf_nan=False)
     goal_max_actions: int = Field(default=3, ge=1, le=20, strict=True)
+    belief_proposal: Literal["seed_rejection", "public_opening"] = "seed_rejection"
 
 
 class PlanningPolicy:
@@ -68,6 +70,7 @@ class PlanningPolicy:
             self.config.particles,
             self.config.init_attempts,
             self.config.update_attempts,
+            proposal=self.config.belief_proposal,
         )
         self.hierarchy = (
             TacticalHierarchy(self.config.goal_max_actions)

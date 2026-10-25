@@ -50,6 +50,7 @@ subprocess.run(
 inputs = [
     ROOT / "native/LabExports.cs",
     ROOT / "native/LabCombat.cs",
+    ROOT / "native/LabBelief.cs",
     ROOT / "native/Sts2Lab.csproj",
     source,
     enemy_source,

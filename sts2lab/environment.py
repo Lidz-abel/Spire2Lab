@@ -12,7 +12,9 @@ class BranchProvenance(StrictModel):
     branch_id: str
     parent_branch_id: str | None = None
     parent_decision_id: str | None = None
-    operation: Literal["root", "snapshot", "sample_world", "restore"] = "root"
+    operation: Literal[
+        "root", "snapshot", "sample_world", "restore", "public_opening"
+    ] = "root"
 
 
 class UnsupportedCapability(ValueError):

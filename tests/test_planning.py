@@ -53,7 +53,10 @@ def test_search_budget_mapping_and_no_acting_environment_mutation():
             assert all(p.handle == -1 for p in particles)
 
 
-def test_same_public_input_produces_same_search_despite_different_actual_hidden_state():
+@pytest.mark.parametrize("proposal", ["seed_rejection", "public_opening"])
+def test_same_public_input_produces_same_search_despite_different_actual_hidden_state(
+    proposal,
+):
     with Simulator("nibbits-weak", 1) as env, env.sample_world(1) as hidden_variant:
         first, second = env.observe(), hidden_variant.observe()
         assert semantic_state(first) == semantic_state(second)
@@ -62,7 +65,9 @@ def test_same_public_input_produces_same_search_despite_different_actual_hidden_
             != hidden_variant._raw(debug=True)["debug_draw_order"]
         )
         policies = [
-            PlanningPolicy("hierarchical", 773, "nibbits-weak", config())
+            PlanningPolicy(
+                "hierarchical", 773, "nibbits-weak", config(belief_proposal=proposal)
+            )
             for _ in range(2)
         ]
         try:

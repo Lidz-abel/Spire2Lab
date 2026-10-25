@@ -72,6 +72,7 @@ class HistoryBelief:
         update_attempts=128,
         *,
         factory=Simulator,
+        proposal="seed_rejection",
     ):
         self.encounter = encounter
         self.rng = random.Random(seed)
@@ -79,6 +80,9 @@ class HistoryBelief:
         self.init_attempts = init_attempts
         self.update_attempts = update_attempts
         self.factory = factory
+        if proposal not in ("seed_rejection", "public_opening"):
+            raise ValueError("Unknown belief proposal")
+        self.proposal = proposal
         self.particles = []
         self.current_hash = None
         self.history_digest = None
@@ -112,6 +116,10 @@ class HistoryBelief:
             or obs.exhaust_pile
             or obs.player.energy != 3
             or obs.player.hp != 80
+            or (
+                self.proposal == "public_opening"
+                and (obs.outcome != "ongoing" or obs.known_top or obs.known_bottom)
+            )
         ):
             self._report(counts, "unsupported_opening")
             return self.report
@@ -120,8 +128,16 @@ class HistoryBelief:
                 if self.expired(deadline):
                     counts["timed_out"] = True
                     break
-                world = self.factory(self.encounter, self.rng.randrange(2**31))
                 counts["initializations"] += 1
+                proposal_seed = self.rng.randrange(2**31)
+                world = (
+                    self.factory.from_public_opening(self.encounter, obs, proposal_seed)
+                    if self.proposal == "public_opening"
+                    else self.factory(self.encounter, proposal_seed)
+                )
+                if world is None:
+                    counts["rejections"] += 1
+                    continue
                 try:
                     matches = public_hash(world.observe()) == self.current_hash
                 except BaseException:
@@ -213,7 +229,11 @@ class HistoryBelief:
             "conditioned_transitions": self.steps,
             "history_digest": self.history_digest,
             "reason": reason,
-            "method": "public-history-rejection-resample-v1",
+            "method": (
+                "public-history-conditioned-opening-v2"
+                if self.proposal == "public_opening"
+                else "public-history-rejection-resample-v1"
+            ),
             "exact_posterior_claim": False,
         }
 

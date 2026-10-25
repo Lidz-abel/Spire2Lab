@@ -1,6 +1,6 @@
 # Spire2Lab 代码来源说明
 
-更新时间：2026-10-24
+更新时间：2026-10-25
 
 本文件记录工程来源与依赖边界。“本项目新增实现”指在本项目中编写的代码，包括 AI 辅助编写的适配、验证和实验工具；这项分类本身不构成逐行原创性审计或科研创新结论。游戏内容、上游代码与参考资料各自记录来源。
 
@@ -43,6 +43,15 @@ O-02 至 O-04 随实机证据逐步替换；阶段 2 实现搜索/层级核心�
 ## 来源分类
 
 ### 第二阶段方法与阅读记录（2026-10-24）
+
+2026-10-25 条件开局提议：先写 `docs/PHASE2-EXECUTION.md`，再检查固定模拟器的
+`NativeExports.NativeCombat`、`CombatState`、`CardInstance`、`EnemyDef.HpBand` 与
+`CombatFactory.CreateEnemy`。新增 `native/LabBelief.cs` 与
+`Simulator.from_public_opening` 是本项目编写的适配/提议实现；使用上游状态类型、
+初始模型和 HP 范围，并按上游无放回初始 HP 规则验证公开约束，不能称为独立游戏引擎。
+只在新建的独立 starter 世界中约束已公开 HP 与手牌，剩余牌序使用独立提议随机数。
+不改变实际执行环境，不在已执行转换后复制原版结果；潜在 AI/未来 RNG 仍来自独立
+世界，近似分布的限制保留。没有改写 vendor 源码。新库已归档旧版本并重放旧参考集。
 
 先在 `docs/PHASE2-PLAN.md` 记录输入、输出、预算、失败与隐藏信息边界，再实现本项目
 `belief.py`、`planning.py` 和 `hierarchy.py`；没有移植外部搜索框架源码。
