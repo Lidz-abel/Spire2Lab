@@ -71,8 +71,25 @@ function render(view) {
   $('history').innerHTML=[...view.history].reverse().map(h=>`<div class="history-row"><span class="number">${String(h.step).padStart(2,'0')}</span><span>${esc(h.label)}${h.manual?' · 人工干预':''}</span><span class="${h.hp_delta<0?'loss':'neutral'}">HP ${h.hp_delta>0?'+':''}${h.hp_delta}</span></div>`).join('')||'<p class="empty">执行第一步后，这里会出现实际状态变化。</p>';
   const r=view.last_result;
   $('last-result').innerHTML=r?`<strong>${esc(r.action.label)}</strong><br>生命变化 ${r.facts.player_hp_delta>0?'+':''}${r.facts.player_hp_delta}<br>执行 ${r.execution_ms.toFixed(2)} ms${r.facts.manual_intervention?'<br>本步包含人工干预':''}`:'等待第一步执行。';
+  renderOriginalImage(view);
   $('download').href=`/api/runs/${view.metadata.run_id}/download`;
   if(view.error)showError(Error(view.error));
+}
+function renderOriginalImage(view) {
+  const panel=$('original-image-panel'), img=$('original-image'), record=view.decision_image;
+  panel.hidden=view.metadata.backend!=='original_game';
+  const bound=record?.run_id===view.metadata.run_id&&record?.decision_id===view.observation.decision_id;
+  const available=bound&&record.status==='available'&&/^[0-9a-f]{64}$/.test(record.sha256);
+  const url=available?`/api/runs/${view.metadata.run_id}/images/${record.sha256}.png`:'';
+  if(panel.hidden||!available){img.hidden=true;img.removeAttribute('src');img.dataset.source='';}
+  else if(img.dataset.source!==url){
+    img.hidden=true;img.dataset.source=url;
+    img.onload=()=>{if(img.dataset.source===url){img.hidden=false;$('original-image-status').textContent='原版截图 · 已绑定当前决策';}};
+    img.onerror=()=>{if(img.dataset.source===url){img.hidden=true;$('original-image-status').textContent='画面不可用 · 文件缺失或校验失败';}};
+    img.src=url;
+  }
+  $('original-image-status').textContent=available?(img.hidden?'正在读取已验证画面':'原版截图 · 已绑定当前决策'):bound?'此决策未获得有效画面':'此决策没有关联画面';
+  $('original-image-binding').textContent=available?`${record.width} × ${record.height} · ${record.captured_at} · 决策 ${record.decision_id} · SHA ${record.sha256.slice(0,12)}`:bound?`原因：${record.reason||'capture_unavailable'}。不会沿用前一张画面。`:'旧轨迹可能没有原版截图；语义回放仍可使用。';
 }
 async function refreshRuns() {
   const runs=await api('/api/runs');
@@ -101,19 +118,20 @@ $('load-replay').onclick=()=>action(async()=>{
   if(live.status==='running'||(['planning','executing','reconciling'].includes(live.status)&&live.resume_after_step))live=await api('/api/control',{running:false});
   const events=await api(`/api/runs/${$('run-list').value}`);
   replay={metadata:events[0].data.metadata};replayFrames=[];
-  let observation=events[0].data.observation, decision=null, history=[], last_result=null, planning=null, goal_event=null;
+  let observation=events[0].data.observation, decision=null, history=[], last_result=null, planning=null, goal_event=null, decision_image=null;
   for(const event of events.slice(1)){
+    if(event.kind==='decision_image')decision_image=event.data;
     if(event.kind==='decision')decision=event.data;
     if(event.kind==='planning_report')planning=event.data;
     if(event.kind==='goal_completed')goal_event=event.data;
-    if(event.kind==='action_submitted')replayFrames.push({metadata:replay.metadata,observation,decision,planning,goal_event,history:[...history],last_result,status:'paused'});
+    if(event.kind==='action_submitted')replayFrames.push({metadata:replay.metadata,observation,decision,planning,goal_event,decision_image,history:[...history],last_result,status:'paused'});
     if(event.kind==='transition'){
       const t=event.data;
       history.push({step:history.length+1,label:t.action.label,hp_delta:t.facts.player_hp_delta,manual:t.facts.manual_intervention});
-      observation=t.observation;decision=null;planning=null;goal_event=null;last_result={action:t.action,facts:t.facts,execution_ms:t.execution_ms};
+      observation=t.observation;decision=null;planning=null;goal_event=null;decision_image=null;last_result={action:t.action,facts:t.facts,execution_ms:t.execution_ms};
     }
   }
-  replayFrames.push({metadata:replay.metadata,observation,decision,planning,goal_event,history,last_result,status:observation.outcome==='ongoing'?'paused':'finished'});
+  replayFrames.push({metadata:replay.metadata,observation,decision,planning,goal_event,decision_image,history,last_result,status:observation.outcome==='ongoing'?'paused':'finished'});
   $('replay-controls').hidden=false;$('back-live').hidden=false;
   $('replay-position').max=replayFrames.length-1;$('replay-position').value=0;
   renderReplay();

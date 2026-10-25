@@ -1,6 +1,6 @@
 {
   "stage": 2,
-  "status": "in_progress_v2_combat_verified_images_next",
+  "status": "in_progress_images_compiled_pending_windows_install",
   "started_at": "2026-10-24",
   "branch": "phase2/search-hierarchy",
   "phase_one_checkpoint": "f9faf0a",
@@ -40,8 +40,8 @@
       "passed": true,
       "required_cases": 60,
       "extra_probes": 1,
-      "report": "artifacts/acceptance/status.json",
-      "scope": "unchanged historical references; not new captures"
+      "report": "artifacts/phase2-v2/search-ui-historical-audit.json",
+      "scope": "historical checkpoint before image bridge change; does not certify new Mod"
     },
     "new_live_search": {
       "passed": true,
@@ -89,6 +89,14 @@
       "live_confirmed_actions": 49,
       "ui": "artifacts/phase2-v2/browser/report.json",
       "original_replay_ui": "artifacts/phase2-v2/browser/replay-report.json"
+    },
+    "decision_images": {
+      "status": "compiled_not_live_verified",
+      "mod_sha256": "b6c1a3ab3ca649be06a3ec0aeb2a995d4aa82daedf5d95b51ce87a8773e5c61b",
+      "tests_passed": 175,
+      "tests": "artifacts/phase2-v2/full-image-tests.xml",
+      "synthetic_browser": "artifacts/phase2-v2/image-fixture/browser-report.json",
+      "original_images_captured": false
     }
   },
   "limitations": [
@@ -97,7 +105,7 @@
     "No additional hierarchy benefit was demonstrated; no learned agent or full-game performance claim.",
     "Public-conditioned particles remain approximate and can deplete; fallbacks are included in reports.",
     "Four live search battles do not establish broad original-game or single-act coverage.",
-    "Original images and single-act control are still pending; RL training belongs to stage three.",
+    "Image implementation is compiled and synthetically tested, pending Windows installation and real captures; single-act control is pending.",
     "Independent phase-two installation/reproduction and GitHub delivery remain pending."
   ],
   "implementation_commit": "2f365032b082857b59647be66727a5a784812de6",
@@ -112,7 +120,7 @@
     "ordered_items": {
       "1_sampling": "verified_development_gate_29_of_975_depleted",
       "2_search": "verified_660_simulator_episodes_and_four_live_battles",
-      "3_original_images": "in_progress_contract_recorded",
+      "3_original_images": "implemented_synthetic_tests_passed_pending_windows_install",
       "4_single_act": "pending_after_3"
     },
     "complete": false

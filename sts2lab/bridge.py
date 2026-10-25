@@ -7,11 +7,14 @@ The adapter requires our compiled Mod's game-assembly fingerprint and protocol.
 from __future__ import annotations
 
 import asyncio
+import json
 from dataclasses import dataclass
 import time
 import uuid
 
 import httpx
+
+from .images import MAX_REPLY_BYTES, decode_image
 
 
 class BridgeError(RuntimeError):
@@ -87,6 +90,43 @@ class BridgeClient:
         raise BridgeError(
             "Game did not reach an actionable decision before the deadline"
         )
+
+    async def capture_image(self, expected):
+        async with self.lock:
+            if self.pending is not None:
+                raise BridgeError("Cannot capture an unresolved game action")
+            current = await self.read_state()
+            for key in (
+                "lab_instance_id",
+                "lab_state_token",
+                "game_assembly_sha256",
+                "lab_mod_sha256",
+            ):
+                if current.get(key) != expected.get(key):
+                    raise BridgeError(f"Image observation is stale: {key}")
+            if not current.get(
+                "lab_settled"
+            ) or "decision_images_v1" not in current.get("lab_capabilities", []):
+                raise BridgeError("Settled image capture is unavailable on this bridge")
+            content = bytearray()
+            async with self.client.stream(
+                "GET",
+                "/api/v1/lab/image",
+                params={
+                    "instance": expected["lab_instance_id"],
+                    "token": expected["lab_state_token"],
+                },
+                timeout=7,
+            ) as response:
+                response.raise_for_status()
+                async for chunk in response.aiter_bytes():
+                    content.extend(chunk)
+                    if len(content) > MAX_REPLY_BYTES:
+                        raise BridgeError("Oversized image response")
+            try:
+                return decode_image(json.loads(content), expected)
+            except (KeyError, TypeError, ValueError) as exc:
+                raise BridgeError(f"Image rejected: {exc}") from exc
 
     async def submit(
         self, action: dict, expected_token: str, *, request_id=None, timeout=20

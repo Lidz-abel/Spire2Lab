@@ -1,7 +1,8 @@
 # Original-game decision images
 
-Implementation contract, 2026-10-25. This document specifies the next ordered
-deliverable; it is not evidence that capture is installed or verified.
+Implementation contract, 2026-10-25. Transport, storage and live/replay UI are
+implemented and synthetically tested. The new Windows Mod is compiled; actual
+installation and original-image verification are still pending.
 
 ## Association and information boundary
 
@@ -59,3 +60,36 @@ The original phase-one captures retain their old Mod fingerprint. Rebuilding
 the bridge must not rewrite those captures or imply the new bridge inherited
 their live certification. Audit historical evidence against its archived build
 and report fresh image evidence separately.
+
+## Current implementation and evidence
+
+The read-only `GET /api/v1/lab/image?instance=...&token=...` endpoint uses
+`RenderingServer.FramePostDraw`, rejects concurrent image requests and has a
+five-second deadline. The PNG is capped at 16 MiB and 16,777,216 pixels. The
+Python receiver checks chunk CRCs, bounded decompression, frame counter,
+process/build/token, dimensions and hash before content-addressed storage.
+The server also checks each image's run/decision/public-observation digest
+against the hash-chained trace before serving bytes. Images are absent from
+planner inputs. Missing capture is explicit and does not fabricate a transition.
+
+175 tests passed, including the production C# association gate compiled without
+the game. Synthetic browser checks passed for valid display, clearing the old
+image after capture failure, missing/corrupt bytes, mobile layout and replay
+without mutation requests. These checks used synthetic PNGs, not game pixels.
+Local evidence: `artifacts/phase2-v2/full-image-tests.xml` and
+`artifacts/phase2-v2/image-fixture/browser-report.json`.
+
+The compiled Mod SHA-256 is
+`b6c1a3ab3ca649be06a3ec0aeb2a995d4aa82daedf5d95b51ce87a8773e5c61b`.
+It targets the unchanged game assembly recorded in the private build manifest.
+Install that package from this phase-two checkout on Windows, retain the
+existing port configuration, then verify the actual running fingerprint and
+real decision captures. The old phase-one checkout and Mod package remain
+available. Historical 60+1 evidence was last audited before this bridge change;
+the current-bridge acceptance cache is therefore stale, as intended.
+
+API references: Godot's [viewport texture readback](https://docs.godotengine.org/en/stable/classes/class_viewport.html#class-viewport-method-get-texture)
+and [post-draw signal](https://docs.godotengine.org/en/stable/classes/class_renderingserver.html#class-renderingserver-signal-frame-post-draw).
+The [Godot 4.5 rendering server source](https://github.com/godotengine/godot/blob/4.5/servers/rendering/rendering_server_default.cpp)
+was inspected to check post-draw dispatch; no engine code was copied. Compilation
+against the user's GodotSharp DLL checks API availability, not live capture.

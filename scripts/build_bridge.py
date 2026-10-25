@@ -46,6 +46,11 @@ for old, new in [
         "RunOnMainThread(() => ExecuteAction(action, parsed))",
         "RunOnMainThread(() => ExecuteLabAction(action, parsed))",
     ),
+    (
+        'else if (path == "/api/v1/singleplayer")',
+        'else if (path == "/api/v1/lab/image") { HandleLabImage(request, response); }\n'
+        '            else if (path == "/api/v1/singleplayer")',
+    ),
 ]:
     if text.count(old) != 1:
         raise SystemExit(f"Pinned bridge hook changed: {old}")

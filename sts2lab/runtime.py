@@ -16,6 +16,7 @@ from .planning import PlanningConfig, PlanningPolicy
 from .simulator import Simulator, CONFIG, ROOT
 from .traces import TraceWriter
 from .vocabulary import vocabulary
+from .images import ImageStore
 
 
 async def await_if_needed(result):
@@ -25,6 +26,7 @@ async def await_if_needed(result):
 class Lab:
     def __init__(self, data_dir=None, *, original_factory=None):
         self.data_dir = Path(data_dir or ROOT / "artifacts/runs")
+        self.images = ImageStore(self.data_dir.parent / "images")
         self.original_factory = original_factory or OriginalEnvironment.attach
         self.lock = asyncio.Lock()
         self.env: Environment | None = None
@@ -40,9 +42,55 @@ class Lab:
         self.resume_after_step = False
         self.planning = None
         self.goal_event = None
+        self.decision_image = None
+
+    async def _capture_image(self):
+        self.decision_image = None
+        if self.metadata["backend"] != "original_game":
+            return
+        binding = {
+            "run_id": self.run_id,
+            "decision_id": self.observation.decision_id,
+            "observation_sha256": digest(self.observation),
+        }
+        if not self.env.capabilities.get("original_pixels"):
+            self.decision_image = {
+                **binding,
+                "status": "unavailable",
+                "reason": "bridge_capability_missing",
+            }
+        else:
+            previous_status = self.status
+            self.status = "planning"
+            self.revision += 1
+            try:
+                metadata, png = await self.env.capture_image()
+                self.decision_image = await asyncio.to_thread(
+                    self.images.put,
+                    self.run_id,
+                    metadata,
+                    png,
+                    self.observation.decision_id,
+                    binding["observation_sha256"],
+                )
+            except Exception as exc:
+                self.decision_image = {
+                    **binding,
+                    "status": "unavailable",
+                    "reason": type(exc).__name__,
+                    "detail": str(exc)[:300],
+                }
+            finally:
+                self.status = (
+                    "paused"
+                    if previous_status == "running" and not self.resume_after_step
+                    else previous_status
+                )
+        self.trace.append("decision_image", self.decision_image)
 
     async def _proposal(self):
         self.decision, self.planning = None, None
+        await self._capture_image()
         if self.observation.legal_actions:
             if isinstance(self.policy, PlanningPolicy):
                 previous_status = self.status
@@ -189,6 +237,7 @@ class Lab:
             "decision": self.decision.model_dump() if self.decision else None,
             "planning": self.planning,
             "goal_event": self.goal_event,
+            "decision_image": self.decision_image,
             "last_result": self.last_result,
             "history": self.history[-80:],
             "delay": self.delay,

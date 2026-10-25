@@ -8,13 +8,13 @@ from pathlib import Path
 from typing import Literal
 
 from fastapi import FastAPI, HTTPException, Request
-from fastapi.responses import FileResponse, StreamingResponse
+from fastapi.responses import FileResponse, StreamingResponse, Response
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, ConfigDict, Field
 
 from .bridge import BridgeError, OutcomeUnknown
 from .acceptance import read_acceptance_status
-from .contracts import StepRequest, PROTOCOL_VERSION
+from .contracts import StepRequest, PROTOCOL_VERSION, digest
 from .runtime import Lab
 from .planning import PlanningConfig
 from .simulator import CONFIG, ROOT
@@ -184,6 +184,44 @@ def create_app(data_dir=None, *, original_factory=None):
             return FileResponse(lab.trace_path(run_id), filename=f"{run_id}.jsonl")
         except FileNotFoundError:
             raise HTTPException(404, "Run not found")
+
+    @app.get("/api/runs/{run_id}/images/{image_sha}.png")
+    async def decision_image(run_id: str, image_sha: str):
+        try:
+            events = read_trace(lab.trace_path(run_id))
+            observation, linked = None, False
+            if events[0]["data"]["metadata"]["backend"] != "original_game":
+                raise ValueError("Images require an original-game record")
+            for event in events:
+                if event["kind"] in ("session_started", "transition"):
+                    observation = event["data"]["observation"]
+                if event["kind"] == "decision_image":
+                    record = event["data"]
+                    if (
+                        record.get("sha256") == image_sha
+                        and record.get("status") == "available"
+                    ):
+                        if (
+                            record.get("run_id") != run_id
+                            or not observation
+                            or record.get("decision_id") != observation["decision_id"]
+                            or record.get("observation_sha256") != digest(observation)
+                        ):
+                            raise ValueError("Image association differs from trace")
+                        linked = True
+            if not linked:
+                raise ValueError("Image not associated with this run")
+            png = await asyncio.to_thread(lab.images.get, run_id, image_sha)
+            return Response(
+                png,
+                media_type="image/png",
+                headers={
+                    "Cache-Control": "no-store",
+                    "X-Content-Type-Options": "nosniff",
+                },
+            )
+        except (OSError, ValueError, KeyError, TypeError):
+            raise HTTPException(404, "Verified decision image unavailable")
 
     @app.get("/api/config")
     async def config():

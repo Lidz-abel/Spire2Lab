@@ -7,6 +7,16 @@
 当前开发目录：`/user/chenzk/sts2-lab-phase2`（`phase2/search-hierarchy`）。
 第一阶段保留目录：`/user/chenzk/sts2-lab`（`main`，`f9faf0a`）。
 
+2026-10-25 第3项实现已编译，等待 Windows 安装验收：新 Mod b6c1a3ab...，
+完整 SHA 在 PHASE2-STATUS.json。新增只读 post-draw 截图、进程/版本/token 绑定、
+PNG 限额/CRC/解压校验、run/decision/公开观测摘要关联，以及实时/回放显示。
+175 项全套测试通过；合成图片浏览器检查通过，不能称已采集原版画面。
+包在 phase2/artifacts/windows/mod，旧 Mod 在 mod-history/60d7f563...；安装必须
+从 phase2 路径取包，现有21526配置无需修改。Windows当前仍是旧 Mod。
+新桥接使当前 phase2 验收缓存失效；此前60+1审计原件另存
+artifacts/phase2-v2/search-ui-historical-audit.json。第一阶段目录/证据保持不变，
+不得把旧 Mod 的参考集当成新 Mod 实机证明。第4项仍未开始实现。
+
 2026-10-25 第 2 项有限战斗验证完成：选择冻结 f2bc4c7 后，新保留集 2001–2030，
 5 条件 × 90 场 = 450 场全部获胜，450 次环境重放和 27 次策略重放通过；加开发集
 共 660 次环境、42 次策略重放。预选 HP32/1024 平坦与分层均 77.94 HP，heuristic

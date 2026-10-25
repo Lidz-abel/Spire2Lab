@@ -44,6 +44,15 @@ O-02 至 O-04 随实机证据逐步替换；阶段 2 实现搜索/层级核心�
 
 ### 第二阶段方法与阅读记录（2026-10-24）
 
+2026-10-25 决策截图：先写 docs/DECISION-IMAGES.md，参考 Godot 官方 Viewport /
+RenderingServer 文档及 Godot 4.5 RenderingServerDefault 的 post-draw 分发方式，并检查
+固定 STS2MCP 的 HTTP 分发与主线程队列。新增 bridge/McpMod.Images.cs、
+DecisionImageBoundary.cs、sts2lab/images.py 与面板/控制集成均为本项目编写；没有
+复制 Godot 实现。桥接仍编译固定 STS2MCP，保留上游许可证。图片来自运行时视口，
+不由平台绘制或冒充原版；目前仅编译和合成测试通过，实机安装/截图证据待补。
+PNG 格式检查使用 Python 标准库，校验 CRC、尺寸、解压边界和哈希。源码与测试按
+合成/实机证据分开，图片和游戏 DLL 不入 Git。
+
 2026-10-25 条件开局提议：先写 `docs/PHASE2-EXECUTION.md`，再检查固定模拟器的
 `NativeExports.NativeCombat`、`CombatState`、`CardInstance`、`EnemyDef.HpBand` 与
 `CombatFactory.CreateEnemy`。新增 `native/LabBelief.cs` 与

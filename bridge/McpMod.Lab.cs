@@ -48,7 +48,7 @@ public static partial class McpMod
         state["lab_protocol"] = 1;
         state["game_assembly_sha256"] = LabAssemblySha;
         state["lab_mod_sha256"] = LabModSha;
-        state["lab_capabilities"] = new[] { "scenario_staging_v1", "execution_idle_v1" };
+        state["lab_capabilities"] = new[] { "scenario_staging_v1", "execution_idle_v1", "decision_images_v1" };
         state["lab_profile_id"] = MegaCrit.Sts2.Core.Saves.SaveManager.Instance.CurrentProfileId;
         if (LabScenario != null) state["lab_scenario"] = LabScenario;
         bool inRun = RunManager.Instance.IsInProgress;

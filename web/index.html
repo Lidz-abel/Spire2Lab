@@ -39,6 +39,7 @@
       <div class="hand-heading"><h3>当前手牌 <span id="hand-count"></span></h3><div id="piles"></div></div>
       <section id="hand" class="hand" aria-label="当前手牌"></section>
       <details class="inspector"><summary>查看牌堆组成与智能体实际输入</summary><p class="small muted">抽牌堆以无序组成展示；已知牌顶和牌底单独记录。此处不含真实隐藏顺序。</p><pre id="observation-json"></pre></details>
+      <section id="original-image-panel" class="original-image-panel" hidden aria-label="原版决策画面"><div class="panel-heading"><h3>原版决策画面</h3><span id="original-image-status" class="small muted"></span></div><img id="original-image" alt="与当前决策绑定的原版游戏画面" hidden><p id="original-image-binding" class="small muted"></p></section>
       <section class="timeline"><div class="panel-heading"><h3>执行记录</h3><span class="small muted">动作 → 实际变化</span></div><div id="history"></div></section>
     </main>
     <aside class="decision-panel"><div class="eyebrow">AGENT DECISION</div><h2>这一步，怎么选</h2><p id="decision-meta" class="small muted"></p><div id="proposal"></div><section id="planning-panel" hidden aria-label="搜索与战术目标"><div class="eyebrow">PLANNING</div><div id="planning-summary"></div><div id="planning-goal"></div><div id="planning-completed"></div></section><h3 class="candidate-heading">候选动作</h3><p class="small muted">分数来自当前策略，不代表胜率。点击候选动作可单步干预。</p><div id="candidates"></div><div class="rule-line"></div><div class="eyebrow">ACTUAL RESULT</div><div id="last-result" class="result"></div></aside>

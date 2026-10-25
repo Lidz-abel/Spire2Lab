@@ -427,6 +427,10 @@ class OriginalEnvironment(UnsupportedOperations):
 
     def _install(self, raw):
         self.raw = copy.deepcopy(raw)
+        self.capabilities = {
+            **type(self).capabilities,
+            "original_pixels": "decision_images_v1" in raw.get("lab_capabilities", []),
+        }
         self.observation, self.action_map = normalize_original(
             raw,
             f"{self.epoch}:{self.sequence}",
@@ -435,6 +439,11 @@ class OriginalEnvironment(UnsupportedOperations):
 
     def observe(self):
         return self.observation
+
+    async def capture_image(self):
+        if self.pending_before is not None:
+            raise BridgeError("Cannot capture an unresolved original-game action")
+        return await self.client.capture_image(self.raw)
 
     async def step(self, action_id, decision_id, *, request_id=None):
         if decision_id != self.observation.decision_id:
