@@ -3513,7 +3513,7 @@
     }
   ],
   "heldout": {
-    "status": "not_started",
+    "status": "complete",
     "seeds": [
       2001,
       2002,
@@ -3546,6 +3546,9 @@
       2029,
       2030
     ],
-    "recipe": "config/phase2-search-selected.json"
+    "recipe": "config/phase2-search-selected.json",
+    "summary": "docs/SEARCH-V2-HELDOUT.json",
+    "freeze_commit": "f2bc4c7",
+    "episodes": 450
   }
 }

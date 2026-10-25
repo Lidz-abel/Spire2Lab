@@ -94,7 +94,7 @@ $('backend').onchange=()=>{
   $('backend-hint').textContent=original?'请在原版中准备符合条件的首回合战斗。连接会核对版本与场景，不会重置游戏。':'新建固定初始条件的模拟战斗。';
 };
 $('policy').onchange=()=>{$('planning-settings').hidden=!['rollout','hierarchical'].includes($('policy').value);};
-$('scenario-form').onsubmit=e=>{e.preventDefault();action(async()=>{live=await api('/api/session',{backend:$('backend').value,encounter:$('encounter').value,seed:Number($('seed').value),policy:$('policy').value,policy_seed:Number($('policy-seed').value),planning_config:['rollout','hierarchical'].includes($('policy').value)?{search_calls:Number($('search-budget').value),rollout_depth:Number($('rollout-depth').value)}:null});exitReplay();render(live);await refreshRuns();});};
+$('scenario-form').onsubmit=e=>{e.preventDefault();action(async()=>{live=await api('/api/session',{backend:$('backend').value,encounter:$('encounter').value,seed:Number($('seed').value),policy:$('policy').value,policy_seed:Number($('policy-seed').value),planning_config:['rollout','hierarchical'].includes($('policy').value)?{search_calls:Number($('search-budget').value),rollout_depth:Number($('rollout-depth').value),belief_proposal:'public_opening',utility_version:'terminal-hp-leaf-v2',max_wall_ms:2000}:null});exitReplay();render(live);await refreshRuns();});};
 function exitReplay(){replay=null;$('replay-controls').hidden=true;$('back-live').hidden=true;}
 $('back-live').onclick=()=>{exitReplay();render(live);};
 $('load-replay').onclick=()=>action(async()=>{

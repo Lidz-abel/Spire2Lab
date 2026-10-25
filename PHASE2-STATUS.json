@@ -1,6 +1,6 @@
 {
   "stage": 2,
-  "status": "in_progress_v2_search_selected_pending_heldout_and_live",
+  "status": "in_progress_v2_combat_verified_images_next",
   "started_at": "2026-10-24",
   "branch": "phase2/search-hierarchy",
   "phase_one_checkpoint": "f9faf0a",
@@ -10,8 +10,8 @@
     "P2-02": "implemented_simulator_tests_passed",
     "P2-03": "implemented_simulator_tests_passed",
     "P2-04": "implemented_simulator_ui_passed",
-    "P2-05": "fixed_comparison_complete_no_gain_over_heuristic",
-    "P2-06": "one_live_search_smoke_passed_images_and_broader_coverage_pending",
+    "P2-05": "v2_development_and_new_heldout_complete_limited_hp_gain_no_hierarchy_gain",
+    "P2-06": "four_v2_live_battles_passed_original_images_pending",
     "P2-07": "planned",
     "P2-08": "local_docs_and_evidence_recorded_remote_and_independent_reproduction_pending"
   },
@@ -77,21 +77,31 @@
       "selected_recipe": "config/phase2-search-selected.json",
       "tests_passed": 168,
       "tests": "artifacts/phase2-v2/full-search-tests.xml",
-      "heldout_status": "not_started"
+      "heldout_status": "complete",
+      "heldout_summary": "docs/SEARCH-V2-HELDOUT.json",
+      "freeze_commit": "f2bc4c7",
+      "actor_replays": 660,
+      "policy_replays": 42,
+      "selected_mean_heldout_hp": 77.94444444444444,
+      "heuristic_mean_heldout_hp": 77.03333333333333,
+      "live_report": "artifacts/phase2-v2/live-summary.json",
+      "live_battles": 4,
+      "live_confirmed_actions": 49,
+      "ui": "artifacts/phase2-v2/browser/report.json",
+      "original_replay_ui": "artifacts/phase2-v2/browser/replay-report.json"
     }
   },
   "limitations": [
-    "Search did not improve heldout mean final HP over heuristic in this fixed starter matrix.",
-    "Slimes often depletes particles; heuristic fallback is explicit and included in results.",
-    "Root rollout search and finite particles are not full POMCP or an exact posterior.",
-    "One new original-game search battle does not establish broad live-policy coverage.",
-    "Original images, single-act decisions and learning remain unimplemented.",
-    "Phase-two independent installation/reproduction has not been performed.",
-    "GitHub delivery remains pending after a write-authentication failure; TLS failure is historical."
+    "V2 selected search improved mean heldout HP by 0.91 on this finite starter inventory; all policies won every case.",
+    "The 1024-call condition did not beat the cheaper 256-call condition on heldout; selection was not changed after evaluation.",
+    "No additional hierarchy benefit was demonstrated; no learned agent or full-game performance claim.",
+    "Public-conditioned particles remain approximate and can deplete; fallbacks are included in reports.",
+    "Four live search battles do not establish broad original-game or single-act coverage.",
+    "Original images and single-act control are still pending; RL training belongs to stage three.",
+    "Independent phase-two installation/reproduction and GitHub delivery remain pending."
   ],
   "implementation_commit": "2f365032b082857b59647be66727a5a784812de6",
   "next_actions": [
-    "Evaluate the frozen v2 selection on preregistered seeds 2001-2030 and validate fresh original execution.",
     "Implement and validate original decision-boundary screenshot association.",
     "Implement and verify an end-to-end original single-act controller.",
     "Complete independent phase-two reproduction and verified GitHub synchronization."
@@ -101,8 +111,8 @@
     "plan": "docs/PHASE2-EXECUTION.md",
     "ordered_items": {
       "1_sampling": "verified_development_gate_29_of_975_depleted",
-      "2_search": "development_210_complete_selected_pending_new_heldout",
-      "3_original_images": "pending_after_2",
+      "2_search": "verified_660_simulator_episodes_and_four_live_battles",
+      "3_original_images": "in_progress_contract_recorded",
       "4_single_act": "pending_after_3"
     },
     "complete": false

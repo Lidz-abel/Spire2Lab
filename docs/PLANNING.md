@@ -5,7 +5,10 @@ encounters. These are project-authored, non-learning baselines. The mechanics
 engine remains the pinned upstream simulator with the lab's recorded fixes.
 The full phase-two plan and remaining gates are in [PHASE2-PLAN.md](PHASE2-PLAN.md).
 The [first fixed-budget results](PLANNING-RESULTS.md) include negative findings:
-the current planner does not outperform the heuristic baseline.
+that original planner did not outperform the heuristic baseline. The
+[revised development comparison](PLANNING-V2-RESULTS.md) selects a deeper search;
+its [new held-out evaluation](SEARCH-V2-HELDOUT.json) shows a finite mean-HP
+improvement with no additional hierarchy benefit.
 
 ## Run and inspect
 
@@ -33,7 +36,7 @@ The API exposes the same controls:
 ```bash
 curl --noproxy '*' -X POST http://127.0.0.1:8766/api/session \
   -H 'Content-Type: application/json' \
-  -d '{"encounter":"nibbits-weak","seed":1,"policy":"hierarchical","policy_seed":773,"planning_config":{"search_calls":256,"rollout_depth":12,"max_wall_ms":2000}}'
+  -d '{"encounter":"nibbits-weak","seed":1,"policy":"hierarchical","policy_seed":773,"planning_config":{"search_calls":1024,"rollout_depth":32,"max_wall_ms":2000,"belief_proposal":"public_opening","utility_version":"terminal-hp-leaf-v2"}}'
 ```
 
 This creates a paused simulator session and computes a proposal. Defaults are
@@ -92,7 +95,10 @@ executed actions or independent confidence-interval samples.
 losses as `−2`. Nonterminal utility combines remaining player HP, remaining
 enemy HP and visible unblocked intent. Hierarchical planning adds fixed tactical
 shaping for `survive_turn` or `focus_enemy`; `progress_combat` is the default.
-The exact formula is in [hierarchy.py](../sts2lab/hierarchy.py).
+The revised `terminal-hp-leaf-v2` uses HP fraction for a win, −1 for a loss,
+and an HP-scale continuation estimate with enemy HP and intent penalties. It
+removes the fixed victory jump; it is not a learned or calibrated value model.
+The exact formulas are in [hierarchy.py](../sts2lab/hierarchy.py).
 
 A goal persists for at most three actions by default. Turn changes, target
 removal, covered intent, manual overrides and terminal outcomes can end it
@@ -109,8 +115,10 @@ coverage budget or depleted belief produces an explicit heuristic fallback.
 
 [The frozen recipe](../config/phase2-planning.json) compares random, heuristic,
 flat search and hierarchical search. Both search policies use 64 and 256 model
-calls per decision, depth 8 and no wall-clock cutoff. The different interactive
-default (depth 12, 2 seconds) must not be conflated with this evaluation.
+calls per decision, depth 8 and no wall-clock cutoff. The dashboard now explicitly selects the revised proposal, HP-scale value,
+depth 32 and 1,024 calls with a 2-second cutoff. The Python configuration
+defaults remain the legacy values for compatibility. Neither interactive
+configuration is the old frozen comparison.
 
 ```bash
 # Optional small development smoke test: 18 episodes, first seed per encounter.
