@@ -138,6 +138,12 @@ class ActLab:
     def _error(self, exc):
         self.running = False
         self.error = str(exc)
+        capture_error = None
+        if self.client and getattr(self.client, "latest_state", None) is not None:
+            try:
+                self._capture_raw(self.client.latest_state)
+            except (OSError, ValueError, TypeError) as capture_exc:
+                capture_error = str(capture_exc)
         uncertain = isinstance(exc, OutcomeUnknown) or bool(
             self.client and self.client.pending
         )
@@ -149,6 +155,7 @@ class ActLab:
                 "outcome_unknown": uncertain,
                 "request_id": self.pending["request_id"] if self.pending else None,
                 "last_capture": getattr(self, "last_capture", None),
+                "capture_error": capture_error,
             },
         )
         if not uncertain:

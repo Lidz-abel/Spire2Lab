@@ -330,6 +330,67 @@ async def test_act_rejects_stale_or_unadvertised_command_without_post():
         await client.close()
 
 
+@pytest.mark.asyncio
+async def test_acknowledged_unsupported_overlay_stops_at_observed_boundary():
+    before = raw_state()
+    loading = raw_state("monster", "b" * 64)
+    loading["lab_act_ready"] = False
+    loading["lab_act_boundary"] = "execution_idle"
+    loading["lab_last_request_id"] = "r1"
+    overlay = copy.deepcopy(loading)
+    overlay.update(
+        state_type="relic_select", lab_state_token="c" * 64, lab_act_choices=[]
+    )
+    reads = iter([before, loading, overlay])
+    methods = []
+
+    def handle(request):
+        methods.append(request.method)
+        if request.method == "POST":
+            return httpx.Response(200, json={"status": "ok"})
+        return httpx.Response(200, json=next(reads))
+
+    client = ActBridge("g" * 64, transport=httpx.MockTransport(handle))
+    try:
+        result = await client.choose("choose_map_node:0", "a" * 64, request_id="r1")
+        assert result["state_type"] == "relic_select"
+        obs, mapping = normalize_act(result, "d1")
+        assert obs.unsupported_reason == "Unsupported screen: relic_select"
+        assert not obs.legal_actions and not mapping and client.pending is None
+        assert methods == ["GET", "POST", "GET", "GET"]
+        assert client.latest_state == result
+    finally:
+        await client.close()
+
+
+@pytest.mark.asyncio
+async def test_unsettled_or_busy_unsupported_screen_cannot_confirm_action():
+    from sts2lab.bridge import PendingCommand
+
+    state = raw_state("relic_select", "b" * 64)
+    state.update(lab_act_ready=False, lab_act_choices=[], lab_last_request_id="r1")
+    for settled, boundary in [
+        (False, "execution_idle"),
+        (True, None),
+        (True, "player_choice"),
+    ]:
+        state.update(lab_act_settled=settled, lab_act_boundary=boundary)
+        methods = []
+
+        def handle(request):
+            methods.append(request.method)
+            return httpx.Response(200, json=state)
+
+        client = ActBridge("g" * 64, transport=httpx.MockTransport(handle))
+        client.pending = PendingCommand("r1", "a" * 64, {"action": "lab_act"})
+        try:
+            with pytest.raises(OutcomeUnknown):
+                await client.reconcile(timeout=0.01)
+            assert client.pending is not None and methods == ["GET"]
+        finally:
+            await client.close()
+
+
 class FakeActBridge:
     pending = None
 
@@ -356,6 +417,34 @@ class FakeActBridge:
 
     async def close(self):
         pass
+
+
+@pytest.mark.asyncio
+async def test_uncertain_command_keeps_latest_private_read_without_transition(tmp_path):
+    from sts2lab.bridge import PendingCommand
+
+    class Uncertain(FakeActBridge):
+        async def choose(self, choice_id, token, request_id):
+            self.latest_state = raw_state("overlay", "c" * 64)
+            self.latest_state["private_diagnostic"] = "latest_read_only"
+            self.pending = PendingCommand(request_id, token, {"action": "lab_act"})
+            raise OutcomeUnknown("No confirmed interactive boundary")
+
+    bridge = Uncertain()
+    lab = ActLab(tmp_path / "act-runs", factory=lambda: (bridge, {"fixture": True}))
+    await lab.start("ACT001")
+    before = lab.observation
+    await lab.step(StepRequest(request_id="r1", decision_id=before.decision_id))
+    assert lab.status == "awaiting_confirmation" and lab.pending is not None
+    assert lab.observation == before and not lab.history
+    events = read_trace(lab.trace_path(lab.run_id))
+    assert not any(e["kind"] == "transition" for e in events)
+    error = events[-1]["data"]
+    assert error["outcome_unknown"] and error["capture_error"] is None
+    captured = json.loads((tmp_path / error["last_capture"]["path"]).read_text())
+    assert captured["private_diagnostic"] == "latest_read_only"
+    assert "private_diagnostic" not in canonical_json(lab.view())
+    await lab.close()
 
 
 @pytest.mark.asyncio

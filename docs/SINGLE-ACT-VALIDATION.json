@@ -38,10 +38,10 @@
     "bridge/ActContract.cs": "c4c989630e1ad955785e7ae04d8c3dfdd11fd3a5ae1af660a8b9379050574927",
     "bridge/McpMod.Act.cs": "8636951e1862a3f1954fae40a0390ea203f19a89327f7f458fd8cc5e85f41632",
     "config/single-act-v1.json": "4b1eff94b370a0591674e77ed1dc433cbafe9639251edd331aed5582a9629d2c",
-    "sts2lab/act_bridge.py": "09458c52fc2b7bdee1439e9fa204c476abdc81ce5a362e5d2c62a57e27b94c16",
+    "sts2lab/act_bridge.py": "3b5657c910b06de0abfbbda9d6eb3b124c14772a53aa1a1f7c7a014fbd7ba9c8",
     "sts2lab/act_contracts.py": "f8c1de6f04f8dac3e70e54f4e6b0b813edbd82cb5c681694f715253f182bbde2",
     "sts2lab/act_policy.py": "fc167464a34a3313c0963ae00c7de768e17706c4045e6079af1baa221579b373",
-    "sts2lab/act_runtime.py": "bf684845f68d05c75c748ec11f8a7b156b4a42449ea882575ea35682b46a9a4a",
+    "sts2lab/act_runtime.py": "d2333f7d41495c2d341911c73812ac9ff91347de2347907f2e795a624865f1e2",
     "sts2lab/act_server.py": "8aa1ef983576827700a158077dae872c7ad508aa9facc3891ff3a8b1d4dc134a",
     "sts2lab/act_replay.py": "17f9ec7c79d74c3348f0f0381fe08fabc6ed4abc103b554e41a884bd8d694531",
     "scripts/audit_act.py": "9399c1aeb7747cdd9ec321b5fb87720c4d70ed5cb447efa7a57ab8be47ca4698"
@@ -52,5 +52,11 @@
     "tests_passed": 4,
     "report": "artifacts/single-act/replay-tests.xml",
     "scope": "synthetic rejection and integrity tests; no original act audited yet"
+  },
+  "transport_followup": {
+    "original_attempts": 0,
+    "tests_passed": 26,
+    "tests": "artifacts/single-act/unsupported-tests-final.xml",
+    "scope": "explicit unsupported idle screens; preserve latest private reads on errors; no policy or Mod change"
   }
 }

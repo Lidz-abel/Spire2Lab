@@ -114,7 +114,9 @@
       "live_connection": "reverse_tunnel_unavailable_at_last_check",
       "service_check": "artifacts/single-act/service-check.json",
       "freeze_commit": "a8a861c1a7eff58d4f3d617ad7c47eb80f78d1d7",
-      "offline_audit_tests": 4
+      "offline_audit_tests": 4,
+      "transport_followup_tests": 26,
+      "latest_connection_check": "artifacts/single-act/continuation-1.json"
     }
   },
   "limitations": [

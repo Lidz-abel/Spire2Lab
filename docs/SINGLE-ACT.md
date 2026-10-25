@@ -190,3 +190,12 @@ valid but incomplete attempt writes a failing report and exits 1. A changed
 capture, invalid transition or policy mismatch raises an error; preserve that
 failure alongside the trace. The current source fingerprints must match the
 run's frozen implementation before deterministic policy replay is claimed.
+
+Transport follow-up before the first live attempt: acknowledged, settled
+`bundle_select`, `relic_select`, `crystal_sphere`, `fake_merchant` and generic
+overlay screens can be recorded as unsupported boundaries when the bridge
+explicitly reports `execution_idle`. A loading/post-combat state or busy
+overlay still cannot confirm an action. The most recent validated private
+transport read is saved on an error without becoming a public transition.
+This changes server control/evidence handling only; the Windows Mod and the
+frozen policy/seed recipe are unchanged.

@@ -10,6 +10,18 @@ from .bridge import BridgeClient, BridgeError, OutcomeUnknown, PendingCommand
 
 
 class ActBridge(BridgeClient):
+    # These are actual player-facing overlays from the pinned bridge, not its
+    # transient "unknown" or post-combat loading states. Reaching one can be
+    # acknowledged while the policy explicitly declines to act on it.
+    UNSUPPORTED_SCREENS = frozenset(
+        {"bundle_select", "relic_select", "crystal_sphere", "fake_merchant", "overlay"}
+    )
+
+    async def read_state(self):
+        state = await super().read_state()
+        self.latest_state = state  # Private transport evidence, never policy input.
+        return state
+
     async def wait_boundary(self, *, timeout=30):
         deadline = time.monotonic() + timeout
         while time.monotonic() < deadline:
@@ -115,6 +127,10 @@ class ActBridge(BridgeClient):
                         starting
                         or state.get("lab_act_ready")
                         or act.get("outcome") in ("act_complete", "lost")
+                        or (
+                            state.get("state_type") in self.UNSUPPORTED_SCREENS
+                            and state.get("lab_act_boundary") == "execution_idle"
+                        )
                     )
                 ):
                     self.pending = None
