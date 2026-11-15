@@ -1,3 +1,8 @@
+Current handoff entry: PROJECT-HANDOFF.md; this file contains historical implementation notes.
+2026-10-22 user requirement: prioritize original platform implementation; open-source references
+are allowed. Read AGENTS.md and CODE-PROVENANCE.md (O-01 through O-05). Current upstream
+dependencies remain in use; independent backend replacements have not been implemented.
+
 Goal: 完成第一阶段. NOT COMPLETE. Preserve requirements in PHASE1-STATUS.json.
 Latest checkpoint (2026-10-19): awaiting Windows inputs after repeated missing-report/tunnel checks.
 Architecture and first-phase construction plan: ARCHITECTURE-PLAN.txt.

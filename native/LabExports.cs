@@ -91,6 +91,11 @@ public static partial class NativeExports
                     Buffs(w, "powers", e.Buffs);
                     w.WriteStartArray("intents"); IntentJson(w, e.CurrentIntent, e, s);
                     if (e.SecondaryIntent is { } secondary) IntentJson(w, secondary, e, s);
+                    // v0.107.1 displays Attack + Defend for Nibbit's selected Slice.
+                    // The pinned EnemyAI already applies its block but omits this
+                    // secondary display entry. Project only; never mutate the AI.
+                    else if (e.DefId == KE.Nibbit && e.CurrentIntent.Type == IntentType.Attack && e.MoveIndex % 3 == 1)
+                        IntentJson(w, new Intent(IntentType.Defend, 0), e, s);
                     w.WriteEndArray(); w.WriteEndObject();
                 }
                 w.WriteEndArray();

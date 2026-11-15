@@ -1,6 +1,7 @@
 """Acceptance bookkeeping tests. All synthetic evidence remains in temporary dirs."""
 
 import json
+import hashlib
 from pathlib import Path
 import pytest
 from fastapi.testclient import TestClient
@@ -63,6 +64,71 @@ def windows_stub(root):
     return report, build
 
 
+def release_stub(root):
+    report, build = windows_stub(root)
+    report["assemblies"]["sts2.dll"].update(
+        file_version="0.1.0.0", product_version="0.1.0+" + "a" * 40
+    )
+    write_json(root / "artifacts/windows/report.json", report)
+    build["reference_report_sha256"] = a.sha(root / "artifacts/windows/report.json")
+    write_json(root / "artifacts/windows/mod/build.json", build)
+    binary = (root / "artifacts/windows/assemblies/sts2.dll").read_bytes()
+    release = {
+        "version": "v0.107.1",
+        "commit": "a" * 8,
+        "date": "2026-06-18T15:43:56-07:00",
+        "branch": "synthetic-release",
+        "main_assembly_hash": int.from_bytes(
+            hashlib.sha1(binary).digest()[:4], "little", signed=True
+        ),
+    }
+    write_json(root / "artifacts/windows/release_info.json", release)
+    return release
+
+
+def test_release_file_binds_generic_dll_version_without_rewriting_reports(tmp_path):
+    root = project(tmp_path)
+    release_stub(root)
+    paths = [
+        root / "artifacts/windows" / name for name in ("report.json", "mod/build.json")
+    ]
+    original = [p.read_bytes() for p in paths]
+    dependencies = {}
+
+    def track(path):
+        dependencies[str(path.relative_to(root))] = a.sha(path)
+        return a.sha(path)
+
+    build = a.verify_windows_bundle(root, track)
+    assert build["semantic_game_version_verified"] is True
+    assert build["release_verification"]["version"] == "0.107.1"
+    assert "artifacts/windows/release_info.json" in dependencies
+    assert [p.read_bytes() for p in paths] == original
+
+
+@pytest.mark.parametrize(
+    "field,value,error",
+    [
+        ("version", "v0.107.10", "version differs"),
+        ("version", "v0.107.1-beta", "version differs"),
+        ("commit", "bbbbbbbb", "commit does not match"),
+        ("commit", "a", "commit does not match"),
+        ("main_assembly_hash", 0, "hash differs"),
+        ("main_assembly_hash", True, "signed 32-bit"),
+        ("main_assembly_hash", 2**32, "signed 32-bit"),
+        ("date", "2026-06-18", "timezone"),
+        ("branch", None, "branch is missing"),
+    ],
+)
+def test_mismatched_release_evidence_is_rejected(tmp_path, field, value, error):
+    root = project(tmp_path)
+    release = release_stub(root)
+    release[field] = value
+    write_json(root / "artifacts/windows/release_info.json", release)
+    with pytest.raises(ValueError, match=error):
+        a.verify_windows_bundle(root, a.sha)
+
+
 def test_missing_windows_evidence_cannot_pass(tmp_path):
     root = project(tmp_path)
     report = a.audit_acceptance(root / "index.json", root=root)
@@ -86,9 +152,42 @@ def test_target_label_is_not_actual_version_evidence(tmp_path):
         a.verify_windows_bundle(root, a.sha)
 
 
-def test_complete_matrix_is_cached_only_until_evidence_changes(tmp_path, monkeypatch):
+@pytest.mark.parametrize("change", ["edit", "add", "remove"])
+def test_bridge_extension_inventory_and_content_are_bound(tmp_path, change):
     root = project(tmp_path)
-    windows_stub(root)
+    _, build = windows_stub(root)
+    build["extension_sources"] = {
+        str(p.relative_to(root)): a.sha(p) for p in (root / "bridge").glob("*.cs")
+    }
+    write_json(root / "artifacts/windows/mod/build.json", build)
+    tracked = []
+
+    def track(path):
+        tracked.append(path)
+        return a.sha(path)
+
+    a.verify_windows_bundle(root, track)
+    contract = root / "bridge/ScenarioContract.cs"
+    assert contract in tracked
+    if change == "edit":
+        contract.write_text(contract.read_text() + "\n// changed\n")
+    elif change == "add":
+        (root / "bridge/Unexpected.cs").write_text("// unexpected source")
+    else:
+        contract.unlink()
+    with pytest.raises(ValueError, match="Bridge extension"):
+        a.verify_windows_bundle(root, a.sha)
+
+
+@pytest.mark.parametrize("with_release_info", [False, True])
+def test_complete_matrix_is_cached_only_until_evidence_changes(
+    tmp_path, monkeypatch, with_release_info
+):
+    root = project(tmp_path)
+    if with_release_info:
+        release_stub(root)
+    else:
+        windows_stub(root)
     suite = json.loads((root / "config/acceptance.json").read_text())
     expected = a.expected_cases(suite)
     index = {
@@ -125,6 +224,27 @@ def test_complete_matrix_is_cached_only_until_evidence_changes(tmp_path, monkeyp
     status = root / "status.json"
     write_json(status, report)
     assert a.read_acceptance_status(status, root=root)["verified"] is True
+    vocabulary = root / "config/content-v1.json"
+    original_vocabulary = vocabulary.read_bytes()
+    vocabulary.write_bytes(original_vocabulary + b"\n")
+    assert a.read_acceptance_status(status, root=root)["status"] == "stale_evidence"
+    vocabulary.write_bytes(original_vocabulary)
+    terminal_source = root / "native/LabCombat.cs"
+    terminal_bytes = terminal_source.read_bytes()
+    terminal_source.write_bytes(terminal_bytes + b"\n")
+    assert a.read_acceptance_status(status, root=root)["status"] == "stale_evidence"
+    terminal_source.write_bytes(terminal_bytes)
+    new_native_source = root / "native/Unexpected.cs"
+    new_native_source.write_text("// changed native source inventory")
+    assert a.read_acceptance_status(status, root=root)["status"] == "invalid_report"
+    new_native_source.unlink()
+    assert a.read_acceptance_status(status, root=root)["verified"] is True
+    if with_release_info:
+        release_path = root / "artifacts/windows/release_info.json"
+        previous = release_path.read_bytes()
+        release_path.write_text("{}")
+        assert a.read_acceptance_status(status, root=root)["status"] == "stale_evidence"
+        release_path.write_bytes(previous)
     changed = root / report["cases"][0]["capture_files"][0]
     changed.write_text("changed after audit")
     assert a.read_acceptance_status(status, root=root)["status"] == "stale_evidence"

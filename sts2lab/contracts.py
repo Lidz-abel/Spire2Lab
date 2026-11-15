@@ -7,7 +7,7 @@ import json
 from typing import Literal
 from pydantic import BaseModel, ConfigDict, Field
 
-PROTOCOL_VERSION = "0.2.0"
+PROTOCOL_VERSION = "0.3.0"
 
 
 class StrictModel(BaseModel):
@@ -32,7 +32,6 @@ class Player(StrictModel):
 class Card(StrictModel):
     # References identify one item in one decision, never a persistent hidden instance.
     ref: str = ""
-    native_id: int
     type_id: str
     name: str
     card_type: str

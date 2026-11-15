@@ -19,7 +19,12 @@ def test_initial_conditions_and_hidden_information_boundary():
         assert obs.player.hp == 80
         assert len(obs.hand) + len(obs.draw_pile) == 10
         assert [r.type_id for r in obs.relics] == ["BurningBlood"]
-        assert all(c.native_id != 10001 for c in obs.hand + obs.draw_pile)
+        assert {c.type_id for c in obs.hand + obs.draw_pile} == {
+            "STRIKE_IRONCLAD",
+            "DEFEND_IRONCLAD",
+            "BASH",
+        }
+        assert "native_id" not in obs.model_dump_json()
         assert len({c.ref for c in obs.hand}) == len(obs.hand)
         assert "debug_seed" not in obs.model_dump_json()
         assert "debug_draw_order" not in obs.model_dump_json()
@@ -63,7 +68,11 @@ def test_slime_visible_status_intent_survives_semantic_and_training_encoding():
     env = CombatEnv("slimes-weak")
     try:
         obs, _ = env.reset(seed=1)
-        row = next(row for row in obs["enemies"] if row[4] == 6)
+        row = next(
+            row
+            for row in obs["enemies"]
+            if row[4] == env.vocabulary.token("intents", "StatusCard")
+        )
         assert list(row[5:8]) == [2, 0, 0]
     finally:
         env.close()
@@ -83,6 +92,29 @@ def test_exact_clone_restore_and_branch_isolation():
         assert semantic_state(restored) == initial
 
 
+def test_nibbit_slice_exposes_observed_defend_intent_without_changing_effects():
+    # Minimal public facts from the local v0.107.1 capture after Bash, Strike,
+    # end-turn (2026-10-23). Private raw captures stay outside the repository.
+    with Simulator("nibbits-weak", 1) as env:
+        policy = Policy("heuristic", 773)
+        for _ in range(3):
+            obs = env.observe()
+            env.step(policy.decide(obs).selected_action_id, obs.decision_id)
+        obs = env.observe()
+        assert obs.turn == 1 and obs.player.hp == 68
+        enemy = obs.enemies[0]
+        assert enemy.hp == 25 and enemy.block == 0
+        assert [i.type for i in enemy.intents] == ["Attack", "Defend"]
+        assert enemy.intents[0].magnitude == 6
+        assert enemy.intents[1].magnitude is None and enemy.intents[1].hits is None
+        assert not enemy.intents[1].deals_damage
+        # Merely observing must not apply the announced effect.
+        assert env.observe() == obs
+        after = env.step("end_turn", obs.decision_id).observation
+        assert after.player.hp == 62 and after.enemies[0].block == 5
+        assert [i.type for i in after.enemies[0].intents] == ["Buff"]
+
+
 @pytest.mark.parametrize("encounter", CONFIG["encounters"])
 @pytest.mark.parametrize("policy_name", ["random", "heuristic"])
 def test_complete_legal_battle(encounter, policy_name):
@@ -97,6 +129,76 @@ def test_complete_legal_battle(encounter, policy_name):
             obs = env.step(decision.selected_action_id, obs.decision_id).observation
         assert obs.outcome in ("won", "lost")
         assert not obs.legal_actions
+
+
+def test_starter_victory_includes_one_relic_heal_and_survives_restore():
+    # Live seed-1 Nibbit trace: 68 HP before winning Strike, 74 at rewards.
+    with Simulator("nibbits-weak", 1) as env:
+        policy = Policy("heuristic", 773)
+        for _ in range(10):
+            before = env.observe()
+            env.step(policy.decide(before).selected_action_id, before.decision_id)
+        before = env.observe()
+        assert before.player.hp == 68 and before.outcome == "ongoing"
+        with env.snapshot() as pre_win:
+            result = env.step(
+                policy.decide(before).selected_action_id, before.decision_id
+            )
+            assert result.terminated and result.observation.outcome == "won"
+            assert result.observation.player.hp == 74
+            assert result.facts["player_hp_delta"] == 6
+            assert env.observe() == result.observation
+            with env.snapshot() as terminal:
+                assert terminal.observe().player.hp == 74
+                env.restore(terminal)
+                assert env.observe().player.hp == 74
+                with pytest.raises(ValueError, match="illegal_action"):
+                    env.step("end_turn", env.decision_id)
+            restored = env.restore(pre_win)
+            again = env.step(
+                policy.decide(restored).selected_action_id, restored.decision_id
+            )
+            assert again.observation.player.hp == 74
+
+
+def test_random_victory_clears_block_only_after_winning_action():
+    # Original seed-1 random policy: 64 HP and 5 block before the final Strike.
+    with Simulator("nibbits-weak", 1) as env:
+        policy = Policy("random", 773)
+        for _ in range(16):
+            before = env.observe()
+            env.step(policy.decide(before).selected_action_id, before.decision_id)
+        before = env.observe()
+        assert before.player.hp == 64 and before.player.block == 5
+        result = env.step(policy.decide(before).selected_action_id, before.decision_id)
+        assert result.observation.outcome == "won"
+        assert (
+            result.observation.player.hp == 70 and result.observation.player.block == 0
+        )
+
+
+def test_starter_defeat_never_pays_victory_heal():
+    with Simulator("nibbits-weak", 1) as env:
+        while env.observe().outcome == "ongoing":
+            env.step("end_turn", env.decision_id)
+        assert env.observe().outcome == "lost" and env.observe().player.hp <= 0
+
+
+def test_starter_combat_powers_expire_at_victory():
+    # Original Sludge Spinner seed-1 random trace retains its combat power until
+    # the winning Strike, then reports an empty power list at rewards.
+    with Simulator("sludge-spinner", 1) as env:
+        policy = Policy("random", 773)
+        for _ in range(14):
+            before = env.observe()
+            env.step(policy.decide(before).selected_action_id, before.decision_id)
+        before = env.observe()
+        assert before.player.hp == 69 and before.player.powers
+        result = env.step(policy.decide(before).selected_action_id, before.decision_id)
+        assert result.observation.outcome == "won"
+        assert (
+            result.observation.player.hp == 75 and not result.observation.player.powers
+        )
 
 
 def test_gym_contract_and_masks():

@@ -1,56 +1,364 @@
 {
-  "goal": "完成第一阶段",
+  "goal": "完成第一阶段所有的内容",
   "project_name": "Spire2Lab",
   "repository_slug": "Spire2Lab",
-  "status": "awaiting_windows_input",
+  "roadmap": {
+    "version": "three-stage-v1",
+    "updated_at": "2026-10-24",
+    "plan": "ARCHITECTURE-PLAN.txt",
+    "stages": [
+      {
+        "id": 1,
+        "title": "可信实验平台",
+        "status": "local_technical_acceptance_passed_remote_delivery_pending"
+      },
+      {
+        "id": 2,
+        "title": "搜索与分层决策",
+        "status": "in_progress_separate_branch_see_PHASE2_STATUS"
+      },
+      {
+        "id": 3,
+        "title": "高效训练与原版评测",
+        "status": "planned"
+      }
+    ],
+    "phase_one_milestones": [
+      {
+        "id": "P1-01",
+        "title": "版本与来源冻结",
+        "status": "verified_installed_release_and_pinned_sources",
+        "depends_on": []
+      },
+      {
+        "id": "P1-02",
+        "title": "自主平台核心与可替换环境接口",
+        "status": "verified_shared_protocol_and_finite_backend_boundaries",
+        "depends_on": []
+      },
+      {
+        "id": "P1-03",
+        "title": "最小实机闭环",
+        "status": "verified_live_complete_battles_and_controlled_response_loss_recovery",
+        "depends_on": [
+          "P1-01"
+        ]
+      },
+      {
+        "id": "P1-04",
+        "title": "可重复场景与随机性对齐",
+        "status": "verified_declared_openings_and_60_finite_public_trajectories_not_global_rng_equivalence",
+        "depends_on": [
+          "P1-03"
+        ],
+        "preparation_precedes": "P1-03 scoped dashboard battle acceptance"
+      },
+      {
+        "id": "P1-05",
+        "title": "面板与决策记录验收",
+        "status": "verified_live_manual_auto_pause_export_readonly_replay_desktop_mobile",
+        "depends_on": [
+          "P1-02",
+          "P1-03"
+        ]
+      },
+      {
+        "id": "P1-06",
+        "title": "搜索训练接口与复现能力验收",
+        "status": "verified_interfaces_worker_reproduction_and_same_host_independent_rebuild",
+        "depends_on": [
+          "P1-02"
+        ]
+      },
+      {
+        "id": "P1-07",
+        "title": "原版参考集验收",
+        "status": "verified_60_independent_cases_plus_loss_probe_all_9_boundary_categories",
+        "depends_on": [
+          "P1-03",
+          "P1-04",
+          "P1-05",
+          "P1-06"
+        ]
+      },
+      {
+        "id": "P1-08",
+        "title": "第一阶段交付",
+        "status": "local_package_documentation_and_evidence_ready_remote_sync_pending",
+        "depends_on": [
+          "P1-01",
+          "P1-02",
+          "P1-03",
+          "P1-04",
+          "P1-05",
+          "P1-06",
+          "P1-07"
+        ]
+      }
+    ],
+    "first_execution_unit": [
+      "P1-01",
+      "P1-03"
+    ],
+    "linux_work_without_windows_input": [
+      "P1-02",
+      "P1-06"
+    ],
+    "original_visuals": {
+      "stage_one": "reserve_run_and_decision_associations",
+      "stage_two": "capture_decision_boundary_screenshots",
+      "stage_three": "synchronize_screenshots_and_optional_low_fps_video",
+      "vision_only_policy": "optional_separate_research"
+    }
+  },
+  "implementation_direction": {
+    "requested_at": "2026-10-22",
+    "user_requirement": "平台尽可能原创，可以参考开源实现",
+    "policy": "project_authored_core_with_attributed_references",
+    "plan": "CODE-PROVENANCE.md",
+    "current_backend": "upstream_simulator_bindings_data_and_mod_with_project_extensions",
+    "independent_backend_migration": "planned_not_implemented",
+    "phase_one_scope": "existing_finite_scope_and_live_game_acceptance_preserved"
+  },
+  "status": "locally_validated_remote_delivery_pending",
   "requirements": {
-    "versioned_semantic_protocol": "implemented_v0.2.0",
+    "versioned_semantic_protocol": "implemented_v0.3.0_public_card_ids_semantic_only",
     "native_linux_simulator": "built_and_smoke_tested",
     "explicit_starter_deck_and_relic": "tested",
     "random_and_heuristic_policies": "tested",
-    "live_dashboard_and_manual_step": "browser_smoke_tested",
-    "automatic_control_and_replay_ui": "browser_verified_desktop_and_mobile",
+    "live_dashboard_and_manual_step": "verified_real_game_and_simulator",
+    "automatic_control_and_replay_ui": "verified_live_auto_pause_manual_export_replay_desktop_mobile",
     "trace_integrity_and_reexecution": "tested",
     "hidden_information_boundary": "starter_scope_tested",
     "snapshot_restore_and_branch_isolation": "tested",
-    "gymnasium_interface": "tested_combat_entities_v2",
-    "process_isolated_vector_sampling": "tested_two_workers",
-    "windows_game_version_and_bridge": "awaiting_windows_reference_files",
-    "real_game_adapter": "canonical_mapping_async_runtime_and_browser_tested_with_synthetic_transport_not_live",
-    "real_game_one_step": "not_verified",
-    "real_game_full_battle": "not_verified",
-    "cross_backend_step_parity": "not_verified",
-    "cross_backend_comparison_tool": "implemented_with_capture_hash_checks_and_candidate_reexecution_no_local_live_evidence",
-    "bridge_source_hooks": "prepare_only_verified_not_compiled",
+    "gymnasium_interface": "tested_combat_entities_v3_project_content_vocabulary",
+    "process_isolated_vector_sampling": "gym_two_workers_tested_and_semantic_sampling_one_two_four_workers_reproducible",
+    "windows_game_version_and_bridge": "public_build_23811903_release_v0_107_1_commit_and_assembly_hash_verified_runtime_sha256_matches",
+    "windows_ssh_command": "report_and_three_assemblies_received_live_gets_verified_through_18526_to_windows_21526",
+    "real_game_adapter": "live_scoped_complete_battles_and_browser_control_boundaries_verified",
+    "real_game_one_step": "live_card_and_end_turn_settlement_confirmed_with_current_mod",
+    "real_game_full_battle": "60_fixed_cases_and_separate_loss_probe_complete_and_independently_replayed",
+    "cross_backend_step_parity": "60_of_60_fixed_cases_and_all_nine_boundary_categories_verified_current_build",
+    "cross_backend_comparison_tool": "capture_hash_checks_and_independent_reexecution_exercised_on_complete_original_traces",
+    "bridge_source_hooks": "current_mod_execution_idle_gate_live_verified",
     "native_atomic_publish": "staged_binary_replacement_exercised",
-    "windows_install_script": "corrected_pinned_mod_layout_not_executed_on_windows",
+    "windows_install_script": "successful_four_file_install_and_backup_directory_user_reported_on_windows_failure_and_rollback_paths_mock_tested",
     "pinned_source_integrity": "archive_hash_and_1417_source_files_verified_build_and_first_load_guarded",
-    "bootstrap": "current_workspace_install_verify_build_test_completed",
+    "bootstrap": "independent_cold_install_at_2c25a99_upgraded_and_rebuilt_at_4f8447b_132_passed_one_optional_powershell_skip_300_trajectories_match",
     "native_build_history": "previous_binary_and_manifest_archive_verified",
     "unknown_action_archive": "tested_and_browser_verified_no_game_action_or_fabricated_outcome",
-    "reference_candidate_generation": "declared_seed_public_and_private_opening_checks_no_search_no_state_overrides_component_tested_live_pending",
-    "scoped_reference_acceptance_gate": "implemented_60_case_matrix_and_boundary_coverage_no_live_cases_available"
+    "reference_candidate_generation": "all_61_immutable_original_captures_corroborated_and_candidates_independently_reexecuted",
+    "scoped_reference_acceptance_gate": "verified_scope_60_required_cases_plus_one_probe",
+    "sampling_scaling_measurement": "commit_4f8447b_nine_rounds_2700_episodes_43875_decisions_public_trajectories_match_shared_host",
+    "windows_bridge_listener": "21526_serving_root_and_main_menu_through_linux_18526_tunnel_protocol_1_reference_fingerprint_matches",
+    "windows_main_menu_state": "corrected_mutable_model_mod_fingerprint_profile2_verified_then_two_successful_seed1_openings",
+    "readonly_bridge_check": "implemented_live_main_menu_passed_synthetic_failure_tests_passed_no_combat_actions",
+    "original_release_binding": "release_info_exact_version_commit_prefix_sha1_int32_compatibility_hash_and_full_dll_sha256_verified",
+    "controlled_scenario_staging": "all_60_independent_declared_openings_verified_with_repeated_nibbit_seed1_check",
+    "shared_environment_contract": "observe_step_close_and_optional_operations_declared_native_reset_and_no_io_original_refusals_tested",
+    "content_encoding_boundary": "native_id_removed_from_public_observations_semantic_benchmark_config_and_project_tokens_tested_old_versions_explicitly_refused",
+    "branch_provenance": "immutable_branch_id_parent_branch_parent_decision_and_operation_tested_recorded_in_session_metadata_not_observations_original_backend_none",
+    "training_transition_boundary": "real_simulator_invalid_noop_filtering_attempt_limit_truncation_and_win_loss_precedence_tested",
+    "policy_version_records": "existing_random_v1_and_heuristic_v1_decision_records_verified_in_saved_trace",
+    "original_settlement_boundary": "current_mod_runtime_fingerprint_execution_idle_and_complete_battle_capture_verified",
+    "original_response_loss": "actual_game_post_with_injected_lost_response_get_only_reconciliation_no_duplicate_action"
   },
   "evidence": {
-    "local_tests": "artifacts/lab-tests.xml (43 passed)",
+    "local_tests": "artifacts/lab-tests.xml (47 passed, 1 existing dependency deprecation warning; 2026-10-22)",
     "browser_checks": "artifacts/browser-checks.json (6 passed, 0 JavaScript errors)",
     "development_benchmark": "artifacts/benchmark-development.json (60 complete episodes, 980 steps)",
     "upstream_csharp": "artifacts/upstream-tests/upstream.trx (4801 passed, 1 skipped)",
     "upstream_python": "519 passed, 7 skipped, 1 known failure: test_display_amount_powers_are_compared_by_presence",
     "original_browser_contract": "artifacts/original-dashboard-synthetic/report.json (5 checks, synthetic transport only)",
-    "native_library_sha256": "90f73b83758827c8f8377b35f5ea19f1f59fc8c4a6b72ed01be02b0500f6a65d",
+    "native_library_sha256": "1ef77a847010c7c0590f2c610da26c711dc5d636649df5afea6f61e9c64a005d",
     "bootstrap": "artifacts/bootstrap-check.json",
-    "windows_onboarding_package": "artifacts/installers/sts2-lab-windows.zip (scripts only, not executed on Windows)",
-    "acceptance_audit": "artifacts/acceptance/status.json (incomplete; 60 original-game cases missing)"
+    "windows_onboarding_package": "artifacts/installers/sts2-lab-windows.zip (scripts only; includes GameBridgePort support and existing-installation migration instructions; latest changes tested with mocked transport, Windows migration not verified)",
+    "acceptance_audit": "artifacts/acceptance/status.json (release gate passes; empty cases index; all 60 reference battles and boundary coverage missing)",
+    "readme_branding": "artifacts/branding/structure-check.json and readme-render-check.json (3 SVGs, 30 local links/anchors, 4 local theme/viewport previews; not GitHub-hosted rendering)",
+    "readme_example": "artifacts/branding/python-example.txt (one real native simulator action, verified 2026-10-22)",
+    "sampling_benchmark": "artifacts/sampling-development.json (1/2/4 workers, 3 repeats, 300 episodes per round; source and hardware recorded; simulator only)",
+    "windows_script_checks": "tests/windows_scripts.ps1 via tests/test_windows_scripts.py (PowerShell 7.6.6 on Linux; synthetic files and mocked SSH/SCP/Steam; not Windows execution)",
+    "fresh_checkout": "artifacts/repro-check.json and artifacts/repro-bootstrap.log (commit a2c29eb; 46 passed, 1 optional PowerShell skip; 60 public trajectories match original build; same host only)",
+    "dashboard_health": "artifacts/dashboard-health.json (loopback 8765 serving, original_game_verified false, checked 2026-10-22)",
+    "windows_first_attempt": "User terminal transcript on 2026-10-22: Steam build 23811903 detected; connection closed after SSH password prompt; no version report or assemblies received",
+    "ssh_preflight_checks": "artifacts/windows-helper-tests.xml (mocked transport failure classification and local report retention; actual local POSIX shell checkout/directory checks; no live Windows SSH authentication evidence)",
+    "windows_ssh_probe": "User Windows client transcript on 2026-10-22: SPIRE2LAB_SSH_OK, exec request accepted, Exit status 0; proves that login and remote command only, not SCP or forwarding; earlier closure cause unknown",
+    "windows_references": "artifacts/windows/report.json and reference-verification.json (Steam public build 23811903; three received DLL SHA-256 hashes and sizes match; semantic version unverified)",
+    "bridge_build": "artifacts/windows/bridge-build.log and mod/build.json (SDK 9.0.319; build succeeded with 0 errors and 1 upstream CS8602 warning; compiled does not mean in-game verified)",
+    "bridge_metadata": "artifacts/windows/assembly-metadata-check.json (CardModel.Enchantment public instance getter exists; metadata inspection only, game code not executed)",
+    "bridge_related_tests": "artifacts/windows/bridge-integration-tests.xml (16 passed, 1 existing dependency warning; transport, adapter and installer checks use synthetic or upstream fixtures, not live Windows gameplay)",
+    "bridge_network_probe": "Reverse listener 127.0.0.1:18526 present; post-install-probe.json and post-install-greeting-probe.json record GET timeouts while game was not running, no live state obtained",
+    "windows_installation": "User Windows transcript on 2026-10-22: STS2_MCP.dll, mod_manifest.json, LICENSE.txt and build.json downloaded; installation succeeded and backup directory created; no runtime validation yet",
+    "mod_consent_exit": "artifacts/windows/mod-startup-calls.json: read-only IL call-target inspection shows NConfirmModLoadingPopup.OnYesButtonPressed saves consent settings then calls NGame.Quit; first-enable exit matches this flow",
+    "reported_release": "artifacts/windows/user-reported-release.json (user main-menu text v0.107.1 and 2026.06.18; matches configured target, no runtime fingerprint or machine-verified release capture)",
+    "post_restart_diagnostics": "artifacts/windows/restart-probe.json (both tunneled GETs timed out); user reported local requests timed out too; local-listener-timeout.json records listener 127.0.0.1:15526 owned by PID 44400 and explicit Proxy=null GET timeout; later owner identification is recorded in windows_port_conflict",
+    "windows_port_conflict": "artifacts/windows/port-owner-conflict.json (user transcript: listener PID 44400 is Code.exe; Mod settings injection and game main menu logged, no HTTP startup line supplied; exact VS Code forwarding entry and bind error unverified)",
+    "port_migration_tests": "artifacts/windows/port-migration-tests.xml (1 pytest harness passed; PowerShell 7.6.6 on Linux, mocked SSH/SCP/Steam; default/custom tunnel mappings, invalid/conflicting port rejection, installer and rollback preserve port config; not live Windows evidence)",
+    "port_migration_attempt": "artifacts/windows/port-migration-blocked.json (user PowerShell transcript: 21526 already listening; supplied script throws before reading, backing up or writing Mod config; PID/process identity and current config unknown)",
+    "both_bridge_port_owners": "artifacts/windows/both-ports-owned-by-vscode.json (user Windows transcript: 127.0.0.1 ports 15526 and 21526 both owned by Code.exe PID 44400; user confirms game is closed; exact forwarding entries and release not verified)",
+    "windows_ports_released": "artifacts/windows/ports-released-check.json (user reports no output from Windows 15526/21526 listener check; direct Linux check shows dashboard healthy and no 18526 listener; Mod config and live HTTP not yet verified)",
+    "windows_main_menu_http": "artifacts/windows/local-main-menu-user-transcript.json and local-main-menu-check.json (user output: port 21526 config, root status ok, menu/main, lab_protocol 1; runtime hash matches uploaded DLL, report and bridge build; not server-captured or battle evidence)",
+    "live_tunnel_main_menu": "artifacts/windows/tunnel-main-menu-20261022T165341.json (direct Linux BridgeClient: root plus five main-menu reads; protocol/fingerprint/stability passed; GET only)",
+    "reusable_bridge_check": "artifacts/windows/bridge-check-20261022T165923467279.json (scripts/check_bridge.py: seven checks passed using live transport; no combat or semantic release certification)",
+    "readonly_bridge_tests": "artifacts/windows/bridge-check-tests.xml (12 passed: bridge transport and diagnostic checks; synthetic HTTP only)",
+    "release_metadata_inspection": "artifacts/windows/release-metadata-inspection.json (read-only PE metadata/call-target inspection: ReleaseInfoManager loads release_info.json; ReleaseInfo defines Version, Commit, Date, Branch and MainAssemblyHash; file not yet received)",
+    "profiles_readonly": "artifacts/windows/profiles-readonly.json (live GET only: current profile 1 has data; slots 2 and 3 report no data; no profile switch or gameplay action)",
+    "installed_release": "artifacts/windows/release_info.json and release-verification.json (v0.107.1; commit 59260271 matches DLL product commit; main_assembly_hash -1555940892 recomputed; SHA-256 linked to original Windows report and Mod references)",
+    "assembly_hash_format": "artifacts/windows/assembly-hasher-inspection.json (read-only metadata: SHA1.HashData followed by BinaryPrimitives.ReadInt32LittleEndian; game code not executed)",
+    "release_gate_tests": "artifacts/windows/release-gate-tests.xml (16 passed, 1 existing dependency warning; synthetic release files/assemblies only; incorrect version, commit, checksum, date, branch and stale cache refused)",
+    "experiment_profile": "artifacts/windows/navigation-20261022T171304286536.json (live UI switch to previously empty profile 2; profile 1 not used for the test run)",
+    "live_opening_scope_refusal": "artifacts/windows/navigation-20261022T171541715347.json (Ironclad A0, starter deck/relic, 80 HP, 99 gold, Nibbit; floor 1 differs from required floor 2; normal adapter refuses benchmark attachment)",
+    "live_one_step_probe": "artifacts/windows/one-step-probe-20261022T171722625580.json (nine checks passed: one Defend, energy 3 to 2, block 0 to 5, HP unchanged, hand/discard changes, settled state and matching request acknowledgment; explicit benchmark_eligible false)",
+    "scenario_staging_design": "docs/SCENARIO-STAGING.md; local API signature evidence in artifacts/windows/scenario-api.json and scenario-api-extra.json; initial endpoint and client drafts now in worktree, not game-verified",
+    "scenario_staging_build": "artifacts/windows/scenario-build-3.log and mod/build.json (0 errors, 1 upstream CS8602 warning; three extension sources fingerprinted; previous build archived in mod-history; new Mod not installed or exercised in Windows)",
+    "scenario_staging_failed_builds": "artifacts/windows/scenario-build-1.log and scenario-build-2.log (retained failed compilation attempts before the successful third build)",
+    "scenario_staging_component_tests": "artifacts/windows/scenario-component-tests.xml (57 passed, 1 existing dependency warning; includes synthetic transport, recovery, provenance and compiled C# input contract checks)",
+    "scenario_staging_regression_tests": "artifacts/windows/scenario-regression-tests.xml (92 passed, 1 existing dependency warning; no additional original-game gameplay evidence)",
+    "scenario_staging_preinstall": "artifacts/windows/staging-preinstall-20261022T174839985791.json (live read-only GET: old Mod has no new fingerprint/capability, floor-1 battle still active; installer steps sent to user)",
+    "environment_contract_tests": "artifacts/environment-contract-tests.xml (33 passed, 1 existing dependency warning; real native reset/branch preservation and synthetic no-I/O original capability refusal)",
+    "environment_contract_regression": "artifacts/environment-contract-regression-tests.xml (100 passed, 1 existing dependency warning; no new live gameplay evidence)",
+    "dashboard_service_reload": "artifacts/windows/dashboard-restart-20261022T175710789348.json (healthy paused simulator after restart; previous native session archived without game action; this service loaded commit 650f3a4 before later lifecycle edits)",
+    "staging_install_recheck": "artifacts/windows/staging-install-check-20261022T180129896726.json (live GET still reports old Mod and existing battle; no lab_prepare sent)",
+    "vocabulary_component_tests": "artifacts/vocabulary-component-tests.xml (58 passed, 1 existing dependency warning)",
+    "vocabulary_regression_tests": "artifacts/vocabulary-regression-tests.xml (114 passed, 1 existing dependency warning)",
+    "vocabulary_migration": "artifacts/vocabulary-migration-before.json and vocabulary-migration-after.json (120 fixed simulator battles, 2180 decisions; public trajectories/actions/rewards/termination match after excluding only removed IDs and protocol version; no original-game evidence)",
+    "protocol_03_browser": "artifacts/browser-checks.json (6 passed, no JS errors) and artifacts/original-dashboard-synthetic/report.json (5 passed, no JS errors, synthetic transport); previous reports archived under artifacts/browser-history/20261022T181009567473",
+    "protocol_03_service": "artifacts/protocol-migration-restart-20261022T181009567473.json (old native session archived before restart; PID 127906 serves the new protocol; no Windows actions)",
+    "protocol_03_sampling": "artifacts/sampling-protocol03-development.json (commit 2c25a99, clean source at measurement; 1/2/4 workers, 3 repeats, 300 cases per round; 2700 episodes and 44100 decisions; all public trajectory hashes match)",
+    "protocol_03_cold_install": "artifacts/repro-2c25a99-bootstrap-resumed.log and repro-2c25a99-bootstrap-resumed-result.json (exit 0 after network recovery; fresh venv, independent caches, downloaded SDK and native build; no copied runtime dependencies; 113 passed, 1 optional PowerShell skip, 1 existing dependency warning). Two earlier TLS failure logs/results preserved under artifacts/repro-2c25a99-bootstrap*",
+    "latest_windows_install_check": "artifacts/windows/settlement-install-readiness.json (read-only GET still reports mutable-model Mod 93e1cc5c..., current Nibbit battle; no additional game actions; new settlement build not loaded)",
+    "protocol_03_fresh_build_comparison": "artifacts/repro-2c25a99-comparison.json (same host; 300 simulator runs, 60 unique cases, 4900 decisions; per-case records match excluding only library_sha256; native binaries differ, no bitwise reproducibility claim; tracked source unchanged, report dirty flag reflects untracked .repro-cache/)",
+    "interface_boundary_tests": "artifacts/interface-boundary-tests.xml (30 passed, 1 existing dependency warning; native lineage, Gym transition boundary, stored policy versions and synthetic original transport)",
+    "interface_boundary_regression": "artifacts/interface-boundary-regression-tests.xml (123 passed, 1 existing Starlette/httpx deprecation warning; no live-game battle validation)",
+    "interface_boundary_acceptance": "artifacts/acceptance/interface-boundary-status.json (expected exit 1; errors empty; all 60 original battles and all 9 coverage types missing)",
+    "interface_service": "artifacts/interface-service-restart.json (old finished simulator session closed on server shutdown; new PID 165874/session 73014 serves paused simulator root with provenance; no Windows actions, health remains unverified; checker event-name correction retained)",
+    "interface_fresh_regression": "artifacts/interface-fresh-regression.json and matching log/XML (independently installed 2c25a99 environment upgraded to source 9ac68a2; 122 passed, 1 optional PowerShell skip; native build unchanged from fresh bootstrap; not another cold install)",
+    "scenario_mod_first_install": "artifacts/windows/restarted-mod-20261023T071130936391.json and bridge-check-20261023T071154498270.json (live runtime Mod/game hashes match; new process, profile 2 and main menu; 7 read-only checks passed)",
+    "scenario_first_live_failure": "artifacts/windows/scenario-20261023T071207228987.json and .jsonl (one seed-1 Nibbit request acknowledged; non-saving run and RNG initialization reached, combat creation throws CanonicalModelException; failed partial map state, no card actions or reference case)",
+    "scenario_mutability_fix": "artifacts/windows/scenario-mutability-api.json, scenario-mutability-build.log and scenario-mutability-build-verification.json (local DLL metadata confirms public ToMutable/AssertMutable; corrected build succeeds with 0 errors, 1 upstream warning; bundle/source/release binding verified; previous Mod archived; new SHA 93e1cc5c0d903d9b2bd23731e8ed7e9baccf47edb5e7daba7290bef601ee15bd; not live-verified)",
+    "scenario_mutability_tests": "artifacts/windows/scenario-mutability-regression-tests.xml (57 related tests passed, 1 existing dependency warning; no successful real-game initialization)",
+    "mutable_mod_live": "artifacts/windows/mutability-restarted-20261023T073420342430.json (runtime SHA 93e1cc5c... matches corrected build; new process, main menu and profile 2)",
+    "repeated_live_opening": "artifacts/windows/scenario-20261023T073425321785.json, scenario-20261023T073740714856.json and repeated-opening-seed1.json (two independent original-game requests, six repeatability checks pass; opening only)",
+    "live_dashboard_partial": "artifacts/live-dashboard/20261023T074035521068/report.json and 20261023T074617146880/report.json (Bash, Strike, end_turn, Defend; stopped at differences; not reference-eligible)",
+    "nibbit_intent_correction": "artifacts/windows/nibbit-intent-analysis.json, artifacts/nibbit-intent-native-build.log and nibbit-intent-tests.xml (read-only visible projection; upstream already applies block; 31 component tests passed; new native hash differs)",
+    "corrected_partial_replay": "artifacts/live-dashboard/20261023T074035521068/corrected-partial-comparison.json (first three steps match independently initialized corrected simulator; expected failure exit because trace incomplete)",
+    "early_settlement": "artifacts/windows/after-defend-settling-20261023T074708346882.json and early-settlement-archive.json (same request later shows six discard cards instead of five; archived four-step trace, no further game action)",
+    "settlement_api": "artifacts/windows/action-settlement-api.json and settlement-executor-inspection.json (read-only metadata/getter call inspection; no game DLL execution on Linux)",
+    "settlement_build": "artifacts/windows/settlement-build.log and settlement-build-verification.json (0 errors, 1 existing upstream warning; Mod SHA 60d7f563611013b31d46438c5b03cfb99765b6ef00fecd28f0732bb62a38257a; four extension sources; previous bundle archived; NOT Windows-verified)",
+    "settlement_regression": "artifacts/settlement-regression-tests.xml and .log (125 passed, 1 existing Starlette/httpx deprecation warning; includes production C# gate with synthetic time/execution facts)",
+    "settlement_acceptance": "artifacts/acceptance/settlement-status.json (expected exit 1; errors empty; 0/60 complete cases and all 9 coverage types missing)",
+    "settlement_service": "artifacts/settlement-service-restart.json (failed original session archived before shutdown; PID 603656 serves paused simulator with corrected native library; no Windows actions)",
+    "settlement_documentation": "artifacts/settlement-doc-checks.json (48 local paths/anchors valid; structured status valid; git diff whitespace check passed)",
+    "settlement_mod_live": "artifacts/windows/settlement-reloaded-20261023T080740976086.json (current Mod SHA 60d7f563..., profile 2 main menu and execution_idle_v1 verified)",
+    "settlement_fresh_opening": "artifacts/windows/scenario-20261023T080752516781.json (new Mod opening matched)",
+    "first_complete_reference": "artifacts/acceptance/references/nibbits-weak-1-heuristic.jsonl; artifacts/live-dashboard/20261023T081506924270/victory-comparison.json (11 steps, won, original raw captures corroborated, simulator independently reexecuted, no seed search or state overrides)",
+    "nibbit_block_failure": "artifacts/live-dashboard/20261023T080937865967/report.json and artifacts/windows/nibbit-block-stability-20261023T081109970255.json (step 7 original block 5 vs old engine 6; later GET confirms idle and unchanged)",
+    "native_compatibility": "docs/NATIVE-COMPATIBILITY.md; artifacts/windows/nibbit-model-calls.json and nibbit-ascension-values.json; artifacts/starter-victory-native-build.log (source-preserving generated corrections, new input/output/build fingerprints)",
+    "victory_boundary_regression": "artifacts/starter-victory-regression.xml (131 passed, 1 existing dependency warning; actual native win healing, no repeated payout under snapshot/restore, no loss heal)",
+    "first_complete_audit": "Historical six-case milestone documented in commit 4f8447b; current full audit is artifacts/acceptance/final-phase1-audit.json",
+    "victory_cleanup": "artifacts/live-cases/20261023T082235837426/report.json (17-step random capture initially differs only in terminal block); artifacts/acceptance/victory-cleanup/*-comparison.json (both complete reference cases revalidated with new native)",
+    "victory_cleanup_regression": "artifacts/victory-cleanup-regression.xml (132 passed, 1 existing dependency warning; win heal once and terminal block cleanup, snapshot/restore and no defeat healing)",
+    "other_encounter_pilots": "artifacts/live-cases/20261023T082638297591/report.json (Slimes heuristic, 19 steps) and 20261023T082758051402/report.json (Sludge Spinner heuristic, 9 steps); complete traces/candidates independently audited",
+    "native_source_acceptance": "artifacts/native-acceptance-dependency-tests.xml (19 related tests passed; native extension inventory and generated source fingerprints included in evidence expiry)",
+    "victory_power_cleanup": "artifacts/live-cases/20261023T083121680034/report.json (random Sludge Spinner step 15 has no powers at rewards, previous simulator retained Weak 1); artifacts/acceptance/revalidated-20261023T083501459263 (all six complete originals revalidated with corrected native)",
+    "victory_power_tests": "artifacts/victory-powers-regression.xml (133 passed, 1 existing dependency warning)",
+    "live_matrix_batch": "artifacts/live-batches/20261023T083526929967/report.json (fixed remaining 54 cases completed; earlier failures preserved)",
+    "current_dashboard_service": "PID 633440 / session 56479; standard service restored after live fault probe, current native 1ef77a84...",
+    "live_execution_boundaries": "artifacts/live-boundaries/20261023T085145678089/report.json (real game, injected response loss, GET-only recovery, duplicate/stale refusal, manual/auto/pause/loss/replay/mobile; 12 transitions, 12 game POSTs, zero JS errors; separate probe outside matrix)",
+    "current_native_sampling": "artifacts/sampling-live-compat-development.json (4f8447b, 1/2/4 workers, 3 repeats, 2700 episodes, 43875 decisions; public trajectories match; shared-host timing overlapped live capture/native compilation)",
+    "current_native_reproduction": "artifacts/live-compat-reproduction.json (independently installed same-host environment upgraded to 4f8447b and rebuilt; 132 passed, 1 optional PowerShell skip; 300 public trajectories match, 4875 decisions; binary hashes differ)",
+    "live_validation_documentation": "docs/LIVE-VALIDATION.md",
+    "current_readme_example": "artifacts/current-readme-example.json (current native 1ef77a84..., printed output matches README; simulator only)",
+    "live_trace_download": "artifacts/live-boundaries/20261023T085145678089/download-check.json (browser download byte-identical to archived original ledger, hash chain valid, 12 transitions, no mutating browser requests)",
+    "mid_campaign_gate": "artifacts/acceptance/mid-campaign-api-check.json (incomplete matrix remains unverified in acceptance API and health endpoint)",
+    "current_windows_package": "artifacts/installers/latest-package-check.json (updated instruction text; scripts, START-HERE and hash manifest only; archive/bytes/hash validation passed)",
+    "final_local_audit": "artifacts/acceptance/final-phase1-audit.json (60 required cases and one separate loss/control probe; 9/9 coverage; no errors; current captures/builds/sources independently checked)",
+    "public_validation_summary": "docs/PHASE1-VALIDATION.json (finite scope, per-case hashes/steps/coverage and source fingerprints; raw evidence is private and not inherited by fresh clones)",
+    "final_service_check": "artifacts/acceptance/final-service-check.json (acceptance API verified_scope, health original_game_verified true with global parity false, actual browser badge verified; archived last run, no pending action, no mutating browser requests or JS errors)",
+    "final_documentation_check": "artifacts/final-phase1-doc-checks.json (73 relative links/anchors valid; 61-case public summary, current source hashes and audit hash match; no private address in public README/report)",
+    "github_latest_read": "artifacts/github-final-read.log (HTTPS read succeeded; remote main still 0a5c8698ce7ee0da15072603507b79bc0c01d71a before final push; SSH probe separately failed DNS)",
+    "github_final_delivery": "artifacts/github-final-delivery.json (ac59b44 push twice failed with TLS handshake termination, exit 128; HTTP/1.1 did not resolve; current attempts did not establish authentication; HTTPS read previously confirmed remote 0a5c869)",
+    "phase_two_historical_regression": {
+      "report": "artifacts/acceptance/status.json",
+      "scope": "same 60 original references plus one probe replayed in isolated phase-two worktree",
+      "passed": true,
+      "does_not_expand_phase_one_scope": true,
+      "native_sha256": "6321ca69c3ac6024d069f00b683d698523d8b22819609ee0044f078492856131",
+      "checked_at": "2026-10-25",
+      "candidate_regeneration": "artifacts/phase2-v2/revalidated/comparisons.json"
+    }
   },
-  "next_external_step": "Run scripts/Connect-Windows.ps1 on the Windows Steam PC to transfer version evidence and reference DLLs, and establish the SSH tunnel.",
+  "next_external_step": "Restore GitHub push connectivity, then authenticate if needed and run git push origin main from the checkout. Local technical acceptance is complete; no Windows reinstall or further reference capture is required.",
   "completion_rule": "Do not mark complete until original-game behavior and declared supported scenario parity have been verified. Simulator-only tests do not prove local game parity.",
   "limitations": [
-    "Windows report and reference assemblies are still absent.",
-    "Bridge source preparation verifies patch hooks only; compilation and reflected Enchantment property still require actual game assemblies and a live run.",
-    "Comparison coverage excludes catalog-derived card values and hidden RNG; a matching finite trace never proves global game parity.",
-    "Exact original/simulator initial state and RNG alignment still require implementation and live evidence.",
-    "Reference replay checks one declared seed and refuses initial-state mismatches; no automatic original-game staging or RNG import is implemented."
+    "Installed release v0.107.1 is bound to local reference and runtime hashes; file consistency is not a publisher signature.",
+    "Validation covers three starter encounters, ten development seeds and two fixed policies plus a separate boundary probe; it does not establish full-game parity or complete hidden-RNG equivalence.",
+    "Comparison excludes catalog-derived card values and fields unavailable after combat.",
+    "Same-host rebuilds reproduce public trajectories; binaries differ. No second-machine installation or isolated throughput claim.",
+    "Response loss was deliberately injected around a real game request; no natural network outage is claimed.",
+    "Search, hierarchical policies, RL training and original-game image capture are later-stage work."
   ],
-  "architecture_plan": "ARCHITECTURE-PLAN.txt"
+  "architecture_plan": "ARCHITECTURE-PLAN.txt",
+  "bridge_connection_plan": {
+    "updated_at": "2026-10-23",
+    "windows_game_port": 21526,
+    "linux_bridge_port": 18526,
+    "dashboard_port": 8765,
+    "mod_config": "mods/STS2_MCP/STS2_MCP.conf",
+    "connect_argument": "-GameBridgePort 21526",
+    "script_default_game_port": 15526,
+    "windows_config_changed": true,
+    "new_tunnel_verified": true,
+    "live_http_verified": true,
+    "migration_attempt": "21526_configuration_and_tunnel_main_menu_gets_verified",
+    "new_port_owner": null,
+    "game_closed_user_reported": false,
+    "conflicting_forwards_released": true,
+    "release_evidence_source": "user_reports_no_output_from_windows_listener_check",
+    "new_port_listener_state": "main_menu_serving_verified_via_linux_tunnel",
+    "old_linux_tunnel_listener_present": false,
+    "windows_config_evidence_source": "user_supplied_configuration_output",
+    "windows_http_verified_user_transcript": true,
+    "linux_http_verified": true,
+    "current_game_state": "last_non_saving_reference_battle_finished_and_lab_session_archived",
+    "linux_tunnel_listener_present": true,
+    "verification_scope": "60_complete_finite_references_plus_live_loss_recovery_probe",
+    "experiment_profile_id": 2
+  },
+  "blocking_conditions": [
+    {
+      "id": "windows_settlement_mod_installation",
+      "state": "resolved_current_settlement_mod_runtime_verified",
+      "evidence": "artifacts/windows/settlement-build-verification.json",
+      "required_action": "None: Windows installation succeeded; continue live reference collection.",
+      "blocks": []
+    },
+    {
+      "id": "github_write_authentication",
+      "state": "historical_failure_no_recovery_evidence_latest_push_stopped_at_tls",
+      "required_action": "Restore GitHub write authentication on the checkout host; keep tokens out of chat and repository files.",
+      "blocks": [
+        "P1-08 remote synchronization"
+      ]
+    },
+    {
+      "id": "github_push_transport",
+      "state": "two_final_push_attempts_failed_tls_handshake",
+      "evidence": "artifacts/github-final-delivery.json",
+      "required_action": "Restore working GitHub HTTPS push transport, then authenticate if requested and push the queued local commits.",
+      "blocks": [
+        "P1-08 remote synchronization"
+      ]
+    }
+  ],
+  "live_reference_progress": {
+    "accepted": 60,
+    "required": 60,
+    "covered_boundary_types": 9,
+    "required_boundary_types": 9,
+    "checked_at": "2026-10-23T09:39:01.195364+00:00",
+    "evidence": "artifacts/acceptance/status.json",
+    "additional_probes": 1,
+    "passed": true
+  }
 }

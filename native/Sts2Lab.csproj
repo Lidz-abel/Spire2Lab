@@ -12,9 +12,12 @@
     <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="../vendor/sts2/src/Sts2Emulator/**/*.cs" Exclude="../vendor/sts2/src/Sts2Emulator/obj/**/*.cs;../vendor/sts2/src/Sts2Emulator/bin/**/*.cs;../vendor/sts2/src/Sts2Emulator/Interop/NativeExports.cs" />
+    <Compile Include="../vendor/sts2/src/Sts2Emulator/**/*.cs" Exclude="../vendor/sts2/src/Sts2Emulator/obj/**/*.cs;../vendor/sts2/src/Sts2Emulator/bin/**/*.cs;../vendor/sts2/src/Sts2Emulator/Interop/NativeExports.cs;../vendor/sts2/src/Sts2Emulator/Core/EnemyAI.cs" />
     <Compile Include="generated/NativeExports.cs" />
+    <Compile Include="generated/EnemyAI.cs" />
     <Compile Include="LabExports.cs" />
+    <Compile Include="LabCombat.cs" />
+    <Compile Include="LabBelief.cs" />
     <TrimmerRootDescriptor Include="../vendor/sts2/src/Sts2Emulator/ILLink.Roots.xml" />
     <UnmanagedEntryPointsAssembly Include="Sts2Emulator" />
   </ItemGroup>

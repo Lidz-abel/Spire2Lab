@@ -8,6 +8,7 @@ from pathlib import Path
 import shutil
 import subprocess
 import sys
+import tempfile
 
 parser = argparse.ArgumentParser()
 parser.add_argument(
@@ -31,7 +32,9 @@ build_dir.mkdir(parents=True, exist_ok=True)
 for path in source.glob("*.cs"):
     shutil.copy2(path, build_dir / path.name)
 shutil.copy2(source / "STS2_MCP.csproj", build_dir / "STS2_MCP.csproj")
-shutil.copy2(ROOT / "bridge/McpMod.Lab.cs", build_dir / "McpMod.Lab.cs")
+extension_sources = sorted((ROOT / "bridge").glob("*.cs"))
+for path in extension_sources:
+    shutil.copy2(path, build_dir / path.name)
 main = build_dir / "McpMod.cs"
 text = main.read_text()
 for old, new in [
@@ -42,6 +45,11 @@ for old, new in [
     (
         "RunOnMainThread(() => ExecuteAction(action, parsed))",
         "RunOnMainThread(() => ExecuteLabAction(action, parsed))",
+    ),
+    (
+        'else if (path == "/api/v1/singleplayer")',
+        'else if (path == "/api/v1/lab/image") { HandleLabImage(request, response); }\n'
+        '            else if (path == "/api/v1/singleplayer")',
     ),
 ]:
     if text.count(old) != 1:
@@ -84,6 +92,60 @@ text = text.replace(
     needle,
     "catch { throw; } // Lab: never report an incomplete power list as authoritative",
 )
+# Upstream state reads open shops/chests. Keep observation and mutation separate
+# in the generated copy; the pinned vendor source remains byte-for-byte intact.
+for old, new in [
+    (
+        "merchUI.OpenInventory();",
+        "// Spire2Lab: opening inventory requires a recorded action.",
+    ),
+    (
+        "merchantButton.ForceClick();",
+        "{ /* Spire2Lab: fake merchant is unsupported; GET must not click. */ }",
+    ),
+    (
+        'chestButton.ForceClick();\n            state["message"] = "Opening chest...";',
+        'state["lab_can_open"] = chestButton.IsVisibleInTree();\n            state["message"] = "Chest is closed.";',
+    ),
+    (
+        '["was_chosen"] = opt.WasChosen',
+        '["was_chosen"] = opt.WasChosen,\n                    ["lab_enabled"] = button.IsEnabled && button.IsVisibleInTree()',
+    ),
+]:
+    if text.count(old) != 1:
+        raise SystemExit(f"Pinned read-only state hook changed: {old}")
+    text = text.replace(old, new, 1)
+start = text.index("private static Dictionary<string, object?> BuildShopState")
+end = text.index("private static Dictionary<string, object?> BuildMapState", start)
+section = text[start:end]
+needle = "var state = new Dictionary<string, object?>();"
+assert section.count(needle) == 1
+section = section.replace(
+    needle,
+    needle + """
+        bool inventoryOpen = NMerchantRoom.Instance?.Inventory?.IsOpen == true;
+        state["lab_inventory_open"] = inventoryOpen;
+        state["lab_can_open"] = NMerchantRoom.Instance?.Inventory != null && !inventoryOpen
+            && NMerchantRoom.Instance.MerchantButton.IsEnabled;
+        var labShopBack = NMerchantRoom.Instance != null ? FindFirst<NBackButton>(NMerchantRoom.Instance) : null;
+        state["lab_can_close"] = inventoryOpen && labShopBack?.IsEnabled == true && labShopBack.IsVisibleInTree();
+        if (!inventoryOpen) {
+            state["items"] = new List<Dictionary<string, object?>>();
+            state["can_proceed"] = NMerchantRoom.Instance?.ProceedButton?.IsEnabled ?? false;
+            return state;
+        }
+""",
+)
+assert section.count('["index"] = index,') == 4
+section = section.replace(
+    '["index"] = index,', '["index"] = inventory.AllEntries.ToList().IndexOf(entry),', 3
+)
+section = section.replace(
+    '["index"] = index,',
+    '["index"] = inventory.AllEntries.ToList().IndexOf(removal),',
+    1,
+)
+text = text[:start] + section + text[end:]
 builder.write_text(text)
 if args.prepare_only:
     print(
@@ -106,6 +168,18 @@ for name in ("sts2.dll", "GodotSharp.dll", "0Harmony.dll"):
 
 sdk = shutil.which("dotnet") or str(ROOT / ".tools/dotnet/dotnet")
 output = ROOT / "artifacts/windows/mod"
+if (output / "build.json").exists():
+    previous = json.loads((output / "build.json").read_text())
+    previous_sha = hashlib.sha256((output / "STS2_MCP.dll").read_bytes()).hexdigest()
+    if previous_sha != previous["mod_sha256"]:
+        raise SystemExit(
+            "Existing bridge differs from its manifest; preserve and inspect before rebuilding"
+        )
+    archive = ROOT / "artifacts/windows/mod-history" / previous_sha
+    if not archive.exists():
+        shutil.copytree(output, archive)
+staging = tempfile.TemporaryDirectory(prefix="bridge-build-", dir=output.parent)
+compiled_output = Path(staging.name)
 subprocess.run(
     [
         sdk,
@@ -114,33 +188,54 @@ subprocess.run(
         "-c",
         "Release",
         "-o",
-        str(output),
+        str(compiled_output),
         f"-p:STS2GameDataDir={references}",
     ],
     check=True,
     env={**os.environ, "DOTNET_CLI_TELEMETRY_OPTOUT": "1"},
 )
-shutil.copy2(source / "mod_manifest.json", output / "mod_manifest.json")
-shutil.copy2(source / "LICENSE", output / "LICENSE.txt")
+shutil.copy2(source / "mod_manifest.json", compiled_output / "mod_manifest.json")
+shutil.copy2(source / "LICENSE", compiled_output / "LICENSE.txt")
 manifest = json.loads((ROOT / "vendor/bridge-manifest.json").read_text())
 manifest.update(
     {
+        "status": "compiled_requires_in_game_validation",
+        "steam_build_id": report.get("steam_build_id"),
+        "steam_beta_key": report.get("beta_key"),
+        "configured_target_game_version": report.get("target_game_version"),
+        "semantic_game_version_verified": False,
         "game_assembly_sha256": report["assemblies"]["sts2.dll"]["sha256"],
         "mod_sha256": hashlib.sha256(
-            (output / "STS2_MCP.dll").read_bytes()
+            (compiled_output / "STS2_MCP.dll").read_bytes()
         ).hexdigest(),
         "compiled": True,
         "build_script_sha256": hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
         "source_verification": source_proof,
         "in_game_verified": False,
         "manifest_sha256": hashlib.sha256(
-            (output / "mod_manifest.json").read_bytes()
+            (compiled_output / "mod_manifest.json").read_bytes()
         ).hexdigest(),
         "lab_extension_sha256": hashlib.sha256(
             (ROOT / "bridge/McpMod.Lab.cs").read_bytes()
         ).hexdigest(),
         "reference_report_sha256": hashlib.sha256(report_file.read_bytes()).hexdigest(),
+        "extension_sources": {
+            str(path.relative_to(ROOT)): hashlib.sha256(path.read_bytes()).hexdigest()
+            for path in extension_sources
+        },
+        "capabilities": [
+            "scenario_staging_v1",
+            "execution_idle_v1",
+            "decision_images_v1",
+            "single_act_v1",
+        ],
     }
 )
-(output / "build.json").write_text(json.dumps(manifest, indent=2) + "\n")
+(compiled_output / "build.json").write_text(json.dumps(manifest, indent=2) + "\n")
+output.mkdir(parents=True, exist_ok=True)
+# Compilation failures leave the existing bundle untouched. Publish the manifest
+# last so concurrent installers reject any transient mismatch instead of trusting it.
+for path in sorted(compiled_output.iterdir(), key=lambda p: p.name == "build.json"):
+    os.replace(path, output / path.name)
+staging.cleanup()
 print(f"Compiled bridge at {output}. Compilation is not a claim of in-game validation.")

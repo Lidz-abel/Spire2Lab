@@ -9,10 +9,14 @@ import uuid
 
 from .bridge import OutcomeUnknown
 from .contracts import StepRequest, digest, semantic_state
+from .environment import Environment
 from .original import OriginalEnvironment
 from .policies import Policy
+from .planning import PlanningConfig, PlanningPolicy
 from .simulator import Simulator, CONFIG, ROOT
 from .traces import TraceWriter
+from .vocabulary import vocabulary
+from .images import ImageStore
 
 
 async def await_if_needed(result):
@@ -22,9 +26,11 @@ async def await_if_needed(result):
 class Lab:
     def __init__(self, data_dir=None, *, original_factory=None):
         self.data_dir = Path(data_dir or ROOT / "artifacts/runs")
+        self.images = ImageStore(self.data_dir.parent / "images")
         self.original_factory = original_factory or OriginalEnvironment.attach
         self.lock = asyncio.Lock()
-        self.env = self.trace = None
+        self.env: Environment | None = None
+        self.trace = None
         self.status = "idle"
         self.revision = 0
         self.cache = OrderedDict()
@@ -34,15 +40,96 @@ class Lab:
         self.last_result = None
         self.pending = None
         self.resume_after_step = False
+        self.planning = None
+        self.goal_event = None
+        self.decision_image = None
 
-    def _proposal(self):
-        self.decision = (
-            self.policy.decide(self.observation)
-            if self.observation.legal_actions
-            else None
-        )
+    async def _capture_image(self):
+        self.decision_image = None
+        if self.metadata["backend"] != "original_game":
+            return
+        binding = {
+            "run_id": self.run_id,
+            "decision_id": self.observation.decision_id,
+            "observation_sha256": digest(self.observation),
+        }
+        if not self.env.capabilities.get("original_pixels"):
+            self.decision_image = {
+                **binding,
+                "status": "unavailable",
+                "reason": "bridge_capability_missing",
+            }
+        else:
+            previous_status = self.status
+            self.status = "planning"
+            self.revision += 1
+            try:
+                metadata, png = await self.env.capture_image()
+                self.decision_image = await asyncio.to_thread(
+                    self.images.put,
+                    self.run_id,
+                    metadata,
+                    png,
+                    self.observation.decision_id,
+                    binding["observation_sha256"],
+                )
+            except Exception as exc:
+                self.decision_image = {
+                    **binding,
+                    "status": "unavailable",
+                    "reason": type(exc).__name__,
+                    "detail": str(exc)[:300],
+                }
+            finally:
+                self.status = (
+                    "paused"
+                    if previous_status == "running" and not self.resume_after_step
+                    else previous_status
+                )
+        self.trace.append("decision_image", self.decision_image)
+
+    async def _proposal(self):
+        self.decision, self.planning = None, None
+        await self._capture_image()
+        if self.observation.legal_actions:
+            if isinstance(self.policy, PlanningPolicy):
+                previous_status = self.status
+                self.status = "planning"
+                self.revision += 1
+                task = asyncio.create_task(
+                    asyncio.to_thread(self.policy.decide, self.observation)
+                )
+                try:
+                    self.decision = await asyncio.shield(task)
+                except asyncio.CancelledError:
+                    # Do not destroy native particles while the bounded worker still
+                    # uses them. Cancellation never submits a game action.
+                    await task
+                    raise
+                finally:
+                    self.status = (
+                        "paused"
+                        if previous_status == "running" and not self.resume_after_step
+                        else previous_status
+                    )
+                self.planning = self.policy.last_report
+                self.trace.append("planning_report", self.planning)
+            else:
+                self.decision = self.policy.decide(self.observation)
         if self.decision:
             self.trace.append("decision", self.decision.model_dump())
+
+    def _close_policy(self):
+        policy = getattr(self, "policy", None)
+        if isinstance(policy, PlanningPolicy):
+            policy.close()
+
+    def _interrupt_goal(self, reason):
+        policy = getattr(self, "policy", None)
+        if self.trace and isinstance(policy, PlanningPolicy) and policy.hierarchy:
+            event = policy.hierarchy.interrupt(reason, self.observation.decision_id)
+            if event:
+                self.trace.append("goal_completed", event)
 
     def _require_free(self):
         if self.lock.locked() or self.status in ("executing", "reconciling"):
@@ -59,10 +146,23 @@ class Lab:
         policy="heuristic",
         policy_seed=0,
         backend="native_simulator",
+        planning_config=None,
     ):
         self._require_free()
         async with self.lock:
-            new_policy = Policy(policy, policy_seed)
+            if policy in PlanningPolicy.names:
+                config = (
+                    PlanningConfig.model_validate(planning_config)
+                    if planning_config is not None
+                    else PlanningConfig()
+                )
+                new_policy = PlanningPolicy(policy, policy_seed, encounter, config)
+            else:
+                if planning_config is not None:
+                    raise ValueError(
+                        "Planning configuration requires a planning policy"
+                    )
+                new_policy = Policy(policy, policy_seed)
             if backend == "native_simulator":
                 new_env = Simulator(encounter, seed)
             elif backend == "original_game":
@@ -75,17 +175,20 @@ class Lab:
                 await await_if_needed(new_env.close())
                 raise
             if self.trace:
+                self._interrupt_goal("session_reset")
                 self.trace.append(
                     "session_closed", {"reason": "user_reset", "status": self.status}
                 )
                 self.trace.close()
                 await await_if_needed(self.env.close())
+            self._close_policy()
             self.env, self.policy = new_env, new_policy
             self.run_id = uuid.uuid4().hex
             self.trace = TraceWriter(self.data_dir / f"{self.run_id}.jsonl")
             self.observation = new_obs
             self.status, self.error = "paused", None
             self.history, self.last_result = [], None
+            self.planning, self.goal_event = None, None
             self.pending, self.resume_after_step = None, False
             self.cache.clear()
             self.metadata = {
@@ -99,6 +202,12 @@ class Lab:
                 "policy_seed": policy_seed,
                 "build": new_env.manifest,
                 "capabilities": new_env.capabilities,
+                "branch_provenance": (
+                    new_env.branch_provenance.model_dump()
+                    if new_env.branch_provenance is not None
+                    else None
+                ),
+                "content_vocabulary": vocabulary().metadata(),
             }
             if backend == "original_game":
                 self.metadata["raw_capture_id"] = new_env.epoch
@@ -106,11 +215,15 @@ class Lab:
                 self.metadata["printed_card_values_source"] = (
                     "pinned_catalog_not_live_measurement"
                 )
+            if isinstance(new_policy, PlanningPolicy):
+                self.metadata["planning_config"] = new_policy.config.model_dump()
+                self.metadata["planning_information"] = "confirmed_public_history_only"
+                self.metadata["planning_provenance"] = new_policy.provenance()
             self.trace.append(
                 "session_started",
                 {"metadata": self.metadata, "observation": new_obs.model_dump()},
             )
-            self._proposal()
+            await self._proposal()
             self.revision += 1
             return self.view()
 
@@ -122,6 +235,9 @@ class Lab:
             "metadata": self.metadata,
             "observation": self.observation.model_dump(),
             "decision": self.decision.model_dump() if self.decision else None,
+            "planning": self.planning,
+            "goal_event": self.goal_event,
+            "decision_image": self.decision_image,
             "last_result": self.last_result,
             "history": self.history[-80:],
             "delay": self.delay,
@@ -205,18 +321,15 @@ class Lab:
             self.status, self.error = "executing", None
             self.revision += 1
             try:
-                if self.metadata["backend"] == "original_game":
-                    result = await self.env.step(
-                        action_id, req.decision_id, request_id=req.request_id
-                    )
-                else:
-                    result = self.env.step(action_id, req.decision_id)
-                return self._complete(result)
+                result = await await_if_needed(
+                    self.env.step(action_id, req.decision_id, request_id=req.request_id)
+                )
+                return await self._complete(result)
             except Exception as exc:
                 self._failure(exc)
                 raise
 
-    def _complete(self, result):
+    async def _complete(self, result):
         pending = self.pending
         action, req = pending["action"], pending["request"]
         self.observation = result.observation
@@ -228,6 +341,13 @@ class Lab:
             "transition",
             {"request_id": req.request_id, "action": action.model_dump(), **payload},
         )
+        self.goal_event = None
+        if isinstance(self.policy, PlanningPolicy):
+            self.goal_event = self.policy.observe_transition(
+                pending["before"], action, result, manual=pending["manual"]
+            )
+            if self.goal_event:
+                self.trace.append("goal_completed", self.goal_event)
         self.last_result = {
             "action": action.model_dump(),
             "facts": payload["facts"],
@@ -249,7 +369,7 @@ class Lab:
             else "running" if self.resume_after_step else "paused"
         )
         self.pending, self.error = None, None
-        self._proposal()
+        await self._proposal()
         self.revision += 1
         response = self.view()
         self.cache[req.request_id] = (pending["fingerprint"], response)
@@ -266,7 +386,7 @@ class Lab:
             self.status, self.error = "reconciling", None
             self.revision += 1
             try:
-                return self._complete(await self.env.reconcile())
+                return await self._complete(await self.env.reconcile())
             except Exception as exc:
                 self._failure(exc)
                 raise
@@ -282,6 +402,7 @@ class Lab:
                 return self.view()
             if self.status == "running":
                 raise ValueError("Pause automatic decisions before archiving")
+            self._interrupt_goal("session_archived")
             self.trace.append(
                 "session_archived",
                 {
@@ -300,6 +421,7 @@ class Lab:
             try:
                 await await_if_needed(self.env.close())
             finally:
+                self._close_policy()
                 self.trace.close()
                 self.trace = self.env = self.pending = self.decision = None
                 self.cache.clear()
@@ -313,7 +435,12 @@ class Lab:
             raise ValueError("Delay must be between 0.1 and 5 seconds")
         # A pause stops future decisions immediately; it cannot undo an action that
         # the game is already executing. Do not wait behind the animation lock.
-        if self.status in ("executing", "reconciling", "awaiting_confirmation"):
+        if self.status in (
+            "executing",
+            "reconciling",
+            "awaiting_confirmation",
+            "planning",
+        ):
             if running:
                 raise ValueError("Wait for the original game's result before resuming")
             self.resume_after_step = False
@@ -360,6 +487,8 @@ class Lab:
         return path
 
     async def close(self):
+        self._interrupt_goal("server_shutdown")
+        self._close_policy()
         if self.trace:
             self.trace.append(
                 "session_closed",

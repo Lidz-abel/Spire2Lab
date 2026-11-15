@@ -8,25 +8,31 @@ from pathlib import Path
 from typing import Literal
 
 from fastapi import FastAPI, HTTPException, Request
-from fastapi.responses import FileResponse, StreamingResponse
+from fastapi.responses import FileResponse, StreamingResponse, Response
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, ConfigDict, Field
 
 from .bridge import BridgeError, OutcomeUnknown
 from .acceptance import read_acceptance_status
-from .contracts import StepRequest, PROTOCOL_VERSION
+from .contracts import StepRequest, PROTOCOL_VERSION, digest
 from .runtime import Lab
+from .planning import PlanningConfig
 from .simulator import CONFIG, ROOT
 from .traces import read_trace
+from .act_runtime import ActLab
+from .act_server import install_act_routes
 
 
-def create_app(data_dir=None, *, original_factory=None):
+def create_app(data_dir=None, *, original_factory=None, act_factory=None):
     lab = Lab(data_dir, original_factory=original_factory)
+    act = ActLab(lab.data_dir.parent / "act-runs", factory=act_factory)
+    owner_lock = asyncio.Lock()
 
     @asynccontextmanager
     async def lifespan(app):
         await lab.new_session()
         task = asyncio.create_task(lab.worker())
+        act_task = asyncio.create_task(act.worker())
         yield
         task.cancel()
         try:
@@ -34,9 +40,17 @@ def create_app(data_dir=None, *, original_factory=None):
         except asyncio.CancelledError:
             pass
         await lab.close()
+        act_task.cancel()
+        try:
+            await act_task
+        except asyncio.CancelledError:
+            pass
+        await act.close()
 
     app = FastAPI(title="STS2 Lab", version=PROTOCOL_VERSION, lifespan=lifespan)
     app.state.lab = lab
+    app.state.act = act
+    install_act_routes(app, act, lab, owner_lock)
 
     @app.middleware("http")
     async def same_origin(request: Request, call_next):
@@ -100,10 +114,14 @@ def create_app(data_dir=None, *, original_factory=None):
         seed: int = Field(default=1, ge=0, lt=2**31)
         policy: str = "heuristic"
         policy_seed: int = 0
+        planning_config: PlanningConfig | None = None
 
     @app.post("/api/session")
     async def new_session(config: SessionConfig):
-        return await lab.new_session(**config.model_dump())
+        async with owner_lock:
+            if config.backend == "original_game" and act.active:
+                raise ValueError("The single-act controller owns the original game")
+            return await lab.new_session(**config.model_dump())
 
     @app.post("/api/step")
     async def step(command: StepRequest):
@@ -182,6 +200,44 @@ def create_app(data_dir=None, *, original_factory=None):
             return FileResponse(lab.trace_path(run_id), filename=f"{run_id}.jsonl")
         except FileNotFoundError:
             raise HTTPException(404, "Run not found")
+
+    @app.get("/api/runs/{run_id}/images/{image_sha}.png")
+    async def decision_image(run_id: str, image_sha: str):
+        try:
+            events = read_trace(lab.trace_path(run_id))
+            observation, linked = None, False
+            if events[0]["data"]["metadata"]["backend"] != "original_game":
+                raise ValueError("Images require an original-game record")
+            for event in events:
+                if event["kind"] in ("session_started", "transition"):
+                    observation = event["data"]["observation"]
+                if event["kind"] == "decision_image":
+                    record = event["data"]
+                    if (
+                        record.get("sha256") == image_sha
+                        and record.get("status") == "available"
+                    ):
+                        if (
+                            record.get("run_id") != run_id
+                            or not observation
+                            or record.get("decision_id") != observation["decision_id"]
+                            or record.get("observation_sha256") != digest(observation)
+                        ):
+                            raise ValueError("Image association differs from trace")
+                        linked = True
+            if not linked:
+                raise ValueError("Image not associated with this run")
+            png = await asyncio.to_thread(lab.images.get, run_id, image_sha)
+            return Response(
+                png,
+                media_type="image/png",
+                headers={
+                    "Cache-Control": "no-store",
+                    "X-Content-Type-Options": "nosniff",
+                },
+            )
+        except (OSError, ValueError, KeyError, TypeError):
+            raise HTTPException(404, "Verified decision image unavailable")
 
     @app.get("/api/config")
     async def config():

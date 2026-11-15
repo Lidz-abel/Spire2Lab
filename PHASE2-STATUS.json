@@ -1,0 +1,234 @@
+{
+  "stage": 2,
+  "status": "blocked_pending_windows_mod_and_game_tunnel_for_original_act",
+  "started_at": "2026-10-24",
+  "branch": "phase2/search-hierarchy",
+  "phase_one_checkpoint": "f9faf0a",
+  "plan": "docs/PHASE2-PLAN.md",
+  "milestones": {
+    "P2-01": "contract_and_recipe_frozen",
+    "P2-02": "implemented_simulator_tests_passed",
+    "P2-03": "implemented_simulator_tests_passed",
+    "P2-04": "implemented_simulator_ui_passed",
+    "P2-05": "v2_development_and_new_heldout_complete_limited_hp_gain_no_hierarchy_gain",
+    "P2-06": "live_search_and_decision_images_verified_starter_scope",
+    "P2-07": "implemented_synthetic_tests_and_ui_passed_pending_original_act",
+    "P2-08": "docs_and_e1_code_pushed_sha_verified_independent_reproduction_pending"
+  },
+  "implementation_scope": "starter combat search and original decision images verified within declared scope; normal single-act controller implemented, awaiting live acceptance",
+  "evidence": {
+    "tests": {
+      "passed": 152,
+      "report": "artifacts/phase2-full-tests-corrected.xml",
+      "warning": "existing Starlette/httpx deprecation"
+    },
+    "ui": {
+      "report": "artifacts/phase2-browser-frozen/report.json",
+      "scope": "simulator desktop/mobile complete battle, override, pause and read-only replay"
+    },
+    "evaluation": {
+      "summary": "docs/PHASE2-VALIDATION.json",
+      "discussion": "docs/PLANNING-RESULTS.md",
+      "development": "artifacts/phase2-eval-development/report.json",
+      "heldout": "artifacts/phase2-eval-heldout/report.json",
+      "episodes": 360,
+      "actor_replays_passed": 360,
+      "policy_replays_passed": 24,
+      "performance_improvement_demonstrated": false
+    },
+    "historical_phase1_regression": {
+      "passed": true,
+      "required_cases": 60,
+      "extra_probes": 1,
+      "report": "artifacts/phase2-v2/search-ui-historical-audit.json",
+      "scope": "historical checkpoint before image bridge change; does not certify new Mod"
+    },
+    "new_live_search": {
+      "passed": true,
+      "report": "artifacts/phase2-live/20261023T170930347979/report.json",
+      "encounter": "nibbits-weak",
+      "seed": 1,
+      "policy": "hierarchical",
+      "search_budget": 256,
+      "depth": 8,
+      "confirmed_actions": 9,
+      "fallbacks": 0,
+      "final_hp": 68,
+      "policy_replay_passed": true,
+      "images_captured": false,
+      "browser_replay": "artifacts/phase2-live/20261023T170930347979/browser-replay.json"
+    },
+    "remote_delivery": {
+      "status": "ssh_push_verified_phase2_branch",
+      "attempted_commit": "a8a861c1a7eff58d4f3d617ad7c47eb80f78d1d7",
+      "report": "artifacts/single-act/github-push.json",
+      "exit_code": 143,
+      "remote_head_verified": true,
+      "previous_attempt": {
+        "checked_at": "2026-11-15",
+        "commit": "3a4c70bb56c29bc9d3e9bb610542373d74ea99f2",
+        "report": "artifacts/rl-mvp/environment/e0-20261115/github-push.log",
+        "exit_code": 128,
+        "result": "could_not_read_github_username_terminal_prompts_disabled",
+        "pushed": false
+      },
+      "latest_attempt": {
+        "checked_at": "2026-11-15",
+        "verified_checkpoint": "95c87e3c4110844ac5d226098ac2928c3221a1be",
+        "report": "artifacts/rl-mvp/contracts/e1-20261115/push-verified-initial.json",
+        "handoff_commit_verification": "artifacts/rl-mvp/contracts/e1-20261115/push-verified-final.json",
+        "exit_code": 0,
+        "pushed": true,
+        "branch": "phase2/search-hierarchy",
+        "transport": "SSH_443_via_existing_proxy_with_pinned_GitHub_host_key"
+      }
+    },
+    "conditioned_belief": {
+      "summary": "docs/BELIEF-V2-VALIDATION.json",
+      "paired_report": "artifacts/phase2-v2/belief-development.json",
+      "tests": "artifacts/phase2-v2/full-proposal-tests.xml",
+      "tests_passed": 164,
+      "additional_noninterference": "artifacts/phase2-v2/proposal-noninterference.xml",
+      "historical_regression": "artifacts/acceptance/status.json"
+    },
+    "search_v2": {
+      "development": "docs/SEARCH-V2-VALIDATION.json",
+      "discussion": "docs/PLANNING-V2-RESULTS.md",
+      "selected_recipe": "config/phase2-search-selected.json",
+      "tests_passed": 168,
+      "tests": "artifacts/phase2-v2/full-search-tests.xml",
+      "heldout_status": "complete",
+      "heldout_summary": "docs/SEARCH-V2-HELDOUT.json",
+      "freeze_commit": "f2bc4c7",
+      "actor_replays": 660,
+      "policy_replays": 42,
+      "selected_mean_heldout_hp": 77.94444444444444,
+      "heuristic_mean_heldout_hp": 77.03333333333333,
+      "live_report": "artifacts/phase2-v2/live-summary.json",
+      "live_battles": 4,
+      "live_confirmed_actions": 49,
+      "ui": "artifacts/phase2-v2/browser/report.json",
+      "original_replay_ui": "artifacts/phase2-v2/browser/replay-report.json"
+    },
+    "decision_images": {
+      "status": "live_verified_one_starter_battle",
+      "mod_sha256": "b6c1a3ab3ca649be06a3ec0aeb2a995d4aa82daedf5d95b51ce87a8773e5c61b",
+      "tests_passed": 175,
+      "tests": "artifacts/phase2-v2/full-image-tests.xml",
+      "synthetic_browser": "artifacts/phase2-v2/image-fixture/browser-report.json",
+      "original_images_captured": true,
+      "public_summary": "docs/DECISION-IMAGES-VALIDATION.json",
+      "live_report": "artifacts/phase2-v2/image-live-battle/20261025T065715193624/report.json",
+      "images": 12,
+      "confirmed_actions": 11,
+      "all_replay_frames_checked": true,
+      "stale_image_requests_rejected": true
+    },
+    "single_act": {
+      "summary": "docs/SINGLE-ACT-VALIDATION.json",
+      "normal_act_attempts": 0,
+      "completed": false,
+      "required_mod_sha256": "ff144ee812218f9a3ffbb7dbdb2f5b1c4d6b750a189180d836b6092f85db41bd",
+      "live_connection": "reverse_tunnel_unavailable_at_last_check",
+      "service_check": "artifacts/single-act/service-check.json",
+      "freeze_commit": "a8a861c1a7eff58d4f3d617ad7c47eb80f78d1d7",
+      "offline_audit_tests": 4,
+      "transport_followup_tests": 26,
+      "latest_connection_check": "artifacts/single-act/continuation-2-check.json"
+    }
+  },
+  "limitations": [
+    "V2 selected search improved mean heldout HP by 0.91 on this finite starter inventory; all policies won every case.",
+    "The 1024-call condition did not beat the cheaper 256-call condition on heldout; selection was not changed after evaluation.",
+    "No additional hierarchy benefit was demonstrated; no learned agent or full-game performance claim.",
+    "Public-conditioned particles remain approximate and can deplete; fallbacks are included in reports.",
+    "Four live search battles do not establish broad original-game or single-act coverage.",
+    "Original images are verified for one staged battle; single-act control is still pending.",
+    "Independent phase-two installation/reproduction and GitHub delivery remain pending."
+  ],
+  "implementation_commit": "2f365032b082857b59647be66727a5a784812de6",
+  "next_actions": [
+    "Read SESSION-HANDOFF.md and recheck live process, Git and game state in the new session.",
+    "Start the phase-two dashboard on 8766 when resuming; restore the Windows reverse tunnel and verify the single-act Mod/game build in profile 2.",
+    "Execute the frozen normal-act recipe, preserve all attempts and verify continuous route/family coverage/replay.",
+    "Complete independent phase-two reproduction and verified GitHub synchronization."
+  ],
+  "active_user_goal": {
+    "requested_at": "2026-10-25",
+    "plan": "docs/PHASE2-EXECUTION.md",
+    "ordered_items": {
+      "1_sampling": "verified_development_gate_29_of_975_depleted",
+      "2_search": "verified_660_simulator_episodes_and_four_live_battles",
+      "3_original_images": "verified_live_12_bound_images_and_replay",
+      "4_single_act": "implemented_pending_mod_install_tunnel_and_original_act_acceptance"
+    },
+    "complete": false,
+    "status": "blocked",
+    "blocked_audit": {
+      "consecutive_goal_turns": 3,
+      "previous_turn": "progress",
+      "current_turn": "no_progress_external_blocker_revalidated",
+      "report": "artifacts/single-act/continuation-2-check.json",
+      "reason": "Windows Mod installation cannot be verified and the required game reverse tunnel has no listener; original single-act acceptance cannot proceed."
+    }
+  },
+  "rl_environment": {
+    "checked_at": "2026-11-15",
+    "milestone_work_package": "E0",
+    "status": "server_readiness_passed_same_host_offline_recovery",
+    "documentation": "docs/RL-ENVIRONMENT.md",
+    "lock": "requirements-rl.lock",
+    "report": "artifacts/rl-mvp/environment/e0-20261115/readiness-attempt1.json",
+    "regression_report": "artifacts/rl-mvp/environment/e0-20261115/regression.xml",
+    "regression_tests_passed": 65,
+    "python": "3.12.3",
+    "torch": "2.14.0",
+    "torch_cuda_runtime": "13.0",
+    "gpu_compute_checked_physical_indices": [1],
+    "gpu_avoided_due_to_reported_errors": [0],
+    "distinct_starter_cases": 3,
+    "simulator_executions_in_readiness_check": 6,
+    "first_stage_package_versions_unchanged": true,
+    "game_agent_training_started": false,
+    "original_game_evidence_added": false,
+    "independent_cold_install": false,
+    "next_work_package": "E2"
+  },
+  "rl_contract": {
+    "checked_at": "2026-11-15",
+    "milestone_work_package": "E1",
+    "status": "contract_frozen_boundary_tests_passed_training_not_started",
+    "documentation": "docs/RL-MVP.md",
+    "recipe": "config/rl-mvp-v1.json",
+    "implementation": "sts2lab/rl_contract.py",
+    "manifest_report": "artifacts/rl-mvp/contracts/e1-20261115/contract-manifest.json",
+    "regression_report": "artifacts/rl-mvp/contracts/e1-20261115/regression-attempt2.xml",
+    "regression_tests_passed": 124,
+    "new_contract_tests_passed": 59,
+    "training_case_count": 3000,
+    "validation_case_count": 60,
+    "final_test_case_count": 300,
+    "new_validation_or_final_cases_executed": 0,
+    "smoke_target_valid_transitions": 8192,
+    "smoke_hard_cap_valid_transitions": 10000,
+    "formal_training_enabled": false,
+    "game_agent_training_started": false,
+    "network_and_ppo_implemented": false,
+    "original_game_evidence_added": false,
+    "next_work_package": "E2"
+  },
+  "handoff": {
+    "document": "SESSION-HANDOFF.md",
+    "checked_at": "2026-11-15",
+    "private_snapshot": "artifacts/handoff/20261115/state-check.json",
+    "services": {
+      "8765": "not_listening",
+      "8766": "not_listening",
+      "18526": "not_listening"
+    },
+    "normal_act_trace_count": 0,
+    "goal_status": "blocked",
+    "no_experiment_started": true,
+    "remote_delivery_verified": true
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "version": "starter-planning-evaluation-v1",
+  "scope": "simulator_only",
+  "policy_seed": 773,
+  "budgets": [64, 256],
+  "policies": ["random", "heuristic", "rollout", "hierarchical"],
+  "planning": {
+    "version": "rollout-config-v1",
+    "particles": 8,
+    "init_attempts": 512,
+    "update_attempts": 128,
+    "rollout_depth": 8,
+    "max_wall_ms": null,
+    "exploration": 0.7,
+    "goal_max_actions": 3
+  },
+  "inventory": "phase1.json encounters and split seeds",
+  "timing": "policy decide only, including belief initialization/conditioning; excludes actor step, rendering and trace I/O; shared host",
+  "selection_rule": "report every policy and budget; no selection on heldout outcomes",
+  "replay": "all actor trajectories; one policy replay per encounter/policy/budget using first seed"
+}

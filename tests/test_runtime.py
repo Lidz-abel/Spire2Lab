@@ -65,3 +65,26 @@ def test_trace_tampering_is_detected(tmp_path):
     path.write_text("\n".join(lines) + "\n")
     with pytest.raises(ValueError, match="integrity"):
         read_trace(path)
+
+
+@pytest.mark.parametrize("policy", ["heuristic", "random"])
+def test_trace_preserves_policy_version_and_root_branch_metadata(tmp_path, policy):
+    with TestClient(create_app(tmp_path)) as client:
+        state = client.post("/api/session", json={"policy": policy, "seed": 3}).json()
+        lineage = state["metadata"]["branch_provenance"]
+        assert lineage == {
+            "branch_id": state["observation"]["decision_id"].split(":")[0],
+            "parent_branch_id": None,
+            "parent_decision_id": None,
+            "operation": "root",
+        }
+        assert "branch_provenance" not in state["observation"]
+        path = tmp_path / f"{state['metadata']['run_id']}.jsonl"
+        events = read_trace(path)
+        assert events[0]["data"]["metadata"]["branch_provenance"] == lineage
+        proposal = next(e["data"] for e in events if e["kind"] == "decision")
+        assert proposal == state["decision"]
+        assert proposal["policy"] == f"{policy}-v1"
+        assert proposal["score_semantics"] == (
+            "random_priority" if policy == "random" else "heuristic_points"
+        )

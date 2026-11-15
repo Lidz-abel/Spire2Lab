@@ -1,0 +1,19 @@
+{
+  "remote.autoForwardPorts": false,
+  "remote.restoreForwardedPorts": false,
+  "remote.forwardOnOpen": false,
+  "remote.portsAttributes": {
+    "15526": {
+      "label": "Spire2Lab Windows game bridge",
+      "onAutoForward": "ignore"
+    },
+    "18526": {
+      "label": "Spire2Lab bridge via Connect-Windows.ps1",
+      "onAutoForward": "ignore"
+    },
+    "21526": {
+      "label": "Spire2Lab alternate Windows game bridge",
+      "onAutoForward": "ignore"
+    }
+  }
+}

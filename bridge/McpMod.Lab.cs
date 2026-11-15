@@ -21,8 +21,8 @@ public static partial class McpMod
     private static readonly Dictionary<string, (string Fingerprint, Dictionary<string, object?> Result)> LabRequests = new();
     private static readonly Queue<string> LabRequestOrder = new();
     private static string? LabAssemblySha;
-    private static string? LabObservedToken;
-    private static long LabObservedAt;
+    private static string? LabModSha;
+    private static readonly SettlementGate LabSettlement = new(Stopwatch.Frequency);
     private static string? LabPendingFrom;
     private static string? LabLastRequestId;
 
@@ -43,17 +43,39 @@ public static partial class McpMod
     {
         var state = BuildGameState();
         LabAssemblySha ??= Convert.ToHexString(SHA256.HashData(File.ReadAllBytes(typeof(RunManager).Assembly.Location))).ToLowerInvariant();
+        LabModSha ??= Convert.ToHexString(SHA256.HashData(File.ReadAllBytes(typeof(McpMod).Assembly.Location))).ToLowerInvariant();
         state["lab_instance_id"] = LabInstance;
         state["lab_protocol"] = 1;
         state["game_assembly_sha256"] = LabAssemblySha;
+        state["lab_mod_sha256"] = LabModSha;
+        state["lab_capabilities"] = new[] { "scenario_staging_v1", "execution_idle_v1", "decision_images_v1", "single_act_v1" };
+        state["lab_profile_id"] = MegaCrit.Sts2.Core.Saves.SaveManager.Instance.CurrentProfileId;
+        if (LabScenario != null) state["lab_scenario"] = LabScenario;
+        bool inRun = RunManager.Instance.IsInProgress;
+        bool queueEmpty = !inRun || RunManager.Instance.ActionQueueSet?.IsEmpty == true;
+        var executor = inRun ? RunManager.Instance.ActionExecutor : null;
+        bool executorIdle = !inRun || (executor != null && !executor.IsRunning && executor.CurrentlyRunningAction == null);
+        var run = inRun ? RunManager.Instance.DebugOnlyGetState() : null;
+        bool playPilesEmpty = !inRun || (run != null && run.Players.Count > 0 && run.Players.All(p =>
+            p.PlayerCombatState is { } combat ? combat.PlayPile.IsEmpty : !CombatManager.Instance.IsInProgress));
+        bool handIdle = NCombatRoom.Instance?.Ui?.Hand?.InCardPlay != true;
+        bool executionIdle = queueEmpty && executorIdle && playPilesEmpty && handIdle && !LabSetupBusy;
+        state["lab_execution"] = new Dictionary<string, object?> {
+            ["queue_empty"] = queueEmpty, ["executor_idle"] = executorIdle,
+            ["play_piles_empty"] = playPilesEmpty, ["hand_idle"] = handIdle,
+            ["setup_idle"] = !LabSetupBusy
+        };
+        string? actBoundary = BuildActState(state, executionIdle);
+        state["lab_act_boundary"] = actBoundary;
         string token = LabHash(JsonSerializer.Serialize(state));
         long now = Stopwatch.GetTimestamp();
-        if (token != LabObservedToken)
-        {
-            LabObservedToken = token;
-            LabObservedAt = now;
-        }
-        bool settled = (now - LabObservedAt) / (double)Stopwatch.Frequency >= 0.25;
+        bool settled = LabSettlement.Observe(token, executionIdle, now);
+        bool actSettled = LabActSettlement.Observe(token, actBoundary != null, now);
+        if (LabActPendingFrom != null && token != LabActPendingFrom && actSettled
+            && LabLastRequestId == LabActPendingId && LabActPendingId != null
+            && LabActRequests.TryGetValue(LabActPendingId, out var receipt)
+            && Equals(receipt.Result.GetValueOrDefault("status"), "ok"))
+            LabActPendingFrom = null;
         bool actionable = false;
         if (state.TryGetValue("battle", out var value) && value is Dictionary<string, object?> battle)
         {
@@ -67,15 +89,24 @@ public static partial class McpMod
             LabPendingFrom = null;
         state["lab_state_token"] = token;
         state["lab_settled"] = settled;
-        state["lab_action_ready"] = actionable && settled && LabPendingFrom == null;
+        state["lab_action_ready"] = actionable && settled && LabPendingFrom == null && !LabSetupBusy;
         // Transport provenance is added AFTER hashing; acknowledging a request must
         // not by itself look like a changed game state.
         state["lab_last_request_id"] = LabLastRequestId;
+        state["lab_act_settled"] = actSettled;
+        state["lab_act_ready"] = actSettled && LabActPendingFrom == null && LabPendingFrom == null
+            && LabAct?.GetValueOrDefault("status") as string == "active"
+            && state.GetValueOrDefault("lab_act_choices") is List<ActChoice> choices && choices.Count > 0;
         return state;
     }
 
     private static Dictionary<string, object?> ExecuteLabAction(string action, Dictionary<string, JsonElement> data)
     {
+        if (action == "lab_start_act") return ExecuteLabStartAct(data);
+        if (action == "lab_act") return ExecuteLabAct(data);
+        if (LabActOwned) return Error("single_act_controller_owns_run");
+        if (action == "lab_prepare") return ExecuteLabPrepare(data);
+        if (LabSetupBusy) return Error("lab_scenario_setup_pending");
         if (action != "play_card" && action != "end_turn")
             return ExecuteAction(action, data);
         if (!data.TryGetValue("lab_request_id", out var requestIdValue) || requestIdValue.ValueKind != JsonValueKind.String

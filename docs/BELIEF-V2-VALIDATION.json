@@ -1,0 +1,66 @@
+{
+  "schema": "belief-v2-comparison-v1",
+  "recorded_at": "2026-10-25",
+  "scope": "60 recorded development public histories; same 975 decision points per method",
+  "reference_report_sha256": "476503943d08c23967c504214b868ca70983bb21fa4c8316cc4ee5005ac5c1e7",
+  "native_sha256": "6321ca69c3ac6024d069f00b683d698523d8b22819609ee0044f078492856131",
+  "actual_environment_seed_given_to_belief": false,
+  "exact_posterior_claim": false,
+  "summary": [
+    {
+      "method": "seed_rejection",
+      "histories": 60,
+      "decisions": 975,
+      "depleted_decisions": 309,
+      "opening_successes": 44,
+      "mean_opening_attempts": 307.56666666666666,
+      "opening_ms_median": 251.98644550982863,
+      "conditioning_model_calls": 10988,
+      "per_encounter": {
+        "nibbits-weak": {
+          "depleted": 0,
+          "decisions": 303
+        },
+        "slimes-weak": {
+          "depleted": 309,
+          "decisions": 397
+        },
+        "sludge-spinner": {
+          "depleted": 0,
+          "decisions": 275
+        }
+      }
+    },
+    {
+      "method": "public_opening",
+      "histories": 60,
+      "decisions": 975,
+      "depleted_decisions": 29,
+      "opening_successes": 60,
+      "mean_opening_attempts": 26.433333333333334,
+      "opening_ms_median": 17.87046203389764,
+      "conditioning_model_calls": 17135,
+      "per_encounter": {
+        "nibbits-weak": {
+          "depleted": 0,
+          "decisions": 303
+        },
+        "slimes-weak": {
+          "depleted": 29,
+          "decisions": 397
+        },
+        "sludge-spinner": {
+          "depleted": 0,
+          "decisions": 275
+        }
+      }
+    }
+  ],
+  "new_method_depletion_fraction": 0.029743589743589743,
+  "finite_development_gate_passed": true,
+  "historical_original_replays": {
+    "passed": 61,
+    "includes_extra_probe": true,
+    "new_captures": false
+  }
+}

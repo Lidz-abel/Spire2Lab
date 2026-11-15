@@ -1,4 +1,4 @@
-"""Build a read-only observation extension without editing upstream game mechanics."""
+"""Build attributed native sources with explicit, fingerprinted compatibility fixes."""
 
 import hashlib
 import json
@@ -12,18 +12,21 @@ import sys
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 from sts2lab.source_integrity import verify_installed_source
+from sts2lab.native_compat import (
+    corrected_enemy_ai,
+    corrected_native_exports,
+    CORRECTIONS,
+)
 
 source_proof = verify_installed_source("sts2")
 
 source = ROOT / "vendor/sts2/src/Sts2Emulator/Interop/NativeExports.cs"
 text = source.read_text()
-needle = "public static class NativeExports"
-assert text.count(needle) == 1, "Upstream NativeExports changed; review before building"
 generated = ROOT / "native/generated"
 generated.mkdir(exist_ok=True)
-(generated / "NativeExports.cs").write_text(
-    text.replace(needle, "public static partial class NativeExports", 1)
-)
+(generated / "NativeExports.cs").write_text(corrected_native_exports(text))
+enemy_source = ROOT / "vendor/sts2/src/Sts2Emulator/Core/EnemyAI.cs"
+(generated / "EnemyAI.cs").write_text(corrected_enemy_ai(enemy_source.read_text()))
 sdk = shutil.which("dotnet") or str(ROOT / ".tools/dotnet/dotnet")
 stage = tempfile.TemporaryDirectory(prefix="native-build-", dir=ROOT / ".tools")
 output = Path(stage.name)
@@ -44,9 +47,21 @@ subprocess.run(
     check=True,
     env={**os.environ, "DOTNET_CLI_TELEMETRY_OPTOUT": "1"},
 )
-inputs = [ROOT / "native/LabExports.cs", ROOT / "native/Sts2Lab.csproj", source]
+inputs = [
+    ROOT / "native/LabExports.cs",
+    ROOT / "native/LabCombat.cs",
+    ROOT / "native/LabBelief.cs",
+    ROOT / "native/Sts2Lab.csproj",
+    source,
+    enemy_source,
+    ROOT / "sts2lab/native_compat.py",
+    Path(__file__),
+    generated / "NativeExports.cs",
+    generated / "EnemyAI.cs",
+]
 manifest = json.loads((ROOT / "vendor/manifest.json").read_text())
 manifest["source_verification"] = source_proof
+manifest["compatibility_corrections"] = CORRECTIONS
 manifest["extension_sources"] = {
     str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in inputs
 }

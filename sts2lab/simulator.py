@@ -6,6 +6,7 @@ import ctypes
 from functools import lru_cache
 import json
 import os
+import random
 from pathlib import Path
 import sys
 import threading
@@ -20,6 +21,7 @@ from .contracts import (
     StepResult,
     canonical_json,
 )
+from .environment import BranchProvenance
 
 ROOT = Path(__file__).resolve().parents[1]
 CONFIG = json.loads((ROOT / "config/phase1.json").read_text())
@@ -89,6 +91,9 @@ def load_native():
 class Simulator:
     backend = "native_simulator"
     capabilities = {
+        "observe": True,
+        "step": True,
+        "close": True,
         "reset": True,
         "snapshot": True,
         "restore": True,
@@ -99,11 +104,20 @@ class Simulator:
     def __init__(self, encounter="nibbits-weak", seed=1):
         if encounter not in CONFIG["encounters"]:
             raise ValueError("Encounter is outside the phase-one support inventory")
-        if not 0 <= seed < 2**31:
+        if type(seed) is not int or not 0 <= seed < 2**31:
             raise ValueError("Seed must be in [0, 2**31)")
         with LOCK:
             self.native, self.names, self.manifest = load_native()
             from sts2_gym.env import ENCOUNTER_IDS
+            from .catalog import catalog
+
+            # Keep native IDs at this adapter boundary; config is semantic.
+            deck_ids = [catalog()["cards"][entry].card_id for entry in CONFIG["deck"]]
+            relic_ids = {
+                name: native_id for native_id, name in self.names.relics().items()
+            }
+            if CONFIG["potions"]:
+                raise ValueError("Potions are outside the starter benchmark")
 
             self.encounter = encounter
             self.seed = seed
@@ -114,14 +128,15 @@ class Simulator:
             self.reward_buf = (ctypes.c_float * 1)()
             self.sequence = 0
             self.epoch = uuid.uuid4().hex
+            self.branch_provenance = BranchProvenance(branch_id=self.epoch)
             self.terminated = False
             self.truncated = False
             self.native.reset_arena(
                 self.handle,
-                CONFIG["deck"],
+                deck_ids,
                 self.buf,
                 encounter_id=ENCOUNTER_IDS[encounter],
-                relic_ids=CONFIG["relics"],
+                relic_ids=[relic_ids[name] for name in CONFIG["relics"]],
                 potion_ids=CONFIG["potions"],
                 player_hp=CONFIG["hp"],
                 player_max_hp=CONFIG["max_hp"],
@@ -134,6 +149,84 @@ class Simulator:
     @property
     def decision_id(self):
         return f"{self.epoch}:{self.sequence}"
+
+    @classmethod
+    def from_public_opening(cls, encounter, observation, proposal_seed):
+        """Independent hypothetical starter world, or None if constraints reject it.
+
+        Only public inputs enter this factory. Never call a conditioning setter on
+        an actor or clone an actor's hidden state. Full matching is enforced after
+        the narrow native HP/hand proposal, before the world can reach a planner.
+        """
+        from .belief import public_hash
+        from .catalog import catalog
+
+        if (
+            observation.turn != 0
+            or observation.phase != "combat"
+            or observation.outcome != "ongoing"
+            or observation.unavailable_fields
+            or len(observation.hand) != 5
+            or observation.discard_pile
+            or observation.exhaust_pile
+            or observation.known_top
+            or observation.known_bottom
+        ):
+            return None
+        world = cls(encounter, proposal_seed)
+        keep = False
+        try:
+            with LOCK:
+                names = {name: key for key, name in world.names.enemies().items()}
+                if any(
+                    e.type_id not in names or e.hp != e.max_hp
+                    for e in observation.enemies
+                ):
+                    return None
+                if any(c.type_id not in catalog()["cards"] for c in observation.hand):
+                    return None
+                hand = (ctypes.c_int * 5)(
+                    *[catalog()["cards"][c.type_id].card_id for c in observation.hand]
+                )
+                count = len(observation.enemies)
+                enemy_ids = (ctypes.c_int * count)(
+                    *[names[e.type_id] for e in observation.enemies]
+                )
+                hps = (ctypes.c_int * count)(*[e.max_hp for e in observation.enemies])
+                function = world.native._lib.Sts2Lab_ConditionOpening
+                function.argtypes = [
+                    ctypes.c_int,
+                    ctypes.POINTER(ctypes.c_int),
+                    ctypes.c_int,
+                    ctypes.POINTER(ctypes.c_int),
+                    ctypes.POINTER(ctypes.c_int),
+                    ctypes.c_int,
+                    ctypes.c_int,
+                ]
+                function.restype = ctypes.c_int
+                result = function(
+                    world.handle,
+                    hand,
+                    5,
+                    enemy_ids,
+                    hps,
+                    count,
+                    random.Random(proposal_seed ^ 0x5A17).randrange(2**31),
+                )
+                if result < 0:
+                    raise RuntimeError(f"Public-opening proposal failed: {result}")
+                keep = result == 1 and public_hash(world.observe()) == public_hash(
+                    observation
+                )
+                if not keep:
+                    return None
+                world.branch_provenance = BranchProvenance(
+                    branch_id=world.epoch, operation="public_opening"
+                )
+                return world
+        finally:
+            if not keep:
+                world.close()
 
     def _raw(self, *, debug=False):
         if self.handle < 0:
@@ -150,6 +243,16 @@ class Simulator:
     def observe(self):
         with LOCK:
             raw = self._raw()
+            for pile in (
+                "hand",
+                "draw_pile",
+                "discard_pile",
+                "exhaust_pile",
+                "known_top",
+                "known_bottom",
+            ):
+                for card in raw[pile]:
+                    card.pop("native_id")
             raw["player"]["powers"].sort(key=lambda p: p["type_id"])
             for enemy in raw["enemies"]:
                 enemy["powers"].sort(key=lambda p: p["type_id"])
@@ -268,7 +371,24 @@ class Simulator:
                 outcome=outcome,
             )
 
-    def step(self, action_id, decision_id):
+    def reset(self, *, encounter=None, seed=None):
+        """Replace initial state only after successful construction and observation."""
+        with LOCK:
+            replacement = Simulator(
+                self.encounter if encounter is None else encounter,
+                self.seed if seed is None else seed,
+            )
+            try:
+                observation = replacement.observe()
+            except BaseException:
+                replacement.close()
+                raise
+            self.close()
+            self.__dict__.update(replacement.__dict__)
+            replacement.handle = -1
+            return observation
+
+    def step(self, action_id, decision_id, *, request_id=None):
         with LOCK:
             before = self.observe()
             if decision_id != before.decision_id:
@@ -303,7 +423,7 @@ class Simulator:
                 },
             )
 
-    def _fork(self, *, resample_seed=None):
+    def _fork(self, *, operation, resample_seed=None):
         with LOCK:
             copy = object.__new__(Simulator)
             for key in (
@@ -318,6 +438,12 @@ class Simulator:
             ):
                 setattr(copy, key, getattr(self, key))
             copy.epoch = uuid.uuid4().hex
+            copy.branch_provenance = BranchProvenance(
+                branch_id=copy.epoch,
+                parent_branch_id=self.branch_provenance.branch_id,
+                parent_decision_id=self.decision_id,
+                operation=operation,
+            )
             copy.buf = (ctypes.c_int * self.native.OBS_SIZE)()
             copy.reward_buf = (ctypes.c_float * 1)()
             copy.handle = self.native.clone(
@@ -329,19 +455,19 @@ class Simulator:
 
     def snapshot(self):
         """Exact in-process checkpoint for replay/debug; caller must close it."""
-        return self._fork()
+        return self._fork(operation="snapshot")
 
     def sample_world(self, search_seed):
         """Search entry point. Always resamples the hidden state."""
-        if not 0 <= search_seed < 2**31:
+        if type(search_seed) is not int or not 0 <= search_seed < 2**31:
             raise ValueError("Search seed must be in [0, 2**31)")
-        return self._fork(resample_seed=search_seed)
+        return self._fork(operation="sample_world", resample_seed=search_seed)
 
     def restore(self, snapshot):
         with LOCK:
             if snapshot.encounter != self.encounter or snapshot.seed != self.seed:
                 raise ValueError("Checkpoint belongs to another scenario")
-            replacement = snapshot._fork()
+            replacement = snapshot._fork(operation="restore")
             self.close()
             self.__dict__.update(replacement.__dict__)
             replacement.handle = -1

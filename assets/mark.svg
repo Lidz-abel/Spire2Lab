@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="264" viewBox="0 0 256 264" fill="none" role="img" aria-labelledby="title desc">
+  <title id="title">Spire2Lab — the ascent, inspected</title>
+  <desc id="desc">An original mark: a jagged golden spire rises out of a fan of three cards. A cyan branching ascent crosses its base.</desc>
+  <defs>
+    <linearGradient id="stone" x1="104" y1="28" x2="148" y2="200" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFE4A0"/>
+      <stop offset="0.52" stop-color="#DDB766"/>
+      <stop offset="1" stop-color="#AA7F38"/>
+    </linearGradient>
+    <linearGradient id="route" x1="83" y1="215" x2="168" y2="155" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#72E6DA"/>
+      <stop offset="1" stop-color="#66BDF3"/>
+    </linearGradient>
+  </defs>
+
+  <!-- The card fan and broken skyline are drawn for Spire2Lab. -->
+  <g stroke-linejoin="round">
+    <rect x="54" y="63" width="132" height="165" rx="14" transform="rotate(-16 120 145)" fill="#172B36" stroke="#526E78" stroke-width="2.5"/>
+    <rect x="55" y="62" width="132" height="165" rx="14" transform="rotate(13 121 144)" fill="#22323C" stroke="#7F98A0" stroke-width="2.5"/>
+    <rect x="57" y="55" width="132" height="174" rx="14" fill="#101D29" stroke="#C69E51" stroke-width="2.5"/>
+    <path d="M71 109V78Q71 69 80 69H98M148 69H166Q175 69 175 78V106M71 194V206Q71 215 80 215H96M153 215H166Q175 215 175 206V192" stroke="#8E7649" stroke-width="1.5"/>
+  </g>
+
+  <!-- A single asymmetric spire, its smaller needle, and cut stone ledges. -->
+  <path d="M78 190L83 157L78 151L91 145L93 116L100 95L105 126L112 132L108 145L112 190Z" fill="#9F814C"/>
+  <path d="M103 190L109 150L104 143L115 136L117 107L111 101L122 95L125 64L121 64L136 22L144 65L140 65L145 99L154 107L148 114L153 146L167 154L161 164L170 190Z" fill="url(#stone)"/>
+  <path d="M136 22L134 95L145 99L140 65L144 65Z" fill="#FFF0C8"/>
+  <path d="M134 95L130 137L115 136L104 143L135 149L153 146L148 114L154 107Z" fill="#BA934E"/>
+  <path d="M117 107L139 113M109 150L146 158" stroke="#101D29" stroke-width="3"/>
+  <path d="M128 78L131 68L134 78V87H128ZM139 122L142 115L145 123V132H139Z" fill="#101D29"/>
+  <path d="M68 191L90 185L104 191L121 186L142 192L163 186L178 192" stroke="#D8B267" stroke-width="2.5" stroke-linejoin="round"/>
+
+  <!-- Map forks double as the lab's decision tree. -->
+  <path d="M123 217V200L91 176M123 200L157 175L156 158" stroke="#101D29" stroke-width="9" stroke-linejoin="round"/>
+  <path d="M123 217V200L91 176M123 200L157 175L156 158" stroke="url(#route)" stroke-width="3" stroke-linejoin="round"/>
+  <g fill="#101D29" stroke="#78DED9" stroke-width="2.5">
+    <circle cx="123" cy="211" r="4.5"/>
+    <circle cx="91" cy="176" r="4.5"/>
+    <circle cx="157" cy="175" r="4.5"/>
+  </g>
+  <path d="M156 150L162 158L156 166L150 158Z" fill="#85E7DF" stroke="#101D29" stroke-width="2"/>
+
+</svg>

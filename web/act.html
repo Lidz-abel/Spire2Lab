@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Spire2Lab · Single act</title>
+  <link rel="stylesheet" href="/static/act.css">
+</head>
+<body>
+<header><a href="/">Spire2Lab</a><span>Original game · First act</span><a href="/">Combat laboratory ↗</a></header>
+<main>
+  <div class="intro"><div><p class="eyebrow">SINGLE-ACT CONTROL</p><h1>Follow every decision.</h1><p>Normal Ironclad A0 run · public-screen heuristic · original decision images</p></div><span id="status" class="pill">idle</span></div>
+  <section class="toolbar" aria-label="Run controls">
+    <label>Seed <input id="seed" value="SPIRE2LABACT001" maxlength="24" pattern="[A-Z0-9]+"></label>
+    <button id="start">Start experimental act</button><button id="step">One decision</button>
+    <button id="run">Run</button><button id="pause">Pause</button><button id="reconcile">Reconcile</button><button id="archive">Archive</button>
+  </section>
+  <p class="note">Starts from the main menu in experiment profile 2 without saving. Unknown screens stop automatic play. Closing or archiving preserves the trace; it does not exit the game.</p>
+  <p id="error" role="alert"></p>
+  <section class="replay-controls"><label>Saved run <select id="runs"><option value="">Choose a trace</option></select></label><button id="load">Replay</button><button id="live">Live view</button><input id="frame" type="range" min="0" max="0" value="0" aria-label="Replay decision"><span id="frame-label"></span></section>
+  <div id="summary" class="summary"></div>
+  <div class="grid">
+    <section class="panel pixels"><div class="panel-heading"><h2>Original game</h2><span id="image-state">No decision image</span></div><img id="pixels" alt="Original game at the displayed decision" hidden><p id="no-image">A verified image appears at each supported decision boundary.</p></section>
+    <section class="panel"><h2>Agent decision</h2><p id="goal"></p><p id="mode" class="note"></p><div id="choices"></div></section>
+    <section class="panel"><h2>Visible map / current options</h2><div id="map"></div><div id="screen"></div></section>
+    <section class="panel"><h2>Inventory</h2><div id="inventory"></div></section>
+  </div>
+  <section class="panel"><h2>Confirmed actions</h2><div class="table-wrap"><table><thead><tr><th>Step</th><th>Floor</th><th>Phase</th><th>Action</th><th>HP</th></tr></thead><tbody id="history"></tbody></table></div></section>
+</main>
+<script src="/static/act.js"></script>
+</body></html>

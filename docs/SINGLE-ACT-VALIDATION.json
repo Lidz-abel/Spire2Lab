@@ -1,0 +1,62 @@
+{
+  "schema": "single-act-implementation-checkpoint-v1",
+  "date": "2026-10-25",
+  "status": "implemented_synthetic_tests_passed_pending_original_acceptance",
+  "game_version": "0.107.1",
+  "game_assembly_sha256": "a1f9e653f1e28e4076558fee1e60d218619cb7e057b887c6417f62c62c6d7a52",
+  "mod_sha256": "ff144ee812218f9a3ffbb7dbdb2f5b1c4d6b750a189180d836b6092f85db41bd",
+  "normal_act_attempts": 0,
+  "normal_act_completed": false,
+  "tests": {
+    "passed": 188,
+    "report": "artifacts/single-act/final-tests.xml",
+    "warning": "existing Starlette/httpx deprecation"
+  },
+  "browser": {
+    "evidence_kind": "synthetic_ui_fixture",
+    "desktop": true,
+    "mobile": true,
+    "frames": 2,
+    "replay_mutations": 0,
+    "javascript_errors": 0,
+    "report": "artifacts/single-act/browser-fixture/report.json"
+  },
+  "build": {
+    "compiled": true,
+    "report": "artifacts/single-act/build-attempt4.log",
+    "warning": "existing upstream nullable dereference"
+  },
+  "recipe": "config/single-act-v1.json",
+  "specification": "docs/SINGLE-ACT.md",
+  "limits": [
+    "No continuous original act has been executed with this build.",
+    "Public-screen heuristic only; starter-search validation does not apply to arbitrary act content.",
+    "Synthetic image fixtures are not original-game evidence.",
+    "Unsupported screens halt; every game mechanic is not supported."
+  ],
+  "source_sha256": {
+    "bridge/ActContract.cs": "c4c989630e1ad955785e7ae04d8c3dfdd11fd3a5ae1af660a8b9379050574927",
+    "bridge/McpMod.Act.cs": "8636951e1862a3f1954fae40a0390ea203f19a89327f7f458fd8cc5e85f41632",
+    "config/single-act-v1.json": "4b1eff94b370a0591674e77ed1dc433cbafe9639251edd331aed5582a9629d2c",
+    "sts2lab/act_bridge.py": "3b5657c910b06de0abfbbda9d6eb3b124c14772a53aa1a1f7c7a014fbd7ba9c8",
+    "sts2lab/act_contracts.py": "f8c1de6f04f8dac3e70e54f4e6b0b813edbd82cb5c681694f715253f182bbde2",
+    "sts2lab/act_policy.py": "fc167464a34a3313c0963ae00c7de768e17706c4045e6079af1baa221579b373",
+    "sts2lab/act_runtime.py": "d2333f7d41495c2d341911c73812ac9ff91347de2347907f2e795a624865f1e2",
+    "sts2lab/act_server.py": "8aa1ef983576827700a158077dae872c7ad508aa9facc3891ff3a8b1d4dc134a",
+    "sts2lab/act_replay.py": "17f9ec7c79d74c3348f0f0381fe08fabc6ed4abc103b554e41a884bd8d694531",
+    "scripts/audit_act.py": "9399c1aeb7747cdd9ec321b5fb87720c4d70ed5cb447efa7a57ab8be47ca4698"
+  },
+  "freeze_commit": "a8a861c1a7eff58d4f3d617ad7c47eb80f78d1d7",
+  "offline_audit": {
+    "implemented": true,
+    "tests_passed": 4,
+    "report": "artifacts/single-act/replay-tests.xml",
+    "scope": "synthetic rejection and integrity tests; no original act audited yet"
+  },
+  "transport_followup": {
+    "original_attempts": 0,
+    "tests_passed": 26,
+    "tests": "artifacts/single-act/unsupported-tests-final.xml",
+    "scope": "explicit unsupported idle screens; preserve latest private reads on errors; no policy or Mod change"
+  }
+}

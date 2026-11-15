@@ -1,0 +1,77 @@
+Spire2Lab — 2026-11-16 Proposal delivery
+
+Scope
+  Build Track, individual project, 1–2 pages.
+  Main course work: reinforcement learning training and original-game deployment.
+  Final objective: autonomous complete Ironclad/A0 run; Act 1 is an intermediate gate.
+  The document distinguishes pre-course work, planned work and verified evidence.
+  A successful single run and measured success rate are separate claims.
+
+Editable source
+  docs/course/proposal.html (UTF-8, self-contained; contains identity placeholders)
+
+Offline rendering
+  Run from the phase-two project root using system python3:
+    python3 -B scripts/render_course_proposal.py \
+      --output artifacts/course/proposal-20261116
+
+  To regenerate the personalized version using the student-supplied name and ID:
+    python3 -B scripts/render_course_proposal.py \
+      --output artifacts/course/proposal-20261116-personalized \
+      --name 'ACTUAL_NAME' --student-id 'ACTUAL_STUDENT_ID'
+
+  This uses existing libcairo, libpango, libpangocairo, libgobject, Noto CJK fonts,
+  pdfinfo and pdftotext. It does not modify the project venv or install packages.
+  course_pdf_layout.py is a limited renderer for this source, not a general browser.
+  PDF checks cover A4/two pages, content bounds, required text, identity and ZIP CRC.
+  Visual review should follow every substantive layout change:
+    pdftoppm -scale-to 1600 -png \
+      artifacts/course/proposal-20261116/proposal.pdf \
+      artifacts/course/proposal-20261116/preview
+
+Outputs (ignored/private artifacts)
+  proposal.pdf             Two-page submission document.
+  proposal.html            Editable copy, personalized if names were supplied.
+  *_proposal.zip           Contains proposal.pdf only.
+  proposal-extracted.txt   Text-extraction verification.
+  validation.json         Page/layout checks, hashes and identity/submission state.
+  preview-1.png / -2.png   Optional visual review images, not included in ZIP.
+
+Submission checklist
+  Deadline: 2026-11-16 23:59 Asia/Shanghai, per supplied course schedule.
+  1. Student reviews and owns the wording, proposal scope and AI-use disclosure.
+  2. Verify the supplied name/student ID in the personalized PDF.
+  3. Confirm resource plan or retain explicit GPU availability uncertainty.
+  4. Confirm any teacher-specific template/language requirements (none supplied).
+  5. Upload STUDENT_ID_proposal.zip through the actual course submission link.
+  6. Retain the upload receipt; packaging alone does not mean submission.
+
+Current content/checklist status
+  Completed: scenario, AI relevance, existing/new work boundary, architecture,
+  RL pipeline, MVP/final acceptance, tests, schedule, deliverables, resources,
+  risks, offline demo, references and AI/dependency disclosure.
+  Personalized PDF and correctly named ZIP now exist under
+  artifacts/course/proposal-20261116-personalized/; identity supplied by the student.
+  The original proposal-20261116 directory is an unpersonalized historical draft.
+  Pending: resource allocation confirmation, student review,
+  actual course upload and receipt. No submission link was provided.
+  No RL training, game trial, dependency installation or service start occurred.
+
+Source verification
+  Primary references checked on 2026-11-15:
+    https://arxiv.org/abs/1707.06347
+    https://arxiv.org/abs/2006.14171
+  Upstream provenance and pinned revisions follow CODE-PROVENANCE.md.
+  Current evidence follows PHASE2-STATUS.json, docs/SINGLE-ACT.md and SESSION-HANDOFF.md.
+  Resource read: CPU/memory visible on host, but not a dedicated allocation;
+  nvidia-smi could not communicate with the driver. No GPU model/availability claim.
+
+Historical rendering failures, retained for handoff
+  1. Installed Chromium through Playwright exited on crashpad setsockopt:
+     Operation not permitted, SIGTRAP. No browser service remained active.
+  2. System gi/Pango imported, but the gi Cairo foreign-type module was absent.
+     PangoCairo.create_layout raised KeyError: could not find foreign type Context.
+  3. Switched to existing native libraries via ctypes; no package installation.
+     First layout exceeded the page-2 footer clearance (793.58 pt vs 786 pt limit).
+     Shortened the resource paragraph, then normalized HTML indentation whitespace.
+  Final PDF and validation.json supersede these failed rendering attempts.

@@ -1,9 +1,13 @@
 Spire2Lab — 第一阶段实验环境
 
 项目目录：/user/chenzk/sts2-lab（GitHub：Lidz-abel/Spire2Lab）
-当前状态：Linux 战斗环境与面板可运行；原版适配已接入运行控制并通过合成接口测试，Windows 实机兼容与逐步一致性尚未通过。
+当前状态：Linux 环境与原版面板闭环可运行，三种遭遇已有完整战斗逐步对照通过。
+固定 60/60 场参考及单独的战败/控制探针通过，9/9 类边界已覆盖；版本摘要见 docs/PHASE1-VALIDATION.json。
+实机响应丢失恢复、暂停、人工覆盖、战败及回放验证见 docs/LIVE-VALIDATION.md。
 完整验收清单见 PHASE1-STATUS.json。不得将模拟器自测视为本机原版一致性证明。
 整体架构、第一阶段建设顺序与后续路线见 ARCHITECTURE-PLAN.txt。
+当前采用 three-stage-v1：可信实验平台 → 搜索与分层决策 → 高效训练与原版评测。
+第一阶段本地技术验收已通过，远程交付仍待 GitHub 连通与写认证恢复；无需再次安装 Mod。
 
 启动（Linux）
   cd /user/chenzk/sts2-lab
@@ -20,31 +24,109 @@ Spire2Lab — 第一阶段实验环境
 
 Windows 接入
   1. 将 scripts/Connect-Windows.ps1 复制到 Windows。
-     powershell -ExecutionPolicy Bypass -File .\Connect-Windows.ps1 -Server 用户@服务器 -SshPort 22
+     Set-ExecutionPolicy -Scope Process Bypass -Force
+     .\Connect-Windows.ps1 -Server 用户@服务器 -RemoteRoot /user/chenzk/sts2-lab -SshPort 22
+     RemoteRoot 必须为实际项目绝对路径（在 Linux 项目目录执行 pwd 查看）；换目录后需修改。
+     当前支持字母、数字、下划线、点、斜线和短横线，不支持空格。两个脚本使用相同路径。
      自动查找 Steam 游戏，记录构建 ID 和 DLL 哈希，将三个编译引用 DLL 发送到你的服务器。
      DLL 仅保存在被 Git 忽略的 artifacts/windows/assemblies，不发布、不进入项目源码。
      隧道：Windows 127.0.0.1:8765 -> Linux 127.0.0.1:8765。
      反向隧道：Linux 127.0.0.1:18526 -> Windows 127.0.0.1:15526。
+     默认游戏端口为 15526；若已修改 Mod 配置，追加 -GameBridgePort 21526（或实际端口）。
+     此参数只改变 SSH 目标，不修改 Mod 配置；Linux 18526 和面板 8765 保持原值。
      保持脚本窗口打开，即可在 Windows 浏览器访问面板。
   2. Linux 核对实际版本后构建：
      .venv/bin/python scripts/build_bridge.py
-     当前桥接代码尚未用你的 DLL 编译；编译成功也不等于实机行为验证通过。
+     已使用 Steam public build 23811903 引用编译，发行版本 v0.107.1 与运行时指纹匹配；固定 60 场与额外边界探针已通过。
+     DLL 文件版本 0.1.0.0 不能当作 v0.107.1 的证明；编译成功也不等于实机行为验证通过。
   3. 将 scripts/Install-Windows-Mod.ps1 复制到 Windows，关闭游戏后执行：
-     powershell -ExecutionPolicy Bypass -File .\Install-Windows-Mod.ps1 -Server 用户@服务器
-     安装器会校验本机游戏指纹，备份已有同名 Mod，再通过 Steam 启动游戏。
+     在另一个 PowerShell 窗口进入脚本目录，直接执行，无需再次调用 powershell 启动命令：
+     Set-ExecutionPolicy -Scope Process Bypass -Force
+     .\Install-Windows-Mod.ps1 -Server 用户@服务器 -RemoteRoot /user/chenzk/sts2-lab -SshPort 22
+     安装器会校验本机游戏指纹，备份已有同名 Mod，安装 DLL、manifest、LICENSE.txt 和 build.json。成功后由用户通过 Steam 启动游戏。
      游戏首次加载 Mod 可能要求你在界面中启用。
-  4. 在面板选择“Windows 原版游戏”，连接符合范围的首回合战斗。
+     已核对的本机 build 23811903 在首次同意加载后会保存设置并主动退出；从 Steam 再次启动即可。
+     重启后先停留主菜单，核对版本及桥接接口；若再次退出，先检查启动日志。
+  4. 保持游戏主菜单和隧道，在 Linux 项目目录执行只读连接验收：
+     .venv/bin/python scripts/check_bridge.py
+     默认连续读取 5 次；校验协议、DLL 指纹、进程实例、主菜单状态令牌与最后一次结算标志。
+     只调用 GET，不发送游戏动作。成功退出 0，失败退出非零；每次另存一份带时间戳的
+     artifacts/windows/bridge-check-*.json，不覆盖旧证据。测试传输明确标记 synthetic_transport。
+     主菜单 lab_action_ready=false 是正常的；本检查不证明战斗或发行版本通过。
+     当前收到的 DLL 元数据是通用版本 0.1.0.0，已从元数据确认游戏读取 release_info.json。
+     从 Windows 游戏安装根目录单独复制该文件到 artifacts/windows/release_info.json；
+     当前 Connect 脚本尚不自动上传它。验收器核对精确版本、提交号、程序集兼容校验值
+     和 DLL SHA-256，原始报告和构建记录保持不变。若没有发行文件，只有 DLL 自带
+     目标版本元数据才允许通过；已提供但不匹配的发行文件不能被静默忽略。
+     本机上传的文件已通过核验；其中 32 位兼容校验值不是安全哈希或发行方签名。
+  5. 版本门通过后，选择独立实验存档槽位 2，在无对局的主菜单准备范围内场景：
+     .venv/bin/python scripts/prepare_scenario.py --encounter nibbits-weak --seed 1
+     成功仅表示初态检查通过，不表示完整战斗通过；失败保留报告，未知结果只用
+     --resume 实际报告路径 继续 GET 确认，不能盲目重发。细节见 docs/SCENARIO-STAGING.md。
+     再在面板选择“Windows 原版游戏”，连接符合范围的首回合战斗。
      此操作读取当前对局，不会替你创建或重置游戏。环境种子不会伪装成原版实际种子。
      原版必须是铁甲战士 A0、初始牌组/遗物、未附魔、无药水、80/80 HP、99 金币、
      第 2 层、首回合 5 张手牌、3 点能量；选择与实际敌人一致的遭遇。
-     原版初始化与随机状态对齐工具仍需补齐，不能只凭相同种子宣称一致。
-  5. 动作响应丢失会显示“结果待确认”。点击“确认游戏结果”只读取状态，不重发动作。
+     初始化工具按预先指定的种子建立不保存的调试场景；不在战斗中改写随机状态。
+     私有牌序/RNG 用于验证，不能进入策略输入；相同数字种子本身不证明一致。
+  6. 动作响应丢失会显示“结果待确认”。点击“确认游戏结果”只读取状态，不重发动作。
      等待结算期间可暂停后续决策；已提交的动作不能撤销。
      未决动作禁止直接切换实验。无法继续确认时，可点“归档异常实验”，保留未知结果；
      归档不操作游戏，也不生成胜负或奖励。之后可以创建新实验。
 
 桥接构建采用固定上游的 mods/STS2_MCP/STS2_MCP.dll 与 mod_manifest.json 布局。
-安装器会备份已有文件并在复制失败时尝试恢复。该脚本尚未在你的 Windows 上执行。
+安装器会备份已有文件并在复制失败时尝试恢复。用户已回传 Windows 安装成功输出；
+服务器随后经隧道直接读取主菜单，lab_protocol=1、运行时指纹和连续状态核验通过。
+一次第 1 层防御牌探针确认能量 3->2、格挡 0->5 和请求回执；独立保存在 artifacts/windows/，
+不计入第 2 层的 60 场参考集。当前测试使用原本空白的 Mod 存档槽位 2，未在槽位 1 开局。
+失败回滚目前仅有模拟测试证据。
+
+现有 Windows 安装改用 21526
+  本轮已迁移到 21526；Windows 本机及服务器经 18526 隧道读取主菜单均通过。下列步骤供以后迁移参考，无需再次执行。
+  1. 正常退出游戏，在原 Connect-Windows.ps1 窗口按 Ctrl+C 关闭旧隧道。
+  2. 在 Windows PowerShell 检查：
+       Get-NetTCPConnection -LocalPort 21526 -State Listen -ErrorAction SilentlyContinue
+     有监听者时先停止，不覆盖其他服务；换一个空闲端口并同步下方配置和 SSH 目标。
+     没有监听者后，在游戏目录 mods/STS2_MCP 下备份 STS2_MCP.conf，再将其中整数 port
+     改成 21526。文件为 UTF-8 JSON，例如 {"port":21526}；已有其他属性保留。
+     此文件由已安装 Mod 的 LoadPort 在启动时读取，无需重新编译或重新安装 DLL。
+  3. 从 Steam 重启游戏，停留主菜单，在 Windows 验证：
+       & "$env:SystemRoot\System32\curl.exe" --noproxy "*" --max-time 5 "http://127.0.0.1:21526/"
+       & "$env:SystemRoot\System32\curl.exe" --noproxy "*" --max-time 5 "http://127.0.0.1:21526/api/v1/singleplayer"
+  4. 用独立 PowerShell 窗口重建隧道（替换 SSH 目标及端口，保持窗口打开）：
+       ssh -N -p 22 -o ExitOnForwardFailure=yes -o ServerAliveInterval=30 -o ServerAliveCountMax=3 -L 127.0.0.1:8765:127.0.0.1:8765 -R 127.0.0.1:18526:127.0.0.1:21526 用户@服务器
+     该命令适用于已上传并安装的环境，不重新上传或覆盖版本报告。旧版接入脚本仍指向
+     15526，不要用它重新连接。以后使用更新后的脚本时须显式传 -GameBridgePort 21526。
+     若 SSH 报端口绑定失败，检查旧隧道是否已关闭；不要把新隧道失败当作成功连接。
+     恢复旧端口时先关闭游戏与隧道，恢复配置备份，并将 SSH 目标端口同步恢复。
+
+Windows 桥接超时：检查端口拥有者（以下为默认 15526，换端口后使用实际号码）
+  Windows 15526 应供游戏桥接使用；Linux 18526 由 Connect-Windows.ps1 反向转发到它。
+  在 Windows PowerShell 检查监听者：
+    Get-NetTCPConnection -LocalPort 15526 -State Listen -ErrorAction SilentlyContinue | Select-Object LocalAddress,LocalPort,OwningProcess
+  将返回的 PID 代入（不要假定某个历史 PID 仍是同一进程）：
+    Get-CimInstance Win32_Process -Filter "ProcessId = 返回的PID" | Select-Object ProcessId,Name,ExecutablePath
+  若拥有者是 Code.exe，先保留启动日志中的桥接信息，再正常退出游戏：
+    Select-String -Path "$env:APPDATA\SlayTheSpire2\logs\godot.log" -Pattern '\[STS2 MCP\]|HttpListener|15526' -Context 2,4 | Select-Object -Last 20
+  在 VS Code 底部“端口 / Ports”面板，按“转发地址”查找本地 127.0.0.1:15526，停止该项转发。
+  注意远程端口和本地转发地址可能不同；若当前窗口没有该项，再检查其他 VS Code 远程窗口。
+  保留 Connect-Windows.ps1 的独立 SSH 窗口。再次检查 Windows 15526，确认已无监听者后，
+  从 Steam 启动游戏并停留主菜单，重新读取当前启动日志及 HTTP 根路径和单人状态。
+  不要把 Linux 18526 再转发到 Windows 15526；这会指回原来的桥接目的端口。
+  Mod 的设置项出现，只说明部分初始化执行；须看到 HTTP 响应才算接口连通。
+  若仍有其他进程占用，或没有找到对应转发，保留进程信息和日志继续定位，不直接终止整个编辑器。
+  .vscode/settings.json 对 15526/18526/21526 设置 onAutoForward=ignore，仅在以本项目为工作区时应用。
+  它不会关闭已有、手动或恢复的转发，也不修改全局设置；当前冲突仍须按上面的步骤解除。
+  若换端口后仍由 Code.exe 占用，本项目使用独立 SSH 隧道，因此工作区设置也关闭
+  remote.autoForwardPorts、remote.restoreForwardedPorts、remote.forwardOnOpen。
+  如果 VS Code 打开的目录不是本项目，仓库设置未必生效：在实际远程窗口 Ctrl+,，
+  选择“工作区 / Workspace”，逐项搜索上述设置并取消勾选；不要覆盖整个设置文件。
+  再按 F1 执行 Ports: Focus on Ports View，停止两项冲突的本地转发并检查端口释放。
+  关闭自动转发不会删除已有条目，也不能阻止扩展显式建立转发；仍占用时检查其他
+  远程窗口的 Ports 条目。保留其他转发和独立 SSH 连接，不强制结束整个编辑器。
+  这些设置只控制 VS Code 的转发行为；独立 OpenSSH 隧道不由这些设置管理。
+  VS Code 官方端口转发说明：https://code.visualstudio.com/docs/remote/ssh#_forwarding-a-port-creating-ssh-tunnel
+  设置定义：https://github.com/microsoft/vscode/blob/main/src/vs/workbench/contrib/remote/common/remote.contribution.ts
 
 实验范围
   config/phase1.json 定义 A0 铁甲战士、10 张初始牌、燃烧之血、初始 80/80 HP。
@@ -55,10 +137,15 @@ Windows 接入
   当前上游 CardInstance 没有持久实例 UUID，因此不伪称已支持跨洗牌追踪同名实例。
   native Turn 从 0 开始，面板从 1 开始显示回合。
 
-主要接口（语义协议 0.2.0；训练编码 combat-entities-v2）
-  sts2lab.simulator.Simulator：observe / step / snapshot / restore / sample_world / close。
+主要接口（语义协议 0.3.0；训练编码 combat-entities-v3）
+  sts2lab.simulator.Simulator：observe / step / reset / snapshot / restore / sample_world / close。
+  公开观测与初始配置使用语义名称；后端数字 ID 留在适配器。训练 token 由
+  config/content-v1.json 固定，0 为 padding、未知内容报错，词表版本/指纹随实验记录。
+  旧协议轨迹保留原文件；当前语义回放要求显式迁移，不能直接改版本号冒充新数据。
   snapshot 是精确的进程内检查点，须 close 释放；仅用于校验和恢复。
   sample_world(search_seed) 强制重采样未知牌序及随机流，供后续搜索使用。
+  branch_provenance 记录独立分支、父分支、创建时父决策及操作类型；恢复以检查点
+  为父分支生成新编号。该信息属于实验元数据，不进入策略观测；原版后端为 None。
   持久复现通过带版本的初始配置、动作和逐步轨迹完成，不把内存句柄当跨进程存档。
   sts2lab.policies.Policy：只接收 Observation，无法访问真实隐藏状态。
   sts2lab.gym_env.CombatEnv：标准 reset/step 和 action_masks，详见 ENCODING.json。
@@ -71,6 +158,10 @@ Windows 接入
   .venv/bin/python scripts/build_bridge.py --prepare-only
   .venv/bin/python scripts/benchmark.py --split development
   .venv/bin/python scripts/benchmark.py --split heldout
+  .venv/bin/python scripts/benchmark_sampling.py --workers 1 2 4 --repeats 3 --episodes-per-case 5
+  多进程报告为 artifacts/sampling-development.json；包含硬件、源码哈希、吞吐、延迟和进程 RSS。
+  固定用例在每轮重复，逐步公开轨迹哈希必须一致。计时包括/排除哪些开销见报告 measurement。
+  RSS 峰值之和不等于同时刻物理内存；这些是模拟器测量，不是原版一致性或训练收益。
   .venv/bin/python -c "from sts2lab.verification import replay_trace; print(replay_trace('artifacts/runs/你的运行ID.jsonl'))"
   浏览器验证（先启动服务）：
     PLAYWRIGHT_BROWSERS_PATH="$PWD/.tools/browsers" .venv/bin/playwright install chromium
@@ -84,7 +175,8 @@ Windows 接入
   上游 C# 测试：4801 通过、1 跳过。
   上游 Python 测试：527 项中 519 通过、7 跳过、1 失败。
   已知失败为 TENDER_POWER 显示值比较规则，位于上游比较工具，不在本阶段内容范围。
-  我们的逐步比较器独立实现；仍需真实原版参考轨迹才能验收。
+  上述上游测试为早期版本检查点；当前项目回归与实机证据以 PHASE1-STATUS.json 为准。
+  我们的逐步比较器独立实现；完整范围结论须由固定原版参考集验收。
   原版桥接 transport 测试用合成响应验证通信契约，不能证明实机兼容。
 
 后续扩展
@@ -104,13 +196,14 @@ Windows 接入
   比较器核对原始捕获、动作关联、协议版本、场景配置，并重新执行模拟器候选轨迹。
   报告声明比较字段与排除项；拒绝合成接口数据、未决动作、缺失证据及不匹配初态。
   通过表示这一条完整战斗轨迹的已测字段一致，不证明整个游戏或隐藏随机流一致。
-  当前没有你本机原版的通过报告。
+  已有本机原版完整通过报告，固定矩阵计数及覆盖见 PHASE1-STATUS.json。
 
 当前本地证据
-  43 项 Python 测试通过；原生模拟器页面 6 条浏览器流程通过。
+  当前代码检查点 4f8447b：133 项测试通过；原生模拟器页面 6 条浏览器流程通过。
   原版协议页面 5 条流程使用合成 HTTP 接口验证，明确不是实机兼容或规则证据：
     PLAYWRIGHT_BROWSERS_PATH="$PWD/.tools/browsers" .venv/bin/python scripts/check_original_dashboard.py
-  开发集 60 场、980 次决策完成。报告包含实际构建指纹、配置与计时范围。
+  当前 1/2/4 workers 九轮共 2700 场、43875 决策的公开轨迹一致；实际构建、硬件、
+  计时范围和共享主机限制均有记录。独立环境升级重建后 300 场轨迹一致；不是原版证据。
   重建原生库使用临时输出和文件原子替换；已加载旧库的进程需要重新启动才能创建新实验。
   重建脚本会保留被替换版本到 .tools/native-history；已经核验备份与当前同指纹的旧库。
   更早的历史版本不保证已归档。
@@ -123,7 +216,7 @@ Windows 接入
   它不会搜索种子，也不会改写模拟器状态来匹配后续结果；第一处差异会保留到报告。
   原始隐藏顺序只用于校验，不进入策略或公开轨迹。随机流完全对齐仍未得到证明。
   候选轨迹和报告都必须使用新路径，避免覆盖失败尝试。
-  当前没有本机原版初态成功对齐的证据；工具完成不代表原版验收完成。
+  当前已有本机原版初态与完整轨迹匹配证据；单个用例通过不替代完整矩阵。
 
 来源核验与接入包
   bootstrap、两个构建脚本和模拟器首次加载会核对固定源码归档及已安装文件。
@@ -146,4 +239,5 @@ Windows 接入
   缺失或失败时返回非零状态，报告写入 artifacts/acceptance/status.json。
   核验实际 DLL 版本/哈希、Mod 构建、固定策略动作、原始捕获和模拟器重执行。
   通过只表示有限参考集已验证；修改代码、版本或证据后已有结论需重新核验。
-  /api/acceptance 和面板显示该状态。目前 60 条实机参考全部缺失，第一阶段尚未完成。
+  /api/acceptance 和面板显示该状态。当前矩阵计数见 PHASE1-STATUS.json。
+  额外实机 loss/recovery 探针只补边界覆盖，不计入 60 场。本地技术验收通过，GitHub 同步单独跟踪。

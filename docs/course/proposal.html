@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <title>Spire2Lab — Final Project Proposal</title>
+  <style>
+    @page { size: A4; margin: 0; }
+    * { box-sizing: border-box; }
+    body { margin: 0; color: #18222e; background: #e9edf1; font-family: "Noto Sans CJK SC", sans-serif; }
+    .page { position: relative; width: 210mm; height: 297mm; padding: 15mm 17mm 16mm; margin: 8mm auto; background: white; break-after: page; }
+    .page:last-child { break-after: auto; }
+    .eyebrow { font-size: 8.5pt; color: #526171; letter-spacing: .6pt; padding-bottom: 2.5mm; border-bottom: 1px solid #b8c4d0; }
+    h1 { margin: 4mm 0 1mm; font-size: 19pt; line-height: 1.3; font-weight: 700; color: #17344d; }
+    .subtitle { font-size: 13pt; margin-bottom: 2.5mm; font-weight: 700; }
+    .meta { font-size: 9pt; color: #526171; margin-bottom: 4mm; }
+    h2 { font-size: 11.2pt; line-height: 1.4; margin: 3.4mm 0 1.3mm; color: #17344d; }
+    p { margin: 0 0 1.8mm; font-size: 10pt; line-height: 1.62; text-align: justify; }
+    strong { font-weight: 700; }
+    .flow { padding: 2.3mm 3mm; background: #f1f5f8; border-left: 2px solid #476e8e; font-size: 9.4pt; line-height: 1.65; margin: 2mm 0; }
+    table { border-collapse: collapse; width: 100%; font-size: 9pt; line-height: 1.5; margin: 2mm 0; }
+    th { text-align: left; color: #17344d; background: #f1f5f8; font-weight: 700; }
+    td, th { padding: 1.5mm 2mm; vertical-align: top; border-bottom: 1px solid #d9e0e6; }
+    .dates { width: 29mm; white-space: nowrap; }
+    .references p { font-size: 8pt; line-height: 1.48; margin-bottom: 1mm; text-align: left; }
+    a { color: #17344d; text-decoration: none; overflow-wrap: anywhere; }
+    .footer { position: absolute; left: 17mm; right: 17mm; bottom: 9mm; border-top: 1px solid #b8c4d0; padding-top: 2mm; font-size: 8pt; color: #65717d; display: flex; justify-content: space-between; }
+    @media print { body { background: white; } .page { margin: 0; } }
+  </style>
+</head>
+<body>
+  <article class="page">
+    <div class="eyebrow">FINAL PROJECT PROPOSAL · BUILD TRACK · 2026.11.16</div>
+    <h1>Spire2Lab</h1>
+    <div class="subtitle">面向《杀戮尖塔 2》自主通关的强化学习系统</div>
+    <div class="meta">个人项目　｜　姓名：<span id="student-name">待填写</span>　｜　学号：<span id="student-id">待填写</span></div>
+
+    <section>
+      <h2>1　场景与目标</h2>
+      <p>面向希望观察 AI 决策的玩家和需要游戏智能体实验工具的学习者，本项目构建一个可训练、可部署、可回放的自主游戏系统。用户启动原版游戏后，Agent 根据公开状态完成出牌、选路、奖励、购买、休息与事件决策，面板同步展示动作、模型输出及原版画面。核心难点是随机性与不完整信息下的长期资源管理，以及训练环境与真实游戏之间的可靠衔接。</p>
+      <p><strong>最终目标：</strong>在固定游戏版本、Ironclad／A0／单人正常开局下，由包含训练策略的系统连续完成全部游戏流程并达到原版胜利终局，全程无需人工接管。强化学习通过环境交互学习决策，是本课程新增工作的中心；第一幕是分阶段验收节点。</p>
+    </section>
+
+    <section>
+      <h2>2　已有基础与课程新增工作</h2>
+      <p>本项目拓展本人已有的 Spire2Lab：课程发布前已具备语义协议、并行采样接口、有限战斗搜索、Windows Mod 控制与截图回放；其中 60 条原版参考战斗及一场 12 帧原版图像记录在声明范围内通过验证。单幕控制代码已存在，普通连续单幕实机尝试仍为 0；尚无正式 RL 训练或训练模型。现有模拟器的原版一致性验证仅覆盖有限初始牌组战斗，不能直接视为全游戏训练环境。</p>
+      <p><strong>新增工程交付：</strong>扩展并验证训练环境与内容覆盖，建设 RL 采样、更新、断点恢复和评估流水线，部署训练模型，完成单幕到完整游戏的控制与测试，并提供自主通关证据。个人负责设计、实现、实验分析及路演；已有工作与课程新增工作分别记录。</p>
+    </section>
+
+    <section>
+      <h2>3　技术方案与强化学习闭环</h2>
+      <div class="flow">训练：Linux 模拟环境 → 并行交互采样 → PPO 更新 → 模型与配置归档<br>部署：Windows 原版 → 公开观测与合法动作 → 训练策略 → 单次执行与确认<br>观测：公开状态 + 决策来源 + 原版画面 → 实时面板／只读回放</div>
+      <p><strong>环境与表征。</strong>复用固定上游模拟器及桥接代码 [3, 4]，逐步验证新增牌组、敌人和界面。编码公开手牌、资源、敌人意图、牌组及历史摘要；网络对当前合法动作逐项评分，掩码排除无效动作 [2]。实际种子、隐藏牌序与 RNG 不进入策略；超时和未支持状态记录为中断，不伪造胜负。</p>
+      <p><strong>训练与决策。</strong>拟用 PyTorch 实现小型 Actor–Critic 与 PPO [1]，包含优势估计、批次更新、梯度检查、日志和断点恢复。先训练战斗策略，再扩展多遭遇与牌组课程；流程调度器接入地图、奖励和资源决策，具备可靠环境后再训练高层策略。早期非战斗启发式作为可记录的基线；多策略头不直接称为已实现分层 RL。搜索增强限于模型覆盖区域。</p>
+      <p><strong>奖励与部署。</strong>战斗以真实胜负为主奖励，整局以原版胜利为最终目标；辅助奖励单独配置并在验证集检查。模型冻结后仅推理，逐步记录 checkpoint 指纹、动作概率、价值估计、策略来源及回退。控制器一次提交动作，读取确认后推进；截图用于观察与审计，初版不训练像素视觉模型。</p>
+    </section>
+    <div class="footer"><span>Spire2Lab · 强化学习训练与原版部署</span><span>1 / 2</span></div>
+  </article>
+
+  <article class="page">
+    <div class="eyebrow">SPIRE2LAB · 实施计划与可验证交付</div>
+    <section>
+      <h2>4　MVP、验收与效果评估</h2>
+      <p><strong>11 月 30 日 MVP：</strong>打通“采样—更新—保存—加载—决策—回放”，交付真实训练 checkpoint、训练曲线和限定战斗的原版部署 Demo；并行推进普通第一幕自主运行，核验地图、奖励、真实购买及休息／升级。整幕策略中学习与规则决策的范围及占比分开报告。</p>
+      <p><strong>最终验收目标：</strong>保存至少一次正常连续完整通关的录像与轨迹，检查无人工接管、无调试跳房间、无资源修改和未决动作。学习策略须实质参与战斗决策，报告逐类决策来源及回退率；使用混合策略时明确组成。一条成功录像证明可运行，整体效果依据预登记测试批次的全部尝试评价；未达成完整通关时如实报告缺口。</p>
+      <p><strong>评估计划：</strong>以随机、现有启发式和纯 RL 为主要对照；搜索仅在相同已验证范围附加比较。拟运行 3 个训练随机种子，各在 100 个独立战斗用例上测试，并预登记 5 次原版完整游戏尝试。训练、验证和最终测试环境种子分离，既往已查看的种子不充当新测试集；冻结配置后进行最终评估。统计胜率、剩余 HP、到达幕／层、整局通关率、决策延迟、训练步数及资源消耗；保留失败、中断与人工介入。测试还覆盖掩码、终止／截断、断点恢复、动作确认、图像绑定及回放零操作。</p>
+    </section>
+
+    <section>
+      <h2>5　个人工作计划与提交节点</h2>
+      <table>
+        <thead><tr><th class="dates">时间（2026 年）</th><th>工程工作与阶段产出</th></tr></thead>
+        <tbody>
+          <tr><td>11.15–11.16</td><td>明确范围、架构、测试和风险；<strong>11.16 23:59 提交本 Proposal。</strong></td></tr>
+          <tr><td>11.17–11.23</td><td>恢复工作区、Mod 与隧道；审计训练覆盖及吞吐，完成 RL 最小训练闭环，继续真实单幕验收。</td></tr>
+          <tr><td>11.24–11.30</td><td>训练首个有效模型，接入原版并验证；<strong>11.30 23:59 提交 2–3 页 Milestone 与 MVP Demo。</strong></td></tr>
+          <tr><td>12.01–12.07</td><td>扩展牌组、后续幕与资源决策，补齐环境对应性检查，联调完整自主游戏。</td></tr>
+          <tr><td>12.08–12.14</td><td>冻结功能与评估配置，完成独立测试、失败分析和通关尝试；参加非正式进度检查。</td></tr>
+          <tr><td>12.15–12.21</td><td>整理代码、模型、结果和复现说明，准备演示及备用录屏；<strong>12.21 23:59 提交路演材料。</strong></td></tr>
+          <tr><td>12.22–12.28</td><td>4 分钟展示与 1 分钟问答；<strong>12.28 23:59 提交 4–6 页报告、源码、结果、视频和 Slides。</strong></td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section>
+      <h2>6　资源、主要风险与备用方案</h2>
+      <p>计划配置 8–16 个 CPU 采样进程、32 GB 内存、50 GB 存储；GPU 型号与配额待确认，Windows PC 运行游戏。依赖 Python、PyTorch、Gymnasium、固定模拟器与 Mod，无付费模型 API；数据来自模拟交互及本机原版采集。先测吞吐，每个训练种子拟从 10<sup>6</sup> 个转换起步，按资源和学习曲线调整；以上为预算，非实测结果。</p>
+      <p><strong>关键风险是内容覆盖与迁移差异。</strong>11 月 23 日前审计可训练范围；逐项扩展、保存首差异，未支持内容停止并记录。算力不足时缩小网络和并行度，优先完成可复现 RL 闭环；训练不稳定时先检查奖励、掩码和数据，可用示范预训练辅助，但仍需真实 RL 更新。固定游戏与依赖版本，保留失败和恢复记录。现场网络或游戏不可用时播放同版本原版录屏并演示离线回放；第一幕材料作为阶段证据，不替代完整通关结论。</p>
+    </section>
+
+    <section class="references">
+      <h2>7　参考资料与使用声明</h2>
+      <p>[1] Schulman et al. Proximal Policy Optimization Algorithms. 2017. <a href="https://arxiv.org/abs/1707.06347">arXiv:1707.06347</a>.<br>
+      [2] Huang &amp; Ontañón. A Closer Look at Invalid Action Masking in Policy Gradient Algorithms. FLAIRS, 2022. <a href="https://arxiv.org/abs/2006.14171">arXiv:2006.14171</a>.<br>
+      [3] evangambit/sts2，固定提交 37e4264，MIT. <a href="https://github.com/evangambit/sts2">github.com/evangambit/sts2</a>.<br>
+      [4] evangambit/STS2MCP，固定提交 18bc23be，MIT. <a href="https://github.com/evangambit/STS2MCP">github.com/evangambit/STS2MCP</a>.</p>
+      <p>外部引擎和派生桥接按来源与许可证披露；AI 辅助用于讨论、代码和文档草拟，由本人审阅、验证并承担责任。提交材料排除游戏 DLL、存档、密钥、未经授权数据及大型依赖缓存。</p>
+    </section>
+    <div class="footer"><span>个人项目 · 截止时间按北京时间管理</span><span>2 / 2</span></div>
+  </article>
+</body>
+</html>

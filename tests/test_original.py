@@ -249,6 +249,7 @@ async def test_runtime_reconciles_once_without_reposting(tmp_path):
     try:
         state = await lab.new_session(backend="original_game", seed=777)
         assert state["metadata"]["seed"] is None
+        assert state["metadata"]["branch_provenance"] is None
         req = StepRequest(
             request_id="one-command",
             decision_id=state["observation"]["decision_id"],

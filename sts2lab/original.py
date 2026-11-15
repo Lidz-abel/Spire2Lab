@@ -15,6 +15,7 @@ import re
 import uuid
 
 from .bridge import BridgeClient, BridgeError, OutcomeUnknown
+from .environment import UnsupportedOperations
 from .catalog import catalog
 from .contracts import (
     Action,
@@ -128,7 +129,6 @@ def read_card(raw, ref=""):
     cost = integral(required(raw, "cost"), "card.cost")
     return Card(
         ref=ref,
-        native_id=definition.card_id,
         type_id=entry,
         name=definition.name,
         card_type=definition.card_type,
@@ -360,9 +360,13 @@ def verify_scope(raw, encounter, *, opening):
             )
 
 
-class OriginalEnvironment:
+class OriginalEnvironment(UnsupportedOperations):
     backend = "original_game"
+    branch_provenance = None
     capabilities = {
+        "observe": True,
+        "step": True,
+        "close": True,
         "reset": False,
         "snapshot": False,
         "restore": False,
@@ -389,9 +393,15 @@ class OriginalEnvironment:
                 raise BridgeError(
                     "Windows DLLs and compiled bridge are missing; run Connect-Windows.ps1 first"
                 )
-            manifest = json.loads(path.read_text())
+            # Local import avoids the acceptance -> parity -> adapter cycle.
+            from .acceptance import verify_windows_bundle, sha
+
+            manifest = verify_windows_bundle(ROOT, sha)
         instance = cls(
-            client or BridgeClient(manifest["game_assembly_sha256"]),
+            client
+            or BridgeClient(
+                manifest["game_assembly_sha256"], mod_sha256=manifest["mod_sha256"]
+            ),
             encounter,
             manifest,
             raw_dir=raw_dir,
@@ -417,6 +427,10 @@ class OriginalEnvironment:
 
     def _install(self, raw):
         self.raw = copy.deepcopy(raw)
+        self.capabilities = {
+            **type(self).capabilities,
+            "original_pixels": "decision_images_v1" in raw.get("lab_capabilities", []),
+        }
         self.observation, self.action_map = normalize_original(
             raw,
             f"{self.epoch}:{self.sequence}",
@@ -425,6 +439,11 @@ class OriginalEnvironment:
 
     def observe(self):
         return self.observation
+
+    async def capture_image(self):
+        if self.pending_before is not None:
+            raise BridgeError("Cannot capture an unresolved original-game action")
+        return await self.client.capture_image(self.raw)
 
     async def step(self, action_id, decision_id, *, request_id=None):
         if decision_id != self.observation.decision_id:

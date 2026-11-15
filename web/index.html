@@ -2,20 +2,22 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Spire Lab · 战斗实验台</title>
+  <title>Spire2Lab · 搜索与决策实验台</title>
   <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
-  <header><a class="brand" href="/">◈ <span>SPIRE <b>LAB</b></span></a><span class="subtitle">自主决策实验台 / PHASE 01</span><div class="connection"><i id="connection-dot"></i><span id="connection">正在连接</span></div></header>
+  <header><a class="brand" href="/">◈ <span>SPIRE <b>LAB</b></span></a><span class="subtitle">搜索与分层决策 / PHASE 02</span><div class="connection"><i id="connection-dot"></i><span id="connection">正在连接</span></div></header>
   <div class="workspace">
     <aside class="sidebar">
       <div class="eyebrow">EXPERIMENT</div><h1>战斗实验</h1><p class="muted">观察每一次选择，追溯每一步结果。</p>
+      <p><a class="text-link" href="/act">原版单幕控制台 ↗</a></p>
       <form id="scenario-form">
         <label for="backend">实验后端</label><select id="backend"><option value="native_simulator">Linux 模拟器</option><option value="original_game">Windows 原版游戏</option></select>
         <p id="backend-hint" class="small muted">新建固定初始条件的模拟战斗。</p>
         <label for="encounter">遭遇</label><select id="encounter"><option value="nibbits-weak">Nibbits · 初始遭遇</option><option value="slimes-weak">Slimes · 初始遭遇</option><option value="sludge-spinner">Sludge Spinner</option></select>
         <div class="form-grid"><div><label for="seed">环境种子</label><input id="seed" type="number" min="0" max="2147483647" value="1" required></div><div><label for="policy-seed">策略种子</label><input id="policy-seed" type="number" value="0" required></div></div>
-        <label for="policy">智能体</label><select id="policy"><option value="heuristic">规则策略 · 可解释评分</option><option value="random">随机策略 · 合法动作均匀抽样</option></select>
+        <label for="policy">智能体</label><select id="policy"><option value="heuristic">规则策略 · 可解释评分</option><option value="random">随机策略 · 合法动作均匀抽样</option><option value="rollout">Rollout 搜索 · 平坦策略</option><option value="hierarchical">分层 Rollout · 持续战术目标</option></select>
+        <div id="planning-settings" hidden><div class="form-grid"><div><label for="search-budget">搜索模拟步预算</label><input id="search-budget" type="number" min="0" max="8192" value="1024"></div><div><label for="rollout-depth">每次 Rollout 深度</label><input id="rollout-depth" type="number" min="1" max="64" value="32"></div></div><p class="small muted">公开条件采样 · HP 尺度评分。默认深度 32、预算 1024，来自开发集选择；交互有 2 秒软时限，回退会单独标明。</p></div>
         <button id="new-session" class="secondary full" type="submit">新建实验</button>
       </form>
       <div class="rule-line"></div>
@@ -38,11 +40,12 @@
       <div class="hand-heading"><h3>当前手牌 <span id="hand-count"></span></h3><div id="piles"></div></div>
       <section id="hand" class="hand" aria-label="当前手牌"></section>
       <details class="inspector"><summary>查看牌堆组成与智能体实际输入</summary><p class="small muted">抽牌堆以无序组成展示；已知牌顶和牌底单独记录。此处不含真实隐藏顺序。</p><pre id="observation-json"></pre></details>
+      <section id="original-image-panel" class="original-image-panel" hidden aria-label="原版决策画面"><div class="panel-heading"><h3>原版决策画面</h3><span id="original-image-status" class="small muted"></span></div><img id="original-image" alt="与当前决策绑定的原版游戏画面" hidden><p id="original-image-binding" class="small muted"></p></section>
       <section class="timeline"><div class="panel-heading"><h3>执行记录</h3><span class="small muted">动作 → 实际变化</span></div><div id="history"></div></section>
     </main>
-    <aside class="decision-panel"><div class="eyebrow">AGENT DECISION</div><h2>这一步，怎么选</h2><p id="decision-meta" class="small muted"></p><div id="proposal"></div><h3 class="candidate-heading">候选动作</h3><p class="small muted">分数来自当前策略，不代表胜率。点击候选动作可单步干预。</p><div id="candidates"></div><div class="rule-line"></div><div class="eyebrow">ACTUAL RESULT</div><div id="last-result" class="result"></div></aside>
+    <aside class="decision-panel"><div class="eyebrow">AGENT DECISION</div><h2>这一步，怎么选</h2><p id="decision-meta" class="small muted"></p><div id="proposal"></div><section id="planning-panel" hidden aria-label="搜索与战术目标"><div class="eyebrow">PLANNING</div><div id="planning-summary"></div><div id="planning-goal"></div><div id="planning-completed"></div></section><h3 class="candidate-heading">候选动作</h3><p class="small muted">分数来自当前策略，不代表胜率。点击候选动作可单步干预。</p><div id="candidates"></div><div class="rule-line"></div><div class="eyebrow">ACTUAL RESULT</div><div id="last-result" class="result"></div></aside>
   </div>
-  <footer><span>Spire2Lab · 实验协议 v0.2</span><span id="decision-id">连接后显示决策编号</span></footer>
+  <footer><span>Spire2Lab · 实验协议 v0.3.0</span><span id="decision-id">连接后显示决策编号</span></footer>
   <script type="module" src="/static/app.js"></script>
 </body>
 </html>

@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="920" height="264" viewBox="0 0 920 264" fill="none" role="img" aria-labelledby="title desc">
+  <title id="title">Spire2Lab — the ascent, inspected</title>
+  <desc id="desc">An original mark: a jagged golden spire rises out of a fan of three cards. A cyan branching ascent crosses its base. A custom geometric Spire squared Lab wordmark sits alongside it.</desc>
+  <defs>
+    <linearGradient id="stone" x1="104" y1="28" x2="148" y2="200" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFE4A0"/>
+      <stop offset="0.52" stop-color="#DDB766"/>
+      <stop offset="1" stop-color="#AA7F38"/>
+    </linearGradient>
+    <linearGradient id="route" x1="83" y1="215" x2="168" y2="155" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#72E6DA"/>
+      <stop offset="1" stop-color="#66BDF3"/>
+    </linearGradient>
+  </defs>
+
+  <!-- The card fan and broken skyline are drawn for Spire2Lab. -->
+  <g stroke-linejoin="round">
+    <rect x="54" y="63" width="132" height="165" rx="14" transform="rotate(-16 120 145)" fill="#172B36" stroke="#526E78" stroke-width="2.5"/>
+    <rect x="55" y="62" width="132" height="165" rx="14" transform="rotate(13 121 144)" fill="#22323C" stroke="#7F98A0" stroke-width="2.5"/>
+    <rect x="57" y="55" width="132" height="174" rx="14" fill="#101D29" stroke="#C69E51" stroke-width="2.5"/>
+    <path d="M71 109V78Q71 69 80 69H98M148 69H166Q175 69 175 78V106M71 194V206Q71 215 80 215H96M153 215H166Q175 215 175 206V192" stroke="#8E7649" stroke-width="1.5"/>
+  </g>
+
+  <!-- A single asymmetric spire, its smaller needle, and cut stone ledges. -->
+  <path d="M78 190L83 157L78 151L91 145L93 116L100 95L105 126L112 132L108 145L112 190Z" fill="#9F814C"/>
+  <path d="M103 190L109 150L104 143L115 136L117 107L111 101L122 95L125 64L121 64L136 22L144 65L140 65L145 99L154 107L148 114L153 146L167 154L161 164L170 190Z" fill="url(#stone)"/>
+  <path d="M136 22L134 95L145 99L140 65L144 65Z" fill="#FFF0C8"/>
+  <path d="M134 95L130 137L115 136L104 143L135 149L153 146L148 114L154 107Z" fill="#BA934E"/>
+  <path d="M117 107L139 113M109 150L146 158" stroke="#101D29" stroke-width="3"/>
+  <path d="M128 78L131 68L134 78V87H128ZM139 122L142 115L145 123V132H139Z" fill="#101D29"/>
+  <path d="M68 191L90 185L104 191L121 186L142 192L163 186L178 192" stroke="#D8B267" stroke-width="2.5" stroke-linejoin="round"/>
+
+  <!-- Map forks double as the lab's decision tree. -->
+  <path d="M123 217V200L91 176M123 200L157 175L156 158" stroke="#101D29" stroke-width="9" stroke-linejoin="round"/>
+  <path d="M123 217V200L91 176M123 200L157 175L156 158" stroke="url(#route)" stroke-width="3" stroke-linejoin="round"/>
+  <g fill="#101D29" stroke="#78DED9" stroke-width="2.5">
+    <circle cx="123" cy="211" r="4.5"/>
+    <circle cx="91" cy="176" r="4.5"/>
+    <circle cx="157" cy="175" r="4.5"/>
+  </g>
+  <path d="M156 150L162 158L156 166L150 158Z" fill="#85E7DF" stroke="#101D29" stroke-width="2"/>
+
+  <!-- Custom outlined letterforms: no font download or embedded bitmap. -->
+  <g fill="#EDF3F7" fill-rule="evenodd">
+    <path transform="translate(277 80)" d="M64 0H24C9 0 0 9 0 23V25C0 39 9 45 23 49L41 54C49 56 53 59 53 65C53 71 48 75 40 75H0V88H41C58 88 68 79 68 64C68 50 60 44 46 40L27 35C18 32 15 30 15 24C15 17 19 13 27 13H64Z"/>
+    <path transform="translate(363 106)" d="M0 0H13V8C18 2 25 -1 34 -1C52 -1 62 12 62 31C62 50 52 63 34 63C25 63 18 60 14 55V85H0ZM14 31C14 43 20 51 32 51C43 51 48 43 48 31C48 19 43 11 32 11C20 11 14 19 14 31Z"/>
+    <path transform="translate(443 106)" d="M0 0H14V62H0ZM-1 -18L7 -28L15 -18L7 -8Z"/>
+    <path transform="translate(477 106)" d="M0 0H13V11C19 2 29 -1 43 0V14H35C21 14 14 22 14 37V62H0Z"/>
+    <path transform="translate(531 106)" d="M59 35H14C15 49 23 53 35 53C43 53 49 51 55 48V59C48 62 42 64 33 64C12 64 0 52 0 31C0 12 12 -1 30 -1C49 -1 59 12 59 29ZM14 24H45C44 15 39 10 30 10C21 10 16 15 14 24Z"/>
+  </g>
+  <path d="M608 74V70C608 59 615 53 626 53C637 53 644 60 644 70C644 77 639 82 632 87L621 96H645V105H607V97L625 82C632 76 634 74 634 70C634 65 631 62 626 62C621 62 618 65 618 70V74Z" fill="#E6C279"/>
+  <g fill="#9EC9D2" fill-rule="evenodd">
+    <path transform="translate(666 80)" d="M0 0H15V74H55V88H0Z"/>
+    <path transform="translate(737 106)" d="M47 0H60V62H47V54C42 60 35 64 26 64C9 64 0 50 0 31C0 12 10 -1 27 -1C36 -1 43 3 47 9ZM14 31C14 44 19 52 30 52C41 52 47 44 47 31C47 19 41 11 30 11C19 11 14 19 14 31Z"/>
+    <path transform="translate(817 80)" d="M0 0H14V34C19 28 26 25 35 25C52 25 62 38 62 57C62 76 52 90 35 90C26 90 18 86 13 80V88H0ZM14 57C14 70 20 78 32 78C43 78 48 70 48 57C48 45 43 37 32 37C20 37 14 45 14 57Z"/>
+  </g>
+</svg>
