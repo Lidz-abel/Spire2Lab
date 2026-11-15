@@ -2,6 +2,12 @@
 
 更新时间：2026-11-15
 
+2026-11-15 E1推送复查：用户询问为何未推送，实际重试将本地05f12d8推至origin的
+phase2/search-hierarchy；退出128：could not read Username for 'https://github.com':
+terminal prompts disabled。当前HTTPS身份获取仍失败，未成功推送；证据保存于
+artifacts/rl-mvp/contracts/e1-20261115/push-retry-*.json。不能仅凭历史阻塞替代当次
+推送实查；后续认证配置恢复后继续推送并核对远端SHA，凭据不经聊天传递。
+
 2026-11-15 E1训练契约完成：用户要求执行E1；以f7eef1a干净工作树开始，核对E0、
 课程计划、来源、环境与现有边界。新增docs/RL-MVP.md及config/rl-mvp-v1.json：
 公开特征固定缩放与分类embedding、共享候选评分/value规格、原奖励、截断bootstrap、

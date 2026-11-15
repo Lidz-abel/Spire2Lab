@@ -38,6 +38,9 @@ GPU 硬件现已实查，长期配额未确认；Proposal 保留预算表述。�
 作者身份缺失已解决。E0实现本地提交`3a4c70b`；其推送退出128：服务器没有可用的
 GitHub HTTPS身份（terminal prompts disabled）。日志在E0证据目录github-push.log，
 尚未推送；后续记录提交的实际HEAD用`git log -1`核对，认证恢复不通过聊天传递令牌。
+E1实现本地提交05f12d8；用户追问后已实际重试推送，仍退出128，错误为无法读取
+GitHub Username（terminal prompts disabled）。本次证据在E1目录push-retry-*.json；
+认证阻塞已重新确认，不是只沿用E0记录，远端交付仍未完成。
 
 11 月 30 日 Milestone 规划已记录于 `docs/course/MILESTONE-PLAN.txt`（planning-v1）。
 首批执行顺序：E0 环境/路径恢复与隔离依赖 → E1 训练契约与评估划分 → E2 最多
