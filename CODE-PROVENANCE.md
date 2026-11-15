@@ -8,6 +8,9 @@ rl_rollout、rl_ppo、rl_io、rl_evaluate及训练/验证脚本；使用通用Py
 直接核对本地2.14.0安装源码。环境规则仍由固定上游native执行。本轮未新增依赖或
 改动native/Mod，初始138项及后续14项检查是合成/环境工程测试；真实学习结果另记。
 运行与数据边界见docs/RL-TRAINING.txt，不据新网络存在就宣称模型有效或原版验收。
+后续真实模拟器E2执行9984有效转换、保存恢复与1/2/4worker通过，结果见
+docs/RL-E2-RESULTS.json。新增scripts/audit_rl_smoke.py为本项目公开轨迹/参数重放审计；
+没有调用原版游戏，也没有复制外部训练器。训练结果与合成预检查分别保存。
 
 2026-11-15 E1训练契约：先定义公开输入、候选动作、GAE边界、种子与恢复用例，再
 编写sts2lab/rl_contract.py、scripts/check_rl_contract.py和tests/test_rl_contract.py。

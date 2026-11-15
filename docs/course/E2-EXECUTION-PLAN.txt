@@ -1,5 +1,6 @@
 Spire2Lab — E2 最小 PPO 训练闭环实施计划
-日期：2026-11-15；状态：规划，尚未实施或启动训练。
+日期：2026-11-15；执行更新：E2已完成，9984有效转换/保存恢复/进程短测/审计通过。
+结果docs/RL-E2-RESULTS.json；执行入口docs/RL-TRAINING.txt。下文保留事前计划。
 依据：docs/RL-MVP.md、config/rl-mvp-v1.json、docs/course/MILESTONE-PLAN.txt。
 本计划细化E1冻结的范围与预算，不修改超参数、种子或游戏规则。
 

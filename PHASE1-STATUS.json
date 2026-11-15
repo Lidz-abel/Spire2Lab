@@ -4,7 +4,7 @@
   "repository_slug": "Spire2Lab",
   "roadmap": {
     "version": "three-stage-v1",
-    "updated_at": "2026-10-24",
+    "updated_at": "2026-11-15",
     "plan": "ARCHITECTURE-PLAN.txt",
     "stages": [
       {
@@ -20,7 +20,7 @@
       {
         "id": 3,
         "title": "高效训练与原版评测",
-        "status": "planned"
+        "status": "bounded_cpu_ppo_prototype_verified_see_PHASE2_STATUS_rl_training"
       }
     ],
     "phase_one_milestones": [

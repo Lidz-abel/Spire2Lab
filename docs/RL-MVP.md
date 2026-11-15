@@ -3,8 +3,10 @@
 冻结日期：2026-11-15；课程工作包 E1。配置为
 [rl-mvp-v1.json](../config/rl-mvp-v1.json)，可执行边界为
 [rl_contract.py](../sts2lab/rl_contract.py)。E1 交付规格、数据适配与边界检查；
-策略网络、rollout collector、GAE/PPO 更新、checkpoint 保存器属于 E2，尚未实现。
-不因契约冻结而宣称已经训练、原版验收或完成第二阶段。
+策略网络、rollout collector、GAE/PPO 更新、checkpoint 保存器属于 E2；2026-11-15
+已实现并通过受限模拟器训练验收，见 [运行说明](RL-TRAINING.txt) 和
+[结果汇总](RL-E2-RESULTS.json)。下文为 E1 冻结规格，保留当时的实施边界；
+后续实现不代表原版验收或第二阶段完成。
 
 ## 范围与输入
 

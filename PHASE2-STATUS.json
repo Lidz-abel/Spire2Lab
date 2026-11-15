@@ -13,7 +13,7 @@
     "P2-05": "v2_development_and_new_heldout_complete_limited_hp_gain_no_hierarchy_gain",
     "P2-06": "live_search_and_decision_images_verified_starter_scope",
     "P2-07": "implemented_synthetic_tests_and_ui_passed_pending_original_act",
-    "P2-08": "docs_and_e1_code_pushed_sha_verified_independent_reproduction_pending"
+    "P2-08": "docs_and_bounded_rl_code_delivery_recorded_independent_reproduction_pending"
   },
   "implementation_scope": "starter combat search and original decision images verified within declared scope; normal single-act controller implemented, awaiting live acceptance",
   "evidence": {
@@ -173,6 +173,7 @@
     }
   },
   "rl_environment": {
+    "evidence_timepoint": "historical_E0_before_training_see_rl_training_for_current_results",
     "checked_at": "2026-11-15",
     "milestone_work_package": "E0",
     "status": "server_readiness_passed_same_host_offline_recovery",
@@ -195,6 +196,7 @@
     "next_work_package": "E2"
   },
   "rl_contract": {
+    "evidence_timepoint": "historical_E1_before_training_see_rl_training_for_current_results",
     "checked_at": "2026-11-15",
     "milestone_work_package": "E1",
     "status": "contract_frozen_boundary_tests_passed_training_not_started",
@@ -217,6 +219,36 @@
     "original_game_evidence_added": false,
     "next_work_package": "E2"
   },
+  "rl_training": {
+    "checked_at": "2026-11-15",
+    "milestone_work_package": "E2",
+    "status": "bounded_simulator_training_recovery_and_workers_passed",
+    "documentation": "docs/RL-TRAINING.txt",
+    "public_results": "docs/RL-E2-RESULTS.json",
+    "delivery_receipt": "artifacts/rl-mvp/smoke/e2-20261115/delivery.json",
+    "acceptance_report": "artifacts/rl-mvp/smoke/e2-20261115/acceptance.json",
+    "budget_ledger": "artifacts/rl-mvp/smoke/e2-20261115/budget.jsonl",
+    "main_training_transitions": 8192,
+    "total_confirmed_training_transitions": 9984,
+    "hard_cap": 10000,
+    "training_run_seeds": [41],
+    "worker_counts_verified": [1, 2, 4],
+    "checkpoint_reload_checks_passed": 14,
+    "exact_initial_actor_actions_replayed": 128,
+    "exact_initial_update_parameter_hash_replayed": true,
+    "regression_attempt1_passed": 138,
+    "targeted_e2_after_refinement_passed": 14,
+    "test_counts_overlap": true,
+    "unique_validation_cases": 60,
+    "selected_rl_validation_wins": 60,
+    "selected_rl_validation_mean_final_hp": 69.46666666666667,
+    "heuristic_validation_mean_final_hp": 76.55,
+    "final_test_cases_executed": 0,
+    "formal_E3_training_enabled": false,
+    "original_game_evidence_added": false,
+    "training_processes_remaining": false,
+    "next_work_package": "E3_recipe_and_resource_freeze_before_training"
+  },
   "handoff": {
     "document": "SESSION-HANDOFF.md",
     "checked_at": "2026-11-15",
@@ -228,7 +260,8 @@
     },
     "normal_act_trace_count": 0,
     "goal_status": "blocked",
-    "no_experiment_started": true,
+    "no_experiment_started": false,
+    "new_experiment_scope": "bounded_E2_simulator_training_only",
     "remote_delivery_verified": true
   }
 }

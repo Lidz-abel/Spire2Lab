@@ -30,7 +30,7 @@ Spire2Lab is an experimental foundation for researchers studying sequential deci
 
 The current focus is observable-history search and persistent tactical goals on a trustworthy experimental environment. The platform separates player-visible information from hidden simulator state and keeps original-game evidence distinct from simulator tests. This makes it possible to investigate both **what an agent decided** and **whether the environment behaved as expected**.
 
-> **Development status — phase 2 in progress.** Starter-combat rollout search, approximate history particles, persistent tactical goals and search inspection are implemented. See the [planning guide](docs/PLANNING.md) and [current evidence](PHASE2-STATUS.json). The phase-one checkpoint passed **60/60 original-game battles** and a separate loss/control probe across **9 boundary categories** ([scope](docs/LIVE-VALIDATION.md), [summary](docs/PHASE1-VALIDATION.json)). One new search-policy live battle has also passed. Broader search-policy coverage, game imagery, single-act decisions and RL training remain outstanding.
+> **Development status — phase 2 remains open; a bounded PPO prototype now runs.** Starter search and original decision images have limited live evidence; normal first-act acceptance remains outstanding. The phase-one checkpoint passed **60/60 original-game battles** and a separate loss/control probe across **9 boundary categories** ([scope](docs/LIVE-VALIDATION.md)). E2 completed **9,984 simulator learning transitions**, checkpoint recovery and 1/2/4-worker checks. This is an engineering result, with no original-game learned-policy or full-run acceptance. See [current evidence](PHASE2-STATUS.json) and [E2 results](docs/RL-E2-RESULTS.json).
 
 ## Key features
 
@@ -41,7 +41,7 @@ The current focus is observable-history search and persistent tactical goals on 
 | **Observable-history planning** | Independent sampled worlds constrained by confirmed public history, bounded root rollout search, explicit depletion/fallback, and candidate visits. No acting-environment snapshot or hidden RNG enters the planner. |
 | **Tactical hierarchy** | Persistent survive/focus/progress goals with duration, termination and real reward accounting. Search shaping leaves the environment reward unchanged; goals are rule-based, not learned. |
 | **Simulator branching** | Exact snapshot/restore and independently sampled hidden worlds, with branch IDs and parent-decision provenance. Exact hidden-state snapshots are for debugging and regression; they must not become a policy oracle. |
-| **Learning interface** | Gymnasium wrapper with a versioned [content vocabulary](config/content-v1.json), entity encoding, action masks, termination/truncation handling, and process-isolated vector sampling tests. No training pipeline is included yet. |
+| **Bounded PPO training** | Public entity actor-critic, candidate masking, explicit-reset rollouts, GAE/PPO, persistent transition budget, checkpoint recovery and validation-only evaluation. [Contract](docs/RL-MVP.md), [run instructions](docs/RL-TRAINING.txt). |
 | **Execution accounting** | Request IDs, stale-decision rejection, confirmation after uncertain responses, and explicit archival of unresolved original-game actions. |
 | **Trace validation** | Hash-chain records, semantic re-execution, capture fingerprints, and a finite original-game acceptance matrix. Missing evidence keeps the gate incomplete. |
 
@@ -75,7 +75,7 @@ flowchart TB
     style windows fill:transparent,stroke:#C69E51
 ```
 
-Linux runs simulation, search, policy execution, logs, and the dashboard. The separate Windows PC runs the game and bridge. Future training workloads also belong on Linux; the Windows machine is reserved for real-game execution and capture.
+Linux runs simulation, search, policy execution, PPO training, logs, and the dashboard. The separate Windows PC runs the game and bridge for real-game execution and capture.
 
 One environment step is one player decision through settled execution. Animation waits and transport retries are not extra training steps. The dashboard renders observations and decisions; it does not implement game rules.
 
@@ -182,7 +182,9 @@ The helpers require an absolute remote path using letters, digits, `_`, `.`, `/`
 
 ## Validation
 
-The current evidence is **engineering validation**, not a learned-agent performance result. [PHASE1-STATUS.json](PHASE1-STATUS.json) records local test results and evidence paths; generated reports are kept under ignored `artifacts/` and are not bundled with this repository.
+Evidence separates original-game checks, simulator training and synthetic tests. [PHASE1-STATUS.json](PHASE1-STATUS.json) and [PHASE2-STATUS.json](PHASE2-STATUS.json) record scopes and evidence paths; generated traces and checkpoints remain under ignored `artifacts/`.
+
+The [E2 CPU PPO smoke run](docs/RL-E2-RESULTS.json) used one training seed and 8,192 main-run transitions, plus 1,792 for recovery and worker checks. On the same **60 validation cases**, the selected learned policy won **60/60** with **69.47 mean final HP**; the heuristic won **60/60** with **76.55 HP**, and random won **52/60** with **31.27 HP**. Selection used these validation cases; the final test split remains untouched. This establishes a working learning loop, not superiority to the heuristic, held-out generalization or original-game performance. Recorded curve data, learner reload checks and exact first-update replay are indexed in the result summary.
 
 The first [planning evaluation](docs/PLANNING-RESULTS.md) covers **360 simulator battles**, **24 complete policy replays**, **152 tests** and one fresh original-game search battle. All benchmark configurations won their starter battles, but search finished with less HP than the heuristic baseline. This is a reproducible baseline with explicit limitations, not evidence of a performance gain. Full case counts, compute settings and build bindings are in the [phase-two summary](docs/PHASE2-VALIDATION.json).
 
@@ -191,6 +193,7 @@ The first [planning evaluation](docs/PLANNING-RESULTS.md) covers **360 simulator
 | [Environment tests](tests/test_environment.py) | Starter conditions, information boundaries, snapshot isolation, legal battles, Gym contract and vector sampling | Simulator scope |
 | [Lifecycle contract tests](tests/test_environment_contract.py) | Reset, immutable branch ancestry, checkpoint restore and explicit original-game capability refusals | Native simulator and no-I/O refusal checks |
 | [Training boundary tests](tests/test_training_boundary.py) | Invalid-action filtering, attempt-limit truncation and natural terminal precedence | Real simulator transitions; no RL training |
+| [PPO implementation tests](tests/test_rl_training.py) and [saved-run audit](scripts/audit_rl_smoke.py) | Masked candidates, GAE boundaries, optimizer/RNG recovery, budget persistence, worker cleanup and recorded first-update reproduction | Synthetic tests and separate bounded simulator training; no original-game RL acceptance |
 | [Sampling tests](tests/test_sampling.py) | Trajectory consistency across worker layouts, failure handling and timeout cleanup | Simulator scope |
 | [Vocabulary tests](tests/test_vocabulary.py) | Public observations encode without backend ID tables; unknown content and incompatible traces are rejected | Protocol 0.3 / encoding v3; finite simulator regression |
 | [Windows helper tests](tests/test_windows_scripts.py) | Configurable paths, preflight refusal, fingerprint checks and install rollback | Mocked PowerShell; requires `pwsh` or `SPIRE2LAB_PWSH`, not a Steam installation |
@@ -258,6 +261,8 @@ The current plan is **three-stage-v1**. Full tasks and exit criteria are in [ARC
 
 Original visuals begin with decision-boundary screenshots in stage 2, followed by synchronized presentation in stage 3. A vision-only policy is an optional separate research task. Independent bindings, a minimal Mod, and a finite combat engine will replace upstream components incrementally after their own validation.
 
+The course E2 training prototype is developed alongside the remaining stage-two original-act gate. Its completion does not close that gate or the full-game objective. Longer E3 training requires a separately frozen resource budget.
+
 ## Development and provenance
 
 For contributions, first read [AGENTS.md](AGENTS.md), the [project handoff](PROJECT-HANDOFF.md), and [code provenance](CODE-PROVENANCE.md). Keep changes scoped, run the relevant checks, and update evidence when behavior changes. Do not commit game DLLs, saves, raw private captures, or credentials.
@@ -272,4 +277,4 @@ Current upstream foundations are pinned and attributed:
 
 The repository's [LICENSE](LICENSE) is MIT. Upstream components retain their own notices; game assets and proprietary assemblies are not covered by the project license. The SVG identity is drawn for Spire2Lab and contains no extracted game artwork or copied project logos.
 
-To reference this work, cite the [Spire2Lab repository](https://github.com/Lidz-abel/Spire2Lab) with the commit used in your experiments. No research paper or trained checkpoint is currently provided.
+To reference this work, cite the [Spire2Lab repository](https://github.com/Lidz-abel/Spire2Lab) with the commit used in your experiments. No research paper is published. Training produces local checkpoints; model weights and private game artifacts are not bundled in Git.
