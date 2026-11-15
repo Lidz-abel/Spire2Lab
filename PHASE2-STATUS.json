@@ -130,7 +130,8 @@
   ],
   "implementation_commit": "2f365032b082857b59647be66727a5a784812de6",
   "next_actions": [
-    "Install the single-act Mod on Windows, restart at profile-2 main menu, restore the SSH tunnel.",
+    "Read SESSION-HANDOFF.md and recheck live process, Git and game state in the new session.",
+    "Start the phase-two dashboard on 8766 when resuming; restore the Windows reverse tunnel and verify the single-act Mod/game build in profile 2.",
     "Execute the frozen normal-act recipe, preserve all attempts and verify continuous route/family coverage/replay.",
     "Complete independent phase-two reproduction and verified GitHub synchronization."
   ],
@@ -152,5 +153,19 @@
       "report": "artifacts/single-act/continuation-2-check.json",
       "reason": "Windows Mod installation cannot be verified and the required game reverse tunnel has no listener; original single-act acceptance cannot proceed."
     }
+  },
+  "handoff": {
+    "document": "SESSION-HANDOFF.md",
+    "checked_at": "2026-11-15",
+    "private_snapshot": "artifacts/handoff/20261115/state-check.json",
+    "services": {
+      "8765": "not_listening",
+      "8766": "not_listening",
+      "18526": "not_listening"
+    },
+    "normal_act_trace_count": 0,
+    "goal_status": "blocked",
+    "no_experiment_started": true,
+    "remote_delivery_verified": false
   }
 }

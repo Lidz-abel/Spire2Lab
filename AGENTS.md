@@ -1,5 +1,8 @@
 # Spire2Lab 协作约定
 
+跨会话接续先读 `SESSION-HANDOFF.md` 获取当前摘要，再按下述入口核对详细证据。
+服务 PID、隧道、安装版本和提交状态必须实查，不能沿用历史交接快照。
+
 开始工作先阅读 `PROJECT-HANDOFF.md`、`CODE-PROVENANCE.md` 和 `PHASE1-STATUS.json`，
 再核对当前工作区。文档中的状态应以文件、运行结果和远程 Git 的实际证据为准。
 当前路线为 `three-stage-v1`：可信实验平台 → 搜索与分层决策 → 高效训练与原版评测。
