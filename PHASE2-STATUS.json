@@ -251,7 +251,9 @@
   },
   "rl_experiment": {
     "milestone_work_package": "E3",
-    "status": "registered_and_preflight_passed_before_first_run",
+    "status": "running_preregistered_seed_repeats",
+    "completed_training_seeds": [41],
+    "active_or_next_seed": 42,
     "recipe": "config/rl-e3-v1.json",
     "plan": "docs/course/E3-EXECUTION-PLAN.txt",
     "training_seeds": [41, 42, 43],

@@ -8,7 +8,9 @@ E3已获用户授权推进：事前配方config/rl-e3-v1.json、计划docs/cours
 CPU4环境/单学习器线程，seed41/42/43各32768，总98304，顺序运行，每次900秒软限。
 接续先查artifacts/rl-mvp/experiments/e3-20261115-v1/的run.json、result/failure和
 budget.jsonl，核对PID再操作；不可重建目录绕额度。入口scripts/train_rl_e3.py。
-首次运行从seed41开始，SIGINT/TERM请求在完整update后保存；E3未因注册或测试而通过。
+seed41已完成32768转换和全量边界审计（末次HP68.05，初始61.43；60例均胜）；
+当前推进seed42，之后seed43，实际进程以run.json和PID实查为准。SIGINT/TERM请求
+在完整update后保存；E3全部重复和最终分析尚未完成，不能提前判为通过。
 新增训练前同初始化对照，固定末次与验证选模分开报告；最终测试、Windows整幕仍未执行。
 
 E2已完成（2026-11-15）：main8192 + resume256 + workers2/4共1536 = 9984有效转换，
