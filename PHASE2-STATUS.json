@@ -154,6 +154,28 @@
       "reason": "Windows Mod installation cannot be verified and the required game reverse tunnel has no listener; original single-act acceptance cannot proceed."
     }
   },
+  "rl_environment": {
+    "checked_at": "2026-11-15",
+    "milestone_work_package": "E0",
+    "status": "server_readiness_passed_same_host_offline_recovery",
+    "documentation": "docs/RL-ENVIRONMENT.md",
+    "lock": "requirements-rl.lock",
+    "report": "artifacts/rl-mvp/environment/e0-20261115/readiness-attempt1.json",
+    "regression_report": "artifacts/rl-mvp/environment/e0-20261115/regression.xml",
+    "regression_tests_passed": 65,
+    "python": "3.12.3",
+    "torch": "2.14.0",
+    "torch_cuda_runtime": "13.0",
+    "gpu_compute_checked_physical_indices": [1],
+    "gpu_avoided_due_to_reported_errors": [0],
+    "distinct_starter_cases": 3,
+    "simulator_executions_in_readiness_check": 6,
+    "first_stage_package_versions_unchanged": true,
+    "game_agent_training_started": false,
+    "original_game_evidence_added": false,
+    "independent_cold_install": false,
+    "next_work_package": "E1"
+  },
   "handoff": {
     "document": "SESSION-HANDOFF.md",
     "checked_at": "2026-11-15",

@@ -32,7 +32,7 @@
 正文以 Build Track 的 RL 训练与原版部署为核心，保留完整自主通关目标，第一幕为中间门。
 用户已提供姓名/学号，个人版 PDF 已填齐，ZIP 按实际学号命名；两页与打包检查通过。
 旧 `artifacts/course/proposal-20261116/` 仅为占位草稿，提交应使用上述个人版目录。
-GPU 型号/配额未确认，文中按需求预算表述。尚未上传课程平台或取得提交回执。
+GPU 硬件现已实查，长期配额未确认；Proposal 保留预算表述。尚未取得课程提交回执。
 下一步：用户审阅个人版 ZIP，于 11 月 16 日 23:59 前提交课程平台并保存回执。
 用户指定的 Git 姓名/邮箱已写入本项目共享 Git 目录的本地配置，全局配置未改。
 作者身份缺失已解决；本轮本地提交以 `git log -1` 为准，远程同步仍未验证。
@@ -40,9 +40,17 @@ GPU 型号/配额未确认，文中按需求预算表述。尚未上传课程平
 11 月 30 日 Milestone 规划已记录于 `docs/course/MILESTONE-PLAN.txt`（planning-v1）。
 首批执行顺序：E0 环境/路径恢复与隔离依赖 → E1 训练契约与评估划分 → E2 最多
 10,000 有效转换的 PPO 冒烟及 checkpoint 恢复。后续为 E3 初步训练评估、E4 实机
-单幕与模型部署、E5 2–3 页报告及 Demo。现有迁移后第一阶段 Python 未安装 torch；
-不要向共享旧 venv 直接安装训练依赖。各工作包仍待执行，本轮只读核对与制定计划。
-普通第一幕实机验收和最终完整自主通关目标保留；GPU 配额与 Windows 连接仍待落实。
+单幕与模型部署、E5 2–3 页报告及 Demo。E0 服务器环境门已通过，E1–E5 尚待执行；
+详见 `docs/RL-ENVIRONMENT.md`。普通第一幕与最终完整自主通关目标保留，Windows
+连接与实装版本仍待核验。下一个独立工作包为 E1，不自动启动长期训练。
+
+E0 证据在 `artifacts/rl-mvp/environment/e0-20261115/`：独立 `.venv-rl`，PyTorch
+2.14.0/CUDA 13.0，CPU与GPU1数值检查通过；三类starter种子1战斗各重复两次一致，
+65项相关回归通过。合成数值检查不是游戏RL；模拟战斗不是原版证据。安装来自同机
+缓存及经RECORD核验的setuptools恢复，不称独立冷安装。依赖锁 `requirements-rl.lock`。
+GPU0有错误，禁止默认使用；本轮按UUID仅验证物理GPU1，GPU2–3未做计算验证。
+现有host报告128逻辑CPU、377GiB内存和四张约48GiB显存设备，不等于独占配额。
+第一阶段源码无差异，包版本清单前后一致；未启动服务/训练，未发送游戏动作。
 
 用户特别要求控制上下文窗口与环境污染：会话切换前更新本摘要，详细历史和证据留在
 索引目标；记录当前任务、已完成工作、下一步、阻塞、进程/端口、依赖和提交状态。
@@ -50,18 +58,19 @@ GPU 型号/配额未确认，文中按需求预算表述。尚未上传课程平
 输出目录和明确的依赖环境；新增长任务记录启动位置、日志及停止方法；退出时只清理
 本轮创建且已确认无用的临时进程，保留失败证据与用户已有环境。
 
-## 当前会话环境差异（恢复执行前处理）
+## 当前会话环境与恢复结果
 
 本会话实际目录为 `/user/chenzk/sts2/sts2-lab-phase2`，共享 Git 元数据在
 `/user/chenzk/sts2/sts2-lab/.git`；下方旧绝对路径属于迁移前布局。
-phase2 的 `.git` 指针及 Git 反向链接仍指向旧位置，`.venv` 仍链接旧的
-`/user/chenzk/sts2-lab/.venv`，导致普通 Git 命令失败、该虚拟环境不可用。
-显式指定现存 `--git-dir` 和 `--work-tree` 可只读核对：本轮文档更新前分支为
-`phase2/search-hierarchy`，HEAD `410c1a3`，工作树干净。尚未修复迁移路径。
-本会话内 8765/8766/18526 HTTP 均连接失败；进程检查未发现目标服务，但沙箱限制
-`ss`，不能据此宣称已查看宿主机完整监听状态。Windows 实际状态仍未知。
+E0已用git worktree repair修复phase2双向Git指针，普通Git命令可用；`.venv`改为
+指向本工作区新建的`.venv-rl`，原共享环境未安装新依赖。四个`.tools`工具链接已改为
+迁移后相对路径。旧链接/Git文件备份在E0证据目录backups；历史repro工作树未修复或清理。
+E0实现前HEAD为`ea8f892`，实际文档提交后HEAD用git log核对。网络代理TLS失败、
+直连DNS失败，本轮依赖使用离线缓存。禁止用旧bootstrap.py同步这个RL环境，它会按
+base-only锁移除训练依赖。当前完整环境以requirements-rl.lock为准。
+权限恢复后可直接读取GPU和ss；本轮ss未发现8765/8766/18526监听。Windows状态仍未知。
 已复核本地 Mod 与游戏引用 DLL 哈希，均匹配下文目标值；普通单幕轨迹仍为 0。
-尚未启动服务、训练或游戏实验，也未重新运行测试；远程提交状态未重新验证。
+本轮已运行E0模拟/数值检查与65项回归，没有原版实验；远程提交状态未重新验证。
 Proposal 导出使用系统 Pango/Cairo 原生库和临时排版工具；没有安装依赖或修复现有 venv。
 页数、文字提取、内嵌字体、排版与 ZIP 校验属于文档检查；失败原因见 PROPOSAL-BUILD.txt。
 
@@ -84,12 +93,12 @@ Proposal 导出使用系统 Pango/Cairo 原生库和临时排版工具；没有�
 
 | 项目 | 正确位置 / 状态 |
 | --- | --- |
-| 当前开发目录 | `/user/chenzk/sts2-lab-phase2` |
+| 当前开发目录 | `/user/chenzk/sts2/sts2-lab-phase2` |
 | 当前分支 | `phase2/search-hierarchy` |
-| 本次文档整理前 HEAD | `67302ae`；新窗口用 `git log -1` 获取文档提交后的实际 HEAD |
+| E0 前 HEAD | `ea8f892`；新窗口用 `git log -1` 获取后续提交后的实际 HEAD |
 | 最近实现提交 | `f4ce166`：明确不支持的单幕界面与异常私有记录 |
-| 第一阶段保留目录 | `/user/chenzk/sts2-lab`，`main`，`f9faf0a`，保持不变 |
-| Git 关系 | 两目录是共享 `/user/chenzk/sts2-lab/.git` 的 worktree；迁移时不要只复制 phase2 的 `.git` 文件 |
+| 第一阶段保留目录 | `/user/chenzk/sts2/sts2-lab`，`main`，`f9faf0a`，源码与依赖保持不变 |
+| Git 关系 | 两目录共享 `/user/chenzk/sts2/sts2-lab/.git`；迁移时不要只复制 phase2 的 `.git` 文件 |
 | GitHub | <https://github.com/Lidz-abel/Spire2Lab> |
 | 远程交付 | 未验证成功；历史写认证失败，最后一次推送无输出超过 90 秒后终止，退出 143 |
 
@@ -184,13 +193,14 @@ Windows 历史上 Code.exe 占用过 15526/21526，遇到超时先核对端口�
 3. 用户要求继续验收后，在服务器启动第二阶段面板：
 
    ```bash
-   cd /user/chenzk/sts2-lab-phase2
+   cd /user/chenzk/sts2/sts2-lab-phase2
    .venv/bin/python -m uvicorn sts2lab.server:app --host 127.0.0.1 --port 8766
    ```
 
 4. Windows 安装 phase2 已备好的单幕包，重启至实验槽位 2 主菜单，恢复 SSH 隧道。
    本机专用路径和可复制命令放在被 Git 忽略的
-   `artifacts/handoff/20261115/LOCAL-RESUME.txt`；凭据不在文档中。
+   `artifacts/handoff/20261115/LOCAL-RESUME.txt`；该历史文件的RemoteRoot需先改为迁移后路径，
+   不能直接照抄旧路径。凭据不在文档中。
    先验证 live game/Mod SHA、实例、槽位、主菜单与结算状态；不要把过去的“已重启”当作当前证明。
 5. 实机执行前核对实际提交及源文件指纹；保留 `a8a861c` 配方冻结与后续服务器修复的区别。
    按配方 ACT001/ACT002/ACT003 顺序测试；最多 1200 动作。保留每次失败，发生修复就注明版本。
@@ -226,10 +236,11 @@ Windows 历史上 Code.exe 占用过 15526/21526，遇到超时先核对端口�
 
 ## 可直接粘贴到新窗口
 
-> 继续 Spire2Lab，工作目录 `/user/chenzk/sts2-lab-phase2`，分支 `phase2/search-hierarchy`。
+> 继续 Spire2Lab，工作目录 `/user/chenzk/sts2/sts2-lab-phase2`，分支 `phase2/search-hierarchy`。
 > 首先阅读 `SESSION-HANDOFF.md`，按其中顺序核对文件与实际运行状态。
 > 保留用户“按顺序完成采样、搜索、原版画面、完整单幕”的完整目标。
 > 前三项仅在声明范围内验收通过；第四项代码已实现，但普通原版单幕尝试为 0。
 > 2026-11-15 核对时 8765/8766 面板与 18526 隧道都未运行，旧 PID 不可用；
 > Windows 最新单幕 Mod 是否安装仍须实查。请先报告接续核对结果及最少必要恢复步骤，
-> 然后继续真实单幕验收。不要重写已验收部分、把合成测试当实机、或宣称提交已推送。
+> E0服务器准备已通过，按docs/course/MILESTONE-PLAN.txt接续E1，Windows恢复后继续实机。
+> 不要重写已验收部分、把合成测试当实机、或宣称本地提交已推送。

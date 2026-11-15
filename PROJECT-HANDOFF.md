@@ -2,6 +2,23 @@
 
 更新时间：2026-11-15
 
+2026-11-15 E0服务器恢复通过：用户提供硬件输出后，当前环境直接确认128逻辑CPU、
+377GiB内存、四张RTX4090标签/49140MiB设备；GPU0有异常，本轮只以UUID选择GPU1。
+worktree repair修复phase2双向Git路径，四个.tools链接改相对路径；新建独立.venv-rl，
+.venv指向它。main仍f9faf0a、源码无diff、安装包清单前后一致，未改系统Python/驱动。
+下载代理TLS失败、直连DNS失败；使用同机pip wheels/uv缓存以copy模式恢复65个包，
+其中setuptools78.1.0经514个RECORD哈希校验后从另一同机环境复制。记录全部来源，
+不称独立冷安装。依赖锁requirements-rl.lock；PyTorch2.14.0/CUDA13.0与pip check通过。
+新增scripts/check_rl_environment.py：CPU/GPU1合成前向/反向/Adam测试、numpy桥接，
+两份上游源码1383+34文件及native指纹检查；三类starter seed1各跑两次公开轨迹一致，
+Nibbit11步74HP、Slimes19步80HP、SludgeSpinner9步77HP。65项相关回归10.40秒通过。
+这是依赖数值测试和模拟器证据，未训练游戏Agent、未验证Windows或正常单幕。
+证据artifacts/rl-mvp/environment/e0-20261115/，含原链接/Git备份、网络与离线失败、
+恢复脚本、包清单、轨迹和测试报告。说明docs/RL-ENVIRONMENT.md；E1–E5待执行。
+未启动面板或长期训练，GPU任务已退出；ss未发现8765/8766/18526监听。
+当前工作目录/user/chenzk/sts2/sts2-lab-phase2；避免运行旧bootstrap.py把RL依赖同步掉。
+历史repro工作树仍旧路径且未清理，不影响当前主工作区。课程Proposal未有上传回执。
+
 2026-11-15 Milestone规划：用户要求规划现在先完成的部分。以8a9cf4f干净工作树为
 基线，只读复核Gym、采样、词表、训练边界和依赖；torch未装、phase2旧链接仍失效。
 新增docs/course/MILESTONE-PLAN.txt，定义E0环境恢复、E1训练契约、E2最多10000
