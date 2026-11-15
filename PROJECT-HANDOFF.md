@@ -2,6 +2,18 @@
 
 更新时间：2026-11-15
 
+2026-11-15 远程推送恢复：用户表示可以推送后实查，HTTPS仍退出128；直接SSH因
+DNS失败、agent socket失效且自定义密钥未被默认选择而无法使用。使用现存
+id_ed25519_github密钥，经既有HTTP代理CONNECT到ssh.github.com:443，主机Ed25519
+公钥按GitHub官方文档及SHA256指纹固定在忽略目录.tools/git/github_known_hosts，
+严格主机校验保持启用。SSH认证返回Lidz-abel，推送phase2/search-hierarchy退出0；
+独立ls-remote核对95c87e3c4110844ac5d226098ac2928c3221a1be与本地一致，包含E0/E1。
+证据artifacts/rl-mvp/contracts/e1-20261115/push-verified-initial.json；此交接提交后
+再推送/核对的最终SHA保存于同目录push-verified-final.json。只修改共享仓库本地
+remote.origin.pushurl和core.sshCommand，原值保存在git-ssh-config-before.json；
+没有修改全局Git/SSH配置、第一阶段源码、课程材料或训练结果。运行配置有本机
+路径/代理依赖，迁移后重核。历史失败保留；此结果解除远程交付阻塞，不解除实机单幕阻塞。
+
 2026-11-15 E1推送复查：用户询问为何未推送，实际重试将本地05f12d8推至origin的
 phase2/search-hierarchy；退出128：could not read Username for 'https://github.com':
 terminal prompts disabled。当前HTTPS身份获取仍失败，未成功推送；证据保存于

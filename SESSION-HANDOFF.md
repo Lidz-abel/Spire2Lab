@@ -35,12 +35,14 @@
 GPU 硬件现已实查，长期配额未确认；Proposal 保留预算表述。尚未取得课程提交回执。
 下一步：用户审阅个人版 ZIP，于 11 月 16 日 23:59 前提交课程平台并保存回执。
 用户指定的 Git 姓名/邮箱已写入本项目共享 Git 目录的本地配置，全局配置未改。
-作者身份缺失已解决。E0实现本地提交`3a4c70b`；其推送退出128：服务器没有可用的
-GitHub HTTPS身份（terminal prompts disabled）。日志在E0证据目录github-push.log，
-尚未推送；后续记录提交的实际HEAD用`git log -1`核对，认证恢复不通过聊天传递令牌。
-E1实现本地提交05f12d8；用户追问后已实际重试推送，仍退出128，错误为无法读取
-GitHub Username（terminal prompts disabled）。本次证据在E1目录push-retry-*.json；
-认证阻塞已重新确认，不是只沿用E0记录，远端交付仍未完成。
+远程交付已恢复：2026-11-15使用现有GitHub SSH密钥，经代理连接ssh.github.com:443，
+认证身份Lidz-abel；已推送phase2/search-hierarchy，并用ls-remote确认95c87e3与本地一致，
+包含E0及E1实现05f12d8。证据为E1目录push-verified-initial.json；本次交接提交后的
+最新核对另存push-verified-final.json，实际HEAD仍用git log/ls-remote核对。
+仓库本地Git配置保存remote.origin.pushurl与core.sshCommand，全局配置未改；两个
+worktree共享此本地配置。SSH主机密钥按GitHub官方指纹固定在.tools/git/github_known_hosts。
+配置引用本服务器私钥路径和代理；它们不入Git，迁移工作区后必须重新核对路径。
+历史HTTPS退出128及超时记录保留，不代表当前SSH仍阻塞；凭据不经聊天传递。
 
 11 月 30 日 Milestone 规划已记录于 `docs/course/MILESTONE-PLAN.txt`（planning-v1）。
 首批执行顺序：E0 环境/路径恢复与隔离依赖 → E1 训练契约与评估划分 → E2 最多
@@ -58,7 +60,7 @@ E3长期预算仍disabled。恢复仅保证学习器状态，环境重启新局�
 证据artifacts/rl-mvp/contracts/e1-20261115/：最终124项通过（E1新增59项+既有65项），
 regression-attempt2.xml/.log；attempt1保留不相加；contract-manifest.json展开清单及指纹。
 合成边界和旧开发seed3模拟器测试，不是游戏RL训练或实机验收。未安装新依赖，
-没有长期进程/游戏动作；8765/8766/18526仍无监听。本轮仅本地提交，未获新远程交付证据。
+没有长期进程/游戏动作；8765/8766/18526仍无监听。E1及此前提交现已通过SSH推送核对。
 
 E0 证据在 `artifacts/rl-mvp/environment/e0-20261115/`：独立 `.venv-rl`，PyTorch
 2.14.0/CUDA 13.0，CPU与GPU1数值检查通过；三类starter种子1战斗各重复两次一致，
@@ -112,13 +114,13 @@ Proposal 导出使用系统 Pango/Cairo 原生库和临时排版工具；没有�
 | 当前开发目录 | `/user/chenzk/sts2/sts2-lab-phase2` |
 | 当前分支 | `phase2/search-hierarchy` |
 | E0 前 HEAD | `ea8f892`；新窗口用 `git log -1` 获取后续提交后的实际 HEAD |
-| 最近实现提交 | `f4ce166`：明确不支持的单幕界面与异常私有记录 |
+| 最近实现提交 | `05f12d8`：E1训练契约、适配与种子划分；后续文档HEAD用git log核对 |
 | 第一阶段保留目录 | `/user/chenzk/sts2/sts2-lab`，`main`，`f9faf0a`，源码与依赖保持不变 |
 | Git 关系 | 两目录共享 `/user/chenzk/sts2/sts2-lab/.git`；迁移时不要只复制 phase2 的 `.git` 文件 |
 | GitHub | <https://github.com/Lidz-abel/Spire2Lab> |
-| 远程交付 | 未验证成功；历史写认证失败，最后一次推送无输出超过 90 秒后终止，退出 143 |
+| 远程交付 | phase2/search-hierarchy已推送且SHA一致；见E1目录push-verified-*.json |
 
-当前代码与文档以本机为准。新窗口不要仅从 GitHub 克隆后假定已有最新成果。
+代码与文档已同步上述分支；GitHub不包含被忽略的私有证据、依赖环境和游戏文件。
 持续小步提交已经获得用户授权；只有核对远程提交后才能报告“已推送”。
 
 关键检查点：`f94a5c0` 采样，`f2bc4c7` 搜索配置冻结，`601b580` 搜索验证，
@@ -230,7 +232,7 @@ Windows 历史上 Code.exe 占用过 15526/21526，遇到超时先核对端口�
      --output artifacts/single-act/RUN_ID-audit.json
    ```
 
-8. 更新状态、交接与来源文档，提交可审查结果；恢复 GitHub 登录/网络后再推送并核对远程。
+8. 更新状态、交接与来源文档，提交可审查结果；使用已验证SSH推送并核对远程SHA。
    单幕实机及剩余交付没有通过前，不能标记四项目标或第二阶段整体完成。
 
 ## 必须保留的本机数据

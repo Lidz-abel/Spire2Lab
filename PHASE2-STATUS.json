@@ -13,7 +13,7 @@
     "P2-05": "v2_development_and_new_heldout_complete_limited_hp_gain_no_hierarchy_gain",
     "P2-06": "live_search_and_decision_images_verified_starter_scope",
     "P2-07": "implemented_synthetic_tests_and_ui_passed_pending_original_act",
-    "P2-08": "local_docs_and_evidence_recorded_remote_and_independent_reproduction_pending"
+    "P2-08": "docs_and_e1_code_pushed_sha_verified_independent_reproduction_pending"
   },
   "implementation_scope": "starter combat search and original decision images verified within declared scope; normal single-act controller implemented, awaiting live acceptance",
   "evidence": {
@@ -59,18 +59,28 @@
       "browser_replay": "artifacts/phase2-live/20261023T170930347979/browser-replay.json"
     },
     "remote_delivery": {
-      "status": "pending_latest_push_requires_https_authentication",
+      "status": "ssh_push_verified_phase2_branch",
       "attempted_commit": "a8a861c1a7eff58d4f3d617ad7c47eb80f78d1d7",
       "report": "artifacts/single-act/github-push.json",
       "exit_code": 143,
-      "remote_head_verified": false,
-      "latest_attempt": {
+      "remote_head_verified": true,
+      "previous_attempt": {
         "checked_at": "2026-11-15",
         "commit": "3a4c70bb56c29bc9d3e9bb610542373d74ea99f2",
         "report": "artifacts/rl-mvp/environment/e0-20261115/github-push.log",
         "exit_code": 128,
         "result": "could_not_read_github_username_terminal_prompts_disabled",
         "pushed": false
+      },
+      "latest_attempt": {
+        "checked_at": "2026-11-15",
+        "verified_checkpoint": "95c87e3c4110844ac5d226098ac2928c3221a1be",
+        "report": "artifacts/rl-mvp/contracts/e1-20261115/push-verified-initial.json",
+        "handoff_commit_verification": "artifacts/rl-mvp/contracts/e1-20261115/push-verified-final.json",
+        "exit_code": 0,
+        "pushed": true,
+        "branch": "phase2/search-hierarchy",
+        "transport": "SSH_443_via_existing_proxy_with_pinned_GitHub_host_key"
       }
     },
     "conditioned_belief": {
@@ -219,6 +229,6 @@
     "normal_act_trace_count": 0,
     "goal_status": "blocked",
     "no_experiment_started": true,
-    "remote_delivery_verified": false
+    "remote_delivery_verified": true
   }
 }
