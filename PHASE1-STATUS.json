@@ -20,7 +20,7 @@
       {
         "id": 3,
         "title": "高效训练与原版评测",
-        "status": "bounded_cpu_ppo_prototype_verified_see_PHASE2_STATUS_rl_training"
+        "status": "bounded_cpu_ppo_repeats_audited_initial_control_incomplete_original_deployment_pending_see_PHASE2_STATUS"
       }
     ],
     "phase_one_milestones": [

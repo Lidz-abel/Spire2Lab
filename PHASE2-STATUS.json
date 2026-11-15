@@ -185,8 +185,12 @@
     "python": "3.12.3",
     "torch": "2.14.0",
     "torch_cuda_runtime": "13.0",
-    "gpu_compute_checked_physical_indices": [1],
-    "gpu_avoided_due_to_reported_errors": [0],
+    "gpu_compute_checked_physical_indices": [
+      1
+    ],
+    "gpu_avoided_due_to_reported_errors": [
+      0
+    ],
     "distinct_starter_cases": 3,
     "simulator_executions_in_readiness_check": 6,
     "first_stage_package_versions_unchanged": true,
@@ -231,8 +235,14 @@
     "main_training_transitions": 8192,
     "total_confirmed_training_transitions": 9984,
     "hard_cap": 10000,
-    "training_run_seeds": [41],
-    "worker_counts_verified": [1, 2, 4],
+    "training_run_seeds": [
+      41
+    ],
+    "worker_counts_verified": [
+      1,
+      2,
+      4
+    ],
     "checkpoint_reload_checks_passed": 14,
     "exact_initial_actor_actions_replayed": 128,
     "exact_initial_update_parameter_hash_replayed": true,
@@ -247,16 +257,25 @@
     "formal_E3_training_enabled": false,
     "original_game_evidence_added": false,
     "training_processes_remaining": false,
-    "next_work_package": "E3_recipe_and_resource_freeze_before_training"
+    "next_work_package": "see_rl_experiment_for_completed_E3_training_and_control_limitation",
+    "formal_E3_training_note": "E1 base flag remains false; separate E3 registration was executed to its own cap, see rl_experiment."
   },
   "rl_experiment": {
     "milestone_work_package": "E3",
-    "status": "running_preregistered_seed_repeats",
-    "completed_training_seeds": [41],
-    "active_or_next_seed": 42,
+    "status": "training_complete_initial_control_incomplete",
+    "completed_training_seeds": [
+      41,
+      42,
+      43
+    ],
+    "active_or_next_seed": null,
     "recipe": "config/rl-e3-v1.json",
     "plan": "docs/course/E3-EXECUTION-PLAN.txt",
-    "training_seeds": [41, 42, 43],
+    "training_seeds": [
+      41,
+      42,
+      43
+    ],
     "transitions_per_seed": 32768,
     "campaign_cap": 98304,
     "workers": 4,
@@ -264,7 +283,23 @@
     "preflight_tests_passed": 94,
     "evidence_directory": "artifacts/rl-mvp/experiments/e3-20261115-v1",
     "final_test_enabled": false,
-    "original_game_evidence_added": false
+    "original_game_evidence_added": false,
+    "primary_comparison_complete": false,
+    "engineering_training_and_audit_complete": true,
+    "confirmed_training_transitions": 98304,
+    "charged_training_transitions": 98304,
+    "amendment": "config/rl-e3-v1-amendment1.json",
+    "documentation": "docs/RL-E3-TRAINING.txt",
+    "public_results": "docs/RL-E3-RESULTS.json",
+    "analysis_report": "artifacts/rl-mvp/experiments/e3-20261115-v1/analysis/summary.json",
+    "delivery_receipt": "artifacts/rl-mvp/experiments/e3-20261115-v1/delivery.json",
+    "amendment_tests_passed": 92,
+    "subsequent_targeted_tests_passed": 6,
+    "test_counts_overlap": true,
+    "checkpoint_reload_checks_passed": 27,
+    "training_processes_remaining": false,
+    "final_test_cases_executed": 0,
+    "next_work_package": "E4_supported_starter_model_adapter_and_original_act_gate"
   },
   "handoff": {
     "document": "SESSION-HANDOFF.md",
@@ -278,7 +313,7 @@
     "normal_act_trace_count": 0,
     "goal_status": "blocked",
     "no_experiment_started": false,
-    "new_experiment_scope": "bounded_E2_simulator_training_only",
+    "new_experiment_scope": "bounded_E2_and_E3_simulator_training_only",
     "remote_delivery_verified": true
   }
 }

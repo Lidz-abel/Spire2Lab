@@ -30,7 +30,7 @@ Spire2Lab is an experimental foundation for researchers studying sequential deci
 
 The current focus is observable-history search and persistent tactical goals on a trustworthy experimental environment. The platform separates player-visible information from hidden simulator state and keeps original-game evidence distinct from simulator tests. This makes it possible to investigate both **what an agent decided** and **whether the environment behaved as expected**.
 
-> **Development status — phase 2 remains open; a bounded PPO prototype now runs.** Starter search and original decision images have limited live evidence; normal first-act acceptance remains outstanding. The phase-one checkpoint passed **60/60 original-game battles** and a separate loss/control probe across **9 boundary categories** ([scope](docs/LIVE-VALIDATION.md)). E2 completed **9,984 simulator learning transitions**, checkpoint recovery and 1/2/4-worker checks. This is an engineering result, with no original-game learned-policy or full-run acceptance. See [current evidence](PHASE2-STATUS.json) and [E2 results](docs/RL-E2-RESULTS.json).
+> **Development status — three bounded PPO training runs are audited; phase 2 remains open.** E3 completed **98,304 simulator learning transitions** across three training seeds. One initial control hit an encoding-capacity limit, so the primary three-seed improvement comparison remains incomplete. Starter search and decision images have limited live evidence; normal first-act and learned-policy deployment acceptance remain outstanding. The phase-one checkpoint passed **60/60 original-game battles** and a separate probe across **9 boundary categories** ([scope](docs/LIVE-VALIDATION.md)). See [current evidence](PHASE2-STATUS.json) and [E3 results](docs/RL-E3-RESULTS.json).
 
 ## Key features
 
@@ -186,6 +186,8 @@ Evidence separates original-game checks, simulator training and synthetic tests.
 
 The [E2 CPU PPO smoke run](docs/RL-E2-RESULTS.json) used one training seed and 8,192 main-run transitions, plus 1,792 for recovery and worker checks. On the same **60 validation cases**, the selected learned policy won **60/60** with **69.47 mean final HP**; the heuristic won **60/60** with **76.55 HP**, and random won **52/60** with **31.27 HP**. Selection used these validation cases; the final test split remains untouched. This establishes a working learning loop, not superiority to the heuristic, held-out generalization or original-game performance. Recorded curve data, learner reload checks and exact first-update replay are indexed in the result summary.
 
+The [E3 repeated runs](docs/RL-E3-RESULTS.json) trained three fresh models for **32,768 transitions each**. Each fixed-budget final model won all 60 validation cases, with **67.90 ± 0.30 HP** across training seeds (sample standard deviation), below the heuristic's **76.55**. Initial HP was 61.43, 0, and missing: seed 43 exceeded the fixed card encoding capacity in one initial-control case. An [explicit post-failure amendment](config/rl-e3-v1-amendment1.json) retained that error and allowed training within the original budget; no three-seed mean improvement is reported. All 98,304 transitions, 27 checkpoint reloads and each first-update replay passed their audits. [Execution instructions](docs/RL-E3-TRAINING.txt) and [case analysis](docs/RL-E3-ANALYSIS.txt) preserve this limitation. The final test split and original-game deployment remain pending.
+
 The first [planning evaluation](docs/PLANNING-RESULTS.md) covers **360 simulator battles**, **24 complete policy replays**, **152 tests** and one fresh original-game search battle. All benchmark configurations won their starter battles, but search finished with less HP than the heuristic baseline. This is a reproducible baseline with explicit limitations, not evidence of a performance gain. Full case counts, compute settings and build bindings are in the [phase-two summary](docs/PHASE2-VALIDATION.json).
 
 | Check | What it establishes | Boundary |
@@ -261,7 +263,7 @@ The current plan is **three-stage-v1**. Full tasks and exit criteria are in [ARC
 
 Original visuals begin with decision-boundary screenshots in stage 2, followed by synchronized presentation in stage 3. A vision-only policy is an optional separate research task. Independent bindings, a minimal Mod, and a finite combat engine will replace upstream components incrementally after their own validation.
 
-The course E2 training prototype is developed alongside the remaining stage-two original-act gate. Its completion does not close that gate or the full-game objective. Longer E3 training requires a separately frozen resource budget.
+The course E2/E3 training work runs alongside the remaining stage-two original-act gate. Its completion does not close that gate or the full-game objective. E3's registered budget is exhausted; further training requires a new experiment and resource registration. The next integration task is a learned-policy adapter within supported starter encounters and restored Windows connectivity.
 
 ## Development and provenance
 

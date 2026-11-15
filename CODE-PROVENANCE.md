@@ -5,6 +5,8 @@
 E3补充：analyze_rl_e3.py与rl_e3_amendment.py由本项目AI辅助编写，需求为全转换审计、
 同初始化对照、缺失值保留、历史源码绑定与失败留痕。seed43初始编码容量错误后登记
 amendment1，不改变上游模拟器或E2核心文件。失败对照不能计入完整主要比较验收。
+实际完成三seed共98304模拟器训练转换，公开docs/RL-E3-RESULTS.json；原版新增证据0。
+分析源码f3edbed校验历史驱动Git哈希与当前核心兼容性，没有放宽E2 checkpoint加载器。
 
 2026-11-15 E3：按docs/course/E3-EXECUTION-PLAN.txt事前冻结需求，新建rl_experiment.py
 和train_rl_e3.py。复用本项目E2模型/采样/PPO/checkpoint/验证实现；预算类复用E2

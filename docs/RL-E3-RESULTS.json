@@ -1,0 +1,444 @@
+{
+  "date": "2026-11-15",
+  "status": "training_complete_initial_control_incomplete",
+  "scope": "E3_small_budget_simulator_validation_only",
+  "primary_comparison_complete": false,
+  "engineering_training_and_audit_complete": true,
+  "recipe": "config/rl-e3-v1.json",
+  "preregistration": "docs/course/E3-EXECUTION-PLAN.txt",
+  "post_failure_amendment": "config/rl-e3-v1-amendment1.json",
+  "documentation": "docs/RL-E3-TRAINING.txt",
+  "interpretation": "docs/RL-E3-ANALYSIS.txt",
+  "parameter_count": 636898,
+  "device": "cpu",
+  "torch_threads": 1,
+  "workers": 4,
+  "transitions_per_update": 512,
+  "training_seeds": [
+    {
+      "seed": 41,
+      "attempt_directory": "artifacts/rl-mvp/experiments/e3-20261115-v1/seed-41-attempt-1",
+      "source": {
+        "commit": "cfaf36764e215009481582f440c1880d31617fac",
+        "dirty": false
+      },
+      "training_transitions": 32768,
+      "total_seconds": 300.92480913409963,
+      "training_transitions_per_second": 122.4088283157496,
+      "initial": {
+        "won": 60,
+        "lost": 0,
+        "truncated": 0,
+        "error": 0,
+        "mean_final_hp": 61.43333333333333
+      },
+      "final": {
+        "won": 60,
+        "lost": 0,
+        "truncated": 0,
+        "error": 0,
+        "mean_final_hp": 68.05
+      },
+      "selected": {
+        "won": 60,
+        "lost": 0,
+        "truncated": 0,
+        "error": 0,
+        "mean_final_hp": 69.01666666666667
+      },
+      "final_minus_initial_hp": 6.616666666666667,
+      "selected_minus_heuristic_hp": -7.533333333333331,
+      "checkpoints": {
+        "initial": {
+          "path": "artifacts/rl-mvp/experiments/e3-20261115-v1/seed-41-attempt-1/checkpoints/update-0000.pt",
+          "sha256": "b381ab51740d68950ba3d280cca566ecf02155e89ebdb0582ac12b1e0f014c53"
+        },
+        "final": {
+          "path": "artifacts/rl-mvp/experiments/e3-20261115-v1/seed-41-attempt-1/checkpoints/update-0064.pt",
+          "sha256": "0976e5fc11a67f87303be8667df9ce5d0b1ad9dc52cabf6fbb7dcceceb801813"
+        },
+        "selected": {
+          "path": "artifacts/rl-mvp/experiments/e3-20261115-v1/seed-41-attempt-1/checkpoints/update-0048.pt",
+          "sha256": "ccf64bd4b0ceece09300a4ebbbaa05b83046284c414b5db2418ec529237c601f"
+        }
+      },
+      "selected_update": 48,
+      "selected_training_steps": 24576
+    },
+    {
+      "seed": 42,
+      "attempt_directory": "artifacts/rl-mvp/experiments/e3-20261115-v1/seed-42-attempt-1",
+      "source": {
+        "commit": "5d17889ccd92c6ae486b57e3a0f34d815597867b",
+        "dirty": false
+      },
+      "training_transitions": 32768,
+      "total_seconds": 300.3009678660892,
+      "training_transitions_per_second": 122.3982260187302,
+      "initial": {
+        "won": 0,
+        "lost": 60,
+        "truncated": 0,
+        "error": 0,
+        "mean_final_hp": 0.0
+      },
+      "final": {
+        "won": 60,
+        "lost": 0,
+        "truncated": 0,
+        "error": 0,
+        "mean_final_hp": 67.55
+      },
+      "selected": {
+        "won": 60,
+        "lost": 0,
+        "truncated": 0,
+        "error": 0,
+        "mean_final_hp": 71.25
+      },
+      "final_minus_initial_hp": 67.55,
+      "selected_minus_heuristic_hp": -5.299999999999997,
+      "checkpoints": {
+        "initial": {
+          "path": "artifacts/rl-mvp/experiments/e3-20261115-v1/seed-42-attempt-1/checkpoints/update-0000.pt",
+          "sha256": "887d672bfcced1ba9692f73f4f63ef62f368913b0e817e59230bfe061fa2d9da"
+        },
+        "final": {
+          "path": "artifacts/rl-mvp/experiments/e3-20261115-v1/seed-42-attempt-1/checkpoints/update-0064.pt",
+          "sha256": "99d6406bcb86b53b3db2b9c777ddab5f53769c48179afdfaceb196da4473f864"
+        },
+        "selected": {
+          "path": "artifacts/rl-mvp/experiments/e3-20261115-v1/seed-42-attempt-1/checkpoints/update-0008.pt",
+          "sha256": "687a17eeac06098e6e14ab91bbbcf035ba5344d10937c2aee5609891673d5b3a"
+        }
+      },
+      "selected_update": 8,
+      "selected_training_steps": 4096
+    },
+    {
+      "seed": 43,
+      "attempt_directory": "artifacts/rl-mvp/experiments/e3-20261115-v1/seed-43-attempt-2",
+      "source": {
+        "commit": "49348a63f8bafc059f001f9a1643f0ffdec3cde2",
+        "dirty": false
+      },
+      "training_transitions": 32768,
+      "total_seconds": 298.62896494800225,
+      "training_transitions_per_second": 122.03337153460225,
+      "initial": {
+        "won": 40,
+        "lost": 19,
+        "truncated": 0,
+        "error": 1,
+        "mean_final_hp": null
+      },
+      "final": {
+        "won": 60,
+        "lost": 0,
+        "truncated": 0,
+        "error": 0,
+        "mean_final_hp": 68.1
+      },
+      "selected": {
+        "won": 60,
+        "lost": 0,
+        "truncated": 0,
+        "error": 0,
+        "mean_final_hp": 69.21666666666667
+      },
+      "final_minus_initial_hp": null,
+      "selected_minus_heuristic_hp": -7.333333333333329,
+      "checkpoints": {
+        "initial": {
+          "path": "artifacts/rl-mvp/experiments/e3-20261115-v1/seed-43-attempt-2/checkpoints/update-0000.pt",
+          "sha256": "b07b7254ea20c086018e572524836b852fa21f4e53b4e482630c48e22d6529cf"
+        },
+        "final": {
+          "path": "artifacts/rl-mvp/experiments/e3-20261115-v1/seed-43-attempt-2/checkpoints/update-0064.pt",
+          "sha256": "699ac8626988b0bcd873fc382609d6b9b4fe28b1f4304dde7f4061d68610de1f"
+        },
+        "selected": {
+          "path": "artifacts/rl-mvp/experiments/e3-20261115-v1/seed-43-attempt-2/checkpoints/update-0008.pt",
+          "sha256": "833c728ff339cadadcb908b4dc3282856be458b91223502579def82310f1d657"
+        }
+      },
+      "selected_update": 8,
+      "selected_training_steps": 4096
+    }
+  ],
+  "total_confirmed_training_transitions": 98304,
+  "total_charged_budget": 98304,
+  "campaign_cap": 98304,
+  "budget_by_seed": [
+    {
+      "seed": 41,
+      "charged": 32768,
+      "confirmed": 32768
+    },
+    {
+      "seed": 42,
+      "charged": 32768,
+      "confirmed": 32768
+    },
+    {
+      "seed": 43,
+      "charged": 32768,
+      "confirmed": 32768
+    }
+  ],
+  "validation_unique_cases": 60,
+  "validation_environment_seeds_inclusive": [
+    20000,
+    20019
+  ],
+  "validation_note": "Three trained models on the same 60 cases, not 180 independent tasks. Selected checkpoints use these validation cases and are optimistic secondary results.",
+  "baselines": {
+    "random": {
+      "cases": 60,
+      "won": 52,
+      "lost": 8,
+      "truncated": 0,
+      "error": 0,
+      "mean_final_hp_all_cases": 31.266666666666666,
+      "case_manifest_sha256": "4ba677f8c6ae8d01157e4c75ec826c8148acfd72eb9e79f1e8d055dcee12bed9"
+    },
+    "heuristic": {
+      "cases": 60,
+      "won": 60,
+      "lost": 0,
+      "truncated": 0,
+      "error": 0,
+      "mean_final_hp_all_cases": 76.55,
+      "case_manifest_sha256": "4ba677f8c6ae8d01157e4c75ec826c8148acfd72eb9e79f1e8d055dcee12bed9"
+    }
+  },
+  "across_seed_statistics": {
+    "initial_hp": {
+      "available_seed_count": 2,
+      "expected_seed_count": 3,
+      "mean": null,
+      "sample_std": null
+    },
+    "final_hp": {
+      "available_seed_count": 3,
+      "expected_seed_count": 3,
+      "mean": 67.89999999999999,
+      "sample_std": 0.30413812651491007
+    },
+    "selected_hp": {
+      "available_seed_count": 3,
+      "expected_seed_count": 3,
+      "mean": 69.82777777777777,
+      "sample_std": 1.2357334004699545
+    },
+    "final_minus_initial_hp": {
+      "available_seed_count": 2,
+      "expected_seed_count": 3,
+      "mean": null,
+      "sample_std": null
+    }
+  },
+  "failed_initial_control": {
+    "attempt": "seed-43-attempt-1",
+    "training_transitions": 0,
+    "won": 40,
+    "lost": 19,
+    "error": 1,
+    "encounter": "slimes-weak",
+    "environment_seed": 20015,
+    "error_text": "RuntimeError: Card encoding capacity exceeded",
+    "whole_seed_initial_hp": null,
+    "whole_seed_final_minus_initial_hp": null,
+    "error_imputed_or_case_excluded": false,
+    "diagnostic": {
+      "scope": "extra_validation_failure_diagnostic_not_training_or_final_test",
+      "encounter": "slimes-weak",
+      "environment_seed": 20015,
+      "initial_model_sha256": "273c4048ecf49a32572aecbf56257f3f06a6596a921c9ade2929231e5613137e",
+      "valid_transitions": 186,
+      "attempted_actions": 187,
+      "error": "Card encoding capacity exceeded",
+      "public_card_zone_sizes": {
+        "hand": 5,
+        "draw_pile": 65,
+        "discard_pile": 0,
+        "exhaust_pile": 0,
+        "known_top": 0,
+        "known_bottom": 0
+      },
+      "failed_action_returned_no_valid_transition": true
+    }
+  },
+  "verification": {
+    "preflight_tests_passed": 94,
+    "amendment_tests_passed": 92,
+    "subsequent_targeted_tests_passed": 6,
+    "test_counts_overlap": true,
+    "tests_note": "Synthetic checks and simulator engineering tests are distinct from the actual training evidence.",
+    "audits": [
+      {
+        "seed": 41,
+        "transitions_audited": 32768,
+        "checkpoint_reload_checks": 9,
+        "boundary_audit_passed": true
+      },
+      {
+        "seed": 42,
+        "transitions_audited": 32768,
+        "checkpoint_reload_checks": 9,
+        "boundary_audit_passed": true
+      },
+      {
+        "seed": 43,
+        "transitions_audited": 32768,
+        "checkpoint_reload_checks": 9,
+        "boundary_audit_passed": true
+      }
+    ],
+    "checkpoint_reload_checks": 27,
+    "first_update_replays": [
+      {
+        "seed": 41,
+        "actions_replayed": 512,
+        "parameter_hash_exact": true,
+        "new_environment_steps": 0
+      },
+      {
+        "seed": 42,
+        "actions_replayed": 512,
+        "parameter_hash_exact": true,
+        "new_environment_steps": 0
+      },
+      {
+        "seed": 43,
+        "actions_replayed": 512,
+        "parameter_hash_exact": true,
+        "new_environment_steps": 0
+      }
+    ],
+    "worker_shutdown_clean": true,
+    "training_processes_remaining": false,
+    "historical_driver_git_fingerprints_verified": true,
+    "e2_core_compatibility_unchanged": true
+  },
+  "low_hp_cases": [
+    {
+      "run_seed": 41,
+      "encounter": "slimes-weak",
+      "environment_seed": 20010,
+      "outcome": "won",
+      "initial_hp": 49,
+      "final_hp": 48,
+      "heuristic_hp": 76,
+      "trace": "case-41-0.json"
+    },
+    {
+      "run_seed": 41,
+      "encounter": "slimes-weak",
+      "environment_seed": 20014,
+      "outcome": "won",
+      "initial_hp": 49,
+      "final_hp": 45,
+      "heuristic_hp": 71,
+      "trace": "case-41-1.json"
+    },
+    {
+      "run_seed": 41,
+      "encounter": "sludge-spinner",
+      "environment_seed": 20009,
+      "outcome": "won",
+      "initial_hp": 61,
+      "final_hp": 61,
+      "heuristic_hp": 80,
+      "trace": "case-41-2.json"
+    },
+    {
+      "run_seed": 42,
+      "encounter": "sludge-spinner",
+      "environment_seed": 20008,
+      "outcome": "won",
+      "initial_hp": 0,
+      "final_hp": 58,
+      "heuristic_hp": 78,
+      "trace": "case-42-0.json"
+    },
+    {
+      "run_seed": 42,
+      "encounter": "sludge-spinner",
+      "environment_seed": 20018,
+      "outcome": "won",
+      "initial_hp": 0,
+      "final_hp": 59,
+      "heuristic_hp": 79,
+      "trace": "case-42-1.json"
+    },
+    {
+      "run_seed": 42,
+      "encounter": "slimes-weak",
+      "environment_seed": 20012,
+      "outcome": "won",
+      "initial_hp": 0,
+      "final_hp": 61,
+      "heuristic_hp": 80,
+      "trace": "case-42-2.json"
+    },
+    {
+      "run_seed": 43,
+      "encounter": "slimes-weak",
+      "environment_seed": 20014,
+      "outcome": "won",
+      "initial_hp": 0,
+      "final_hp": 45,
+      "heuristic_hp": 71,
+      "trace": "case-43-0.json"
+    },
+    {
+      "run_seed": 43,
+      "encounter": "slimes-weak",
+      "environment_seed": 20012,
+      "outcome": "won",
+      "initial_hp": 0,
+      "final_hp": 56,
+      "heuristic_hp": 80,
+      "trace": "case-43-1.json"
+    },
+    {
+      "run_seed": 43,
+      "encounter": "slimes-weak",
+      "environment_seed": 20013,
+      "outcome": "won",
+      "initial_hp": 0,
+      "final_hp": 57,
+      "heuristic_hp": 80,
+      "trace": "case-43-2.json"
+    }
+  ],
+  "low_hp_case_replay_validation_steps": 108,
+  "additional_failure_diagnostic_valid_steps": 186,
+  "additional_failure_diagnostic_attempted_actions": 187,
+  "throughput_definition": "Valid training transitions divided by sampling plus optimization seconds; excludes validation/startup/evidence writes. Shared CPU host, not a controlled scaling benchmark.",
+  "evidence_directory": "artifacts/rl-mvp/experiments/e3-20261115-v1",
+  "analysis_report": "artifacts/rl-mvp/experiments/e3-20261115-v1/analysis/summary.json",
+  "analysis_sha256": "0d36d4a509014e9b6b148ff4c461f9a91b2e75edce88d2640f1e3bcb1e96f7c5",
+  "budget_ledger_sha256": "ed200d0908e83bf64abe80876ee506c03085b15217e87b735fa6c2d6660c1603",
+  "analysis_source_commit": "f3edbed",
+  "curve_data": [
+    "artifacts/rl-mvp/experiments/e3-20261115-v1/analysis/training-curve.csv",
+    "artifacts/rl-mvp/experiments/e3-20261115-v1/analysis/validation-curve.csv",
+    "artifacts/rl-mvp/experiments/e3-20261115-v1/analysis/paired-cases.csv"
+  ],
+  "artifact_note": "Checkpoints, public trajectories and raw logs remain local under ignored artifacts. Git contains source, fixed recipes and this summary; migration requires a separate private evidence backup.",
+  "final_test_cases_executed": 0,
+  "original_game_evidence_added": false,
+  "normal_original_act_attempts": 0,
+  "limitations": [
+    "Post-failure amendment retains seed43 initial capacity error; primary three-seed HP contrast is incomplete, no imputation or exclusion.",
+    "Three training seeds on the same 60 validation cases, not 180 independent tasks.",
+    "Selected checkpoints are validation-optimistic; primary contrast is fixed final versus initialization.",
+    "No full-run training, original-game model deployment, final test or million-step budget.",
+    "Fixed final HP 67.90 +/- 0.30 sample SD trails heuristic 76.55. No superiority or held-out generalization claim.",
+    "E3 uses four workers and 512 transitions per update; E2 main used one and 128, so this is not a budget-only ablation.",
+    "Terminal-win-v1 does not directly reward HP; no causal reward-design conclusion without a separate comparison."
+  ],
+  "next_work": "E4 learned-policy adapter and Windows recovery within supported starter scope; retain the separate frozen original-act gate. New encoding/reward/budget experiments require separate registration."
+}
