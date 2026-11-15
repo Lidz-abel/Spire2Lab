@@ -2,6 +2,25 @@
 
 更新时间：2026-11-15
 
+2026-11-15 E1训练契约完成：用户要求执行E1；以f7eef1a干净工作树开始，核对E0、
+课程计划、来源、环境与现有边界。新增docs/RL-MVP.md及config/rl-mvp-v1.json：
+公开特征固定缩放与分类embedding、共享候选评分/value规格、原奖励、截断bootstrap、
+显式reset、PPO参数、独立种子划分与验证选模、checkpoint恢复边界。训练seed10000–
+10999，验证20000–20019，最终30000–30099，每seed三类遭遇；排除所有已用历史范围。
+E2目标8192/上限10000有效转换，CPU单worker起步，E3预算disabled；最终集未执行。
+新增sts2lab/rl_contract.py检查公开数组、padding/动作引用/掩码与奖励、终局和截断，
+拒绝无效no-op/autoreset结果，复制末状态；scripts/check_rl_contract.py静态展开清单。
+tests/test_rl_contract.py新增59项，最终含既有65项的回归124 passed/11.89s；首轮
+120项通过后补充配置/掩码防护，两个报告不相加。六场starter胜/负边界测试只用旧
+开发seed3，另有截断测试；均是模拟器/合成验证，没有策略训练或原版证据。
+证据artifacts/rl-mvp/contracts/e1-20261115/，含regression-attempt1/2.xml/.log和
+contract-manifest.json；固定配置、源码/文档/依赖指纹及完整3360用例定义。
+无新依赖，无native/Mod/第一阶段变更，无长期训练进程；服务/隧道三端口无监听。
+E2还需实现网络、collector、GAE/PPO和保存器，用真实模拟器证明非零参数更新与恢复；
+不能以E1边界测试替代E2验收。Windows实装和普通整幕仍未知/0次，不改变原四项目标。
+GitHub HTTPS认证没有恢复证据；当前工作本地提交，未宣称推送。11.16 Proposal上传
+回执仍待用户，11.30 Milestone期限不变。下次先读SESSION-HANDOFF再按E2所需取证。
+
 2026-11-15 E0本地交付：3a4c70b保存环境锁、检查器与接续记录，提交后工作树干净。
 一次限时非交互推送origin phase2/search-hierarchy退出128，错误为could not read
 Username for https://github.com: terminal prompts disabled；缺少当前可用HTTPS认证。

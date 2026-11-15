@@ -182,7 +182,30 @@
     "game_agent_training_started": false,
     "original_game_evidence_added": false,
     "independent_cold_install": false,
-    "next_work_package": "E1"
+    "next_work_package": "E2"
+  },
+  "rl_contract": {
+    "checked_at": "2026-11-15",
+    "milestone_work_package": "E1",
+    "status": "contract_frozen_boundary_tests_passed_training_not_started",
+    "documentation": "docs/RL-MVP.md",
+    "recipe": "config/rl-mvp-v1.json",
+    "implementation": "sts2lab/rl_contract.py",
+    "manifest_report": "artifacts/rl-mvp/contracts/e1-20261115/contract-manifest.json",
+    "regression_report": "artifacts/rl-mvp/contracts/e1-20261115/regression-attempt2.xml",
+    "regression_tests_passed": 124,
+    "new_contract_tests_passed": 59,
+    "training_case_count": 3000,
+    "validation_case_count": 60,
+    "final_test_case_count": 300,
+    "new_validation_or_final_cases_executed": 0,
+    "smoke_target_valid_transitions": 8192,
+    "smoke_hard_cap_valid_transitions": 10000,
+    "formal_training_enabled": false,
+    "game_agent_training_started": false,
+    "network_and_ppo_implemented": false,
+    "original_game_evidence_added": false,
+    "next_work_package": "E2"
   },
   "handoff": {
     "document": "SESSION-HANDOFF.md",

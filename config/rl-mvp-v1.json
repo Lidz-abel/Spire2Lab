@@ -1,0 +1,76 @@
+{
+  "version": "rl-mvp-v1",
+  "scope": "ironclad-starter-combat-only",
+  "encoding_version": "combat-entities-v3",
+  "feature_version": "public-entities-scaled-v1",
+  "reward_version": "terminal-win-v1",
+  "phase1_sha256": "ee6d05f24609cb2da13d960e306902f34e4fddda271f1e1532609d907506675f",
+  "vocabulary_sha256": "9df050a8e9f7d0177e83f9c59cdc95c6856913728d253cdf32d13c538357452c",
+  "native_sha256": "6321ca69c3ac6024d069f00b683d698523d8b22819609ee0044f078492856131",
+  "encounters": ["nibbits-weak", "slimes-weak", "sludge-spinner"],
+  "episode_max_steps": 300,
+  "environment_seed_ranges_inclusive": {
+    "train": [10000, 10999],
+    "validation": [20000, 20019],
+    "test": [30000, 30099]
+  },
+  "excluded_historical_seed_ranges_inclusive": [[1, 10], [1001, 1010], [2001, 2030]],
+  "training_run_seeds": [41, 42, 43],
+  "training_case_schedule": "cycle_encounters_draw_train_seed_uniform_with_replacement",
+  "evaluation": {
+    "policies": ["random", "heuristic", "rl_greedy"],
+    "random_policy_seed": 71,
+    "action_rule": "argmax_lowest_index_on_tie",
+    "validation_every_updates": 8,
+    "selection_order": ["win_rate_desc", "mean_final_hp_all_cases_desc", "valid_training_steps_asc"],
+    "metrics": ["won", "lost", "truncated", "error", "final_hp", "episode_return", "valid_steps", "decision_ms", "transitions_per_second"],
+    "test_gate": "frozen_model_hash_and_recipe_before_first_test_execution"
+  },
+  "network": {
+    "architecture": "flat_public_context_shared_candidate_scorer_v1",
+    "embedding_dim": 8,
+    "context_hidden": [128, 128],
+    "candidate_hidden": [64],
+    "activation": "tanh",
+    "value_head": "linear_context_to_scalar",
+    "padding_token": 0,
+    "recurrent": false
+  },
+  "ppo": {
+    "gamma": 0.99,
+    "gae_lambda": 0.95,
+    "learning_rate": 0.0003,
+    "adam_eps": 0.00001,
+    "clip_ratio": 0.2,
+    "value_coefficient": 0.5,
+    "entropy_coefficient": 0.01,
+    "max_grad_norm": 0.5,
+    "epochs": 4,
+    "rollout_steps_per_worker": 128,
+    "minibatch_size": 64,
+    "advantage_normalization": "whole_rollout_population_std_plus_1e-8",
+    "value_loss": "mean_squared_error_unclipped",
+    "learning_rate_schedule": "constant"
+  },
+  "smoke": {
+    "device": "cpu",
+    "workers": 1,
+    "torch_threads": 1,
+    "run_seed": 41,
+    "target_valid_transitions": 8192,
+    "hard_cap_valid_transitions": 10000,
+    "test_split_enabled": false
+  },
+  "formal_training": {
+    "enabled": false,
+    "valid_transitions_per_seed": null,
+    "workers": null,
+    "freeze_after": "E2_throughput_and_resource_review_before_E3"
+  },
+  "checkpoint": {
+    "version": "rl-checkpoint-v1",
+    "save_boundary": "after_complete_optimizer_update",
+    "resume_mode": "restore_learner_rng_and_scheduler_then_reset_environments",
+    "mid_episode_exact_resume": false
+  }
+}

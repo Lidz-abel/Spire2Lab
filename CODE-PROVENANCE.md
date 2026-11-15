@@ -2,6 +2,13 @@
 
 更新时间：2026-11-15
 
+2026-11-15 E1训练契约：先定义公开输入、候选动作、GAE边界、种子与恢复用例，再
+编写sts2lab/rl_contract.py、scripts/check_rl_contract.py和tests/test_rl_contract.py。
+这些为本项目AI辅助实现的NumPy数据检查/缩放和清单工具，未复制外部训练器代码。
+PPO/GAE/action masking方法及Gymnasium时间上限语义引用见docs/RL-MVP.md；
+网络与PPO更新器尚待E2实现。本轮没有新增训练依赖或修改固定上游/native/Mod，
+124项合成/模拟器检查不代表训练效果或原版验收。
+
 2026-11-15 E0 环境补充：新增 `scripts/check_rl_environment.py` 为本项目依赖/环境
 检查工具，使用 PyTorch 的合成数值前向、反向和优化器检查，以及既有启发式的真实
 模拟器战斗；未实现或训练游戏 RL 策略，未扩展原版验证范围。训练依赖版本单独固定于
