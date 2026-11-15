@@ -2,6 +2,11 @@
 
 更新时间：2026-11-15
 
+2026-11-15 E3：按docs/course/E3-EXECUTION-PLAN.txt事前冻结需求，新建rl_experiment.py
+和train_rl_e3.py。复用本项目E2模型/采样/PPO/checkpoint/验证实现；预算类复用E2
+落盘逻辑，另设E3注册后的按seed和campaign上限，不放宽E2的10000门。未复制外部
+训练器、未改奖励或新增依赖；AI辅助实现。开始训练前94项相关检查通过，实际结果另记。
+
 2026-11-15 E2实现：在E1输入/输出、公式与用例冻结后，本项目AI辅助编写rl_model、
 rl_rollout、rl_ppo、rl_io、rl_evaluate及训练/验证脚本；使用通用PyTorch/NumPy，
 未复制第三方训练框架。方法引用沿用docs/RL-MVP.md；PyTorch Categorical熵行为

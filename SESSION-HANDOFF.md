@@ -4,6 +4,13 @@
 本文件是当前摘要；[PROJECT-HANDOFF.md](PROJECT-HANDOFF.md) 保留历史过程。
 若两者描述的进程状态冲突，以最新实际检查为准。
 
+E3已获用户授权推进：事前配方config/rl-e3-v1.json、计划docs/course/E3-EXECUTION-PLAN.txt。
+CPU4环境/单学习器线程，seed41/42/43各32768，总98304，顺序运行，每次900秒软限。
+接续先查artifacts/rl-mvp/experiments/e3-20261115-v1/的run.json、result/failure和
+budget.jsonl，核对PID再操作；不可重建目录绕额度。入口scripts/train_rl_e3.py。
+首次运行从seed41开始，SIGINT/TERM请求在完整update后保存；E3未因注册或测试而通过。
+新增训练前同初始化对照，固定末次与验证选模分开报告；最终测试、Windows整幕仍未执行。
+
 E2已完成（2026-11-15）：main8192 + resume256 + workers2/4共1536 = 9984有效转换，
 预算预留/确认一致；四个run通过、进程已退出，acceptance.json审计通过。公开结果
 docs/RL-E2-RESULTS.json；入口docs/RL-TRAINING.txt。证据根为

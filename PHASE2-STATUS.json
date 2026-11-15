@@ -249,6 +249,21 @@
     "training_processes_remaining": false,
     "next_work_package": "E3_recipe_and_resource_freeze_before_training"
   },
+  "rl_experiment": {
+    "milestone_work_package": "E3",
+    "status": "registered_and_preflight_passed_before_first_run",
+    "recipe": "config/rl-e3-v1.json",
+    "plan": "docs/course/E3-EXECUTION-PLAN.txt",
+    "training_seeds": [41, 42, 43],
+    "transitions_per_seed": 32768,
+    "campaign_cap": 98304,
+    "workers": 4,
+    "device": "cpu",
+    "preflight_tests_passed": 94,
+    "evidence_directory": "artifacts/rl-mvp/experiments/e3-20261115-v1",
+    "final_test_enabled": false,
+    "original_game_evidence_added": false
+  },
   "handoff": {
     "document": "SESSION-HANDOFF.md",
     "checked_at": "2026-11-15",
