@@ -1,0 +1,53 @@
+Spire2Lab E2 — CPU PPO 运行说明
+2026-11-15；实现已通过合成/环境边界检查，真实学习验收结果另行记录。
+契约：docs/RL-MVP.md；配方：config/rl-mvp-v1.json，保持E1指纹不变。
+
+实现入口
+  sts2lab/rl_model.py：636898参数的公开实体ActorCritic，共享候选评分和独立value路径。
+  sts2lab/rl_rollout.py：显式reset、训练用例调度、1/2/4环境进程、time-major rollout。
+  sts2lab/rl_ppo.py：按E1公式计算GAE和clipped PPO，整批优势标准化。
+  sts2lab/rl_io.py：独占预算台账、原子checkpoint、来源校验和学习器恢复。
+  sts2lab/rl_evaluate.py：仅验证集，逐例保存，错误不从分母删除。
+  scripts/train_rl.py / scripts/evaluate_rl.py：训练/验证入口，无最终测试或E3模式。
+
+模型用PyTorch默认Linear/Embedding初始化；固定run41和构造顺序、确定性算法、
+单Torch线程。只运行CPU；categorical padding行保持0。输入为公开编码，不接收
+环境seed/RNG/快照。源文件及native/依赖/词表指纹随run与checkpoint保存。
+所有新增训练核心由本项目按预先冻结规格AI辅助编写，未复制现成训练器。
+方法参考和既有上游引擎来源沿用docs/RL-MVP.md及CODE-PROVENANCE.md。
+
+本轮唯一学习预算台账：artifacts/rl-mvp/smoke/e2-20261115/budget.jsonl。
+本轮重试不得另建campaign重置额度。预留发生在发送动作前，确认发生在验证返回后；
+异常遗留的未确认预留仍扣额度，不假装已完成转换。台账全程独占锁，防止并发越额。
+main8192、resume256、workers2共512、workers4共1024，总9984，硬上限10000。
+所有profile使用同一冻结配方/run41；进程短测从相同初始学习器开始，独立记录。
+当前入口要求该profile完整额度可用；若失败消耗后不足，拒绝运行并记录未完成，
+不能自动放宽预算。缩短短测需要显式记录执行profile修订后实施。
+
+从项目根目录执行（主运行会创建新目录，已存在目录拒绝覆盖）：
+  .venv-rl/bin/python scripts/train_rl.py --campaign artifacts/rl-mvp/smoke/e2-20261115 --run-id main-01 --profile main
+  .venv-rl/bin/python scripts/train_rl.py --campaign artifacts/rl-mvp/smoke/e2-20261115 --run-id resume-01 --profile resume --resume artifacts/rl-mvp/smoke/e2-20261115/main-01/checkpoints/update-0064.pt
+  .venv-rl/bin/python scripts/train_rl.py --campaign artifacts/rl-mvp/smoke/e2-20261115 --run-id workers2-01 --profile workers2
+  .venv-rl/bin/python scripts/train_rl.py --campaign artifacts/rl-mvp/smoke/e2-20261115 --run-id workers4-01 --profile workers4
+
+每个run.json保存PID、argv、路径和指纹。SIGINT/SIGTERM请求在完整update后保存并退出；
+发送前先核对PID与启动命令，不能批量杀用户进程。强制中断可能留不完整update；
+预算已扣除，失败/残留证据必须保留。SIGTERM请求不保证立即退出，验证期间也需等待。
+run目录包含updates/episodes/transitions.jsonl、完整公开obs/next_obs的压缩rollout、
+checkpoints与校验和、validation逐例结果、reload/resume证明、result或failure及cleanup。
+
+只加载本项目产生且信任的本地checkpoint（Torch pickle）；校验和用于完整性检查，
+不能把任意外来文件变成可信文件。源代码/配方/依赖指纹不匹配时拒绝恢复，不静默迁移。
+恢复model/optimizer/Python/NumPy/Torch CPU RNG/调度器/计数/验证历史；CPU模式未使用
+CUDA随机状态。环境重启新episode，记录aborted_by_resume，不保证相同后续游戏轨迹。
+评估隔离随机状态，原子checkpoint仅在完整update之后写入，不保存真实环境快照。
+
+main每8次update与末次验证60用例，random/heuristic各验证一次；resume/进程短测
+在末次也验证。全部都是验证集重复评估，不扩大独立样本数，最终300用例保持封存。
+胜率相同按全用例finalHP、再按较少训练步数选模；恢复继承已有验证历史和所选模型。
+训练吞吐分为采样、采样+更新、含评估与落盘的总耗时；记录推理batch时延。不同
+worker数样本数/episode组成不同，短测只证明功能与给出测量，不证明并行必然加速。
+
+预训练检查：tests-attempt1为138项通过，后续14项E2针对性复查通过；报告在campaign根。
+这些包含合成优化器更新与开发seed3的脚本动作，不算真实学习验收，不计入E2训练步数。
+实际训练结果以run证据为准；不将模拟器训练或验证宣称为Windows原版验收。

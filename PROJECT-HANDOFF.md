@@ -2,6 +2,14 @@
 
 更新时间：2026-11-15
 
+2026-11-15 E2实施启动：用户授权推进E2。按已冻结计划实现636898参数ActorCritic、
+显式reset采样、GAE/PPO、持久预算台账、含优化器/RNG的checkpoint和验证集评估。
+首轮相关测试138 passed/21.16s；加强优化器续训测试和恢复选模后，14项E2复查
+passed/8.82s。证据artifacts/rl-mvp/smoke/e2-20261115/tests-attempt1/2.*，不相加。
+准备开始main-01的8192有效转换；run.json记录实际PID，SIGINT/TERM在update后退出。
+预算台账在同一campaign根，共10000上限，所有恢复/进程短测/失败共用；E3与最终集禁用。
+启动前尚无真实游戏学习结果；本实现提交用于固定源码。说明docs/RL-TRAINING.txt。
+
 2026-11-15 下一步规划：用户要求规划E1后的工作；基于已推送9dda564，新增
 docs/course/E2-EXECUTION-PLAN.txt，将E2拆为网络、采样、GAE/PPO首更新、保存恢复、
 验证/吞吐五步。成功路径8192主运行+256恢复+512二进程+1024四进程共9984转换；

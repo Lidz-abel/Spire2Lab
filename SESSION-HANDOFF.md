@@ -4,6 +4,12 @@
 本文件是当前摘要；[PROJECT-HANDOFF.md](PROJECT-HANDOFF.md) 保留历史过程。
 若两者描述的进程状态冲突，以最新实际检查为准。
 
+E2当前执行覆盖下方历史摘要：训练实现与预检查已完成，正在推进受限真实模拟器
+学习验收；接续先检查artifacts/rl-mvp/smoke/e2-20261115/下的run.json、result/failure
+及budget.jsonl，不能重启另一campaign绕过10000额度。当前拟运行main-01，之后resume、
+workers2/4。实际PID以run.json和进程实查为准；SIGINT/TERM请求在完整update后退出。
+入口和数据说明docs/RL-TRAINING.txt。E3、最终测试、原版整幕验收均未因此完成。
+
 ## 2026-11-15 用户最新要求与课程期限
 
 课程 Final Project 采用 Build Track 定位，用户确认既有个人项目可以继续拓展。
