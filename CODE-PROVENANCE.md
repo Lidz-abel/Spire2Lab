@@ -2,6 +2,10 @@
 
 更新时间：2026-11-15
 
+E3补充：analyze_rl_e3.py与rl_e3_amendment.py由本项目AI辅助编写，需求为全转换审计、
+同初始化对照、缺失值保留、历史源码绑定与失败留痕。seed43初始编码容量错误后登记
+amendment1，不改变上游模拟器或E2核心文件。失败对照不能计入完整主要比较验收。
+
 2026-11-15 E3：按docs/course/E3-EXECUTION-PLAN.txt事前冻结需求，新建rl_experiment.py
 和train_rl_e3.py。复用本项目E2模型/采样/PPO/checkpoint/验证实现；预算类复用E2
 落盘逻辑，另设E3注册后的按seed和campaign上限，不放宽E2的10000门。未复制外部

@@ -1,0 +1,16 @@
+{
+  "version": "rl-e3-v1-amendment1",
+  "registered_after": "seed-43-attempt-1 initial evaluation failure; before seed-43 training",
+  "seed": 43,
+  "attempt": 2,
+  "source_control": "artifacts/rl-mvp/experiments/e3-20261115-v1/seed-43-attempt-1/validation/update-0000",
+  "files": {
+    "summary.json": "556b4cbaff0dc0f80b8a726e7281202e9747eb8eb23e0324c43aada6e65d2f96",
+    "cases.jsonl": "70abdfd9637445b721f2b3a6bd5a7183760d88785c08a914b9ac683cb4887f68"
+  },
+  "model_sha256": "273c4048ecf49a32572aecbf56257f3f06a6596a921c9ade2929231e5613137e",
+  "reason": "Initial greedy policy exceeded fixed card encoding capacity on slimes-weak seed20015 after186 valid steps.",
+  "handling": "Reuse unchanged initial control with error retained; whole-seed initial HP and HP delta remain null; no imputation or case exclusion.",
+  "training": "Unchanged seeds, cases, encoding, reward, PPO and budgets. Trained validation errors still stop the run.",
+  "primary_comparison_complete": false
+}

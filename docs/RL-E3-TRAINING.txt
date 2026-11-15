@@ -1,0 +1,69 @@
+Spire2Lab E3 — 小预算重复训练与分析说明
+2026-11-15；配方config/rl-e3-v1.json，事前计划docs/course/E3-EXECUTION-PLAN.txt。
+执行状态与结果见docs/RL-E3-RESULTS.json；不得把本运行说明本身当成验收证据。
+
+范围与方法
+  CPU上分别运行seed41/42/43，各32768个有效转换，总98304。每个模型新初始化；
+  三类starter遭遇、公开实体编码、terminal-win-v1、PPO参数沿用E1/E2。
+  4个环境worker、单Torch线程、一次只运行一个学习器。与E2主运行相比，每个rollout
+  从128变为512条转换；E3与E2的差异不只是训练步数，不能称单变量预算消融。
+  主要对照为同seed初始模型和固定预算末次模型；验证所选最佳模型为次要结果。
+  不进行奖励shaping/超参搜索、百万步或最终测试。原版整幕/完整通关仍另需验收。
+
+准备与运行
+  使用当前phase2工作区的.venv-rl和requirements-rl.lock，不修改第一阶段环境。
+  不运行会按基础锁同步的旧bootstrap.py。E0是同机缓存环境恢复，未声称独立冷安装。
+  先提交源码：入口拒绝脏工作树，随后记录代码/配置/依赖/native指纹、PID、argv。
+  以下命令从项目根运行，每条结束并检查result/cleanup后再执行下一条：
+
+  OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 .venv-rl/bin/python -u scripts/train_rl_e3.py --seed 41
+  OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 .venv-rl/bin/python -u scripts/train_rl_e3.py --seed 42
+  OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 .venv-rl/bin/python -u scripts/train_rl_e3.py --seed 43
+
+  输出根由冻结配方指定：artifacts/rl-mvp/experiments/e3-20261115-v1/。
+  seed41/42使用attempt1；seed43-attempt1初始验证失败、训练0步，原目录保留。
+  显式事后修订config/rl-e3-v1-amendment1.json允许以下唯一补充运行：
+  OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 .venv-rl/bin/python -u scripts/train_rl_e3.py --seed 43 --attempt 2 --retain-incomplete-initial-control
+  复用指纹核验后的原初始评估，模型权重必须完全相同；整体初始HP及前后HP差缺失。
+  存在时拒绝覆盖。已完成的seed不能重新消耗额度，训练后验证错误仍停止。
+  预算台账有独占锁、每seed32768上限及全局98304上限。所有尝试都记账；不另建目录
+  绕过上限。以后新增实验必须先登记新版本/预算，保留这次全部结果。
+  环境未知内容、NaN/Inf、预算/指纹不匹配等均停止并写failure.json，不伪造战败。
+
+停止与恢复
+  从run.json核对PID和命令后发送SIGINT或SIGTERM；完整update后验证并保存退出。
+  900秒为每次运行的软上限，在update边界检查，单次采样/评估完成可能略晚。
+  恢复用相同seed，新的attempt编号及--resume <可信本地checkpoint.pt>。
+  继承模型/优化器/RNG/调度器/计数，环境从新episode开始；不保证原轨迹精确续接。
+  加载旧checkpoint不能回退预算台账，丢失的在途转换仍占额度；不足则记录未完成。
+  E3本批无中断时，恢复能力依据E2的独立进程实测；E3自身另有每个checkpoint的
+  模型/优化器/RNG/probe重载检查，二者不要混称为新的E3中断续训实验。
+
+评估与证据
+  训练前评估初始模型；每8 updates（4096转换）及末次在同60验证例上评估greedy。
+  random(seed71逐例重置)和heuristic各运行同清单一次，指纹见baselines/manifest.json。
+  每个seed保留9个checkpoint（初始+8个训练后）、验证逐例结果、64个公开rollout、
+  update/episode/transition日志、result/failure与cleanup。模型为本地忽略文件，不入Git。
+  初始模型不参与已训练checkpoint选模；已训练模型按胜率、全用例HP、较少步数排序。
+  模型初始/固定末次/所选结果分别报告，各seed原始值+均值及样本标准差(ddof=1)。
+  3个模型在相同60任务上评估，不能说180个独立测试任务；所选指标有验证集选择偏差。
+
+  三个seed全部完成后执行：
+  .venv-rl/bin/python scripts/analyze_rl_e3.py --campaign artifacts/rl-mvp/experiments/e3-20261115-v1
+
+  analysis/summary.json汇总全部转换审计、checkpoint绑定、每seed首512动作/首update
+  精确离线重放、统计与低HP案例。离线重放不执行环境；另按事前确定的三大HP差距
+  为每seed捕获3个验证案例完整公开轨迹，核对与先前评估轨迹哈希一致，额外验证步数
+  单独记账，不充当新训练或最终测试。获胜但低HP的案例不称战败。
+  analysis/paired-cases.csv、validation-curve.csv、training-curve.csv供后续报告绘图。
+  分析目录拒绝覆盖；每seed必须恰有一个完整训练尝试，失败尝试另外列入汇总。
+  原始初始错误不填补、不剔除；三seed初始HP与前后差统计为null并注明可用seed数。
+  历史checkpoint按对应run.json核验Git提交中的驱动指纹，核心模型/PPO/环境兼容性
+  仍必须匹配当前核心文件，不放宽E2加载器或假装历史驱动等于修订后的驱动。
+
+来源与结果解释
+  E3驱动和预算由本项目基于E2代码AI辅助编写，复用既有采样/PPO/保存/验证模块。
+  审计根据本项目E2审计逻辑扩展；无新增依赖、外部训练器或游戏规则实现替换。
+  原奖励不直接包含HP，因此HP变化不能直接解释为优化了HP奖励；需要独立奖励/方法
+  对照才能验证原因。本轮按固定方案收集结果，不因中途曲线修改算法。
+  小预算验证结果不等于保留集泛化、原版部署或完整自主通关，也不是Proposal百万步完成。

@@ -13,13 +13,14 @@ def main():
     parser.add_argument("--seed", type=int, choices=(41, 42, 43), required=True)
     parser.add_argument("--attempt", type=int, default=1)
     parser.add_argument("--resume", type=Path)
+    parser.add_argument("--retain-incomplete-initial-control", action="store_true")
     args = parser.parse_args()
     if args.attempt < 1:
         parser.error("attempt must be positive")
-    run(args.seed, args.attempt, args.resume)
+    run(args.seed, args.attempt, args.resume, args.retain_incomplete_initial_control)
 
 
-def run(seed, attempt, resume):
+def run(seed, attempt, resume, retain_incomplete=False):
     from datetime import datetime, timezone
     import json
     import os
@@ -52,6 +53,11 @@ def run(seed, attempt, resume):
     from sts2lab.rl_evaluate import evaluate, selection_key
 
     spec, base = load_experiment()
+    amendment = None
+    if retain_incomplete:
+        from sts2lab.rl_e3_amendment import amendment_metadata, retained_control
+
+        amendment = amendment_metadata(seed, attempt, resume)
     campaign = ROOT / spec["campaign_directory"]
     run_id = f"seed-{seed}-attempt-{attempt}"
     out = campaign / run_id
@@ -62,6 +68,8 @@ def run(seed, attempt, resume):
     np.random.seed(seed)
     torch.manual_seed(seed)
     compatible = experiment_compatibility(spec, base)
+    if amendment:
+        compatible["amendment"] = amendment
     origin = source_version()
     if origin["dirty"]:
         raise ValueError("Commit source before E3 execution")
@@ -78,6 +86,7 @@ def run(seed, attempt, resume):
             "base_recipe": base,
             "experiment": spec,
             "resume": str(resume) if resume else None,
+            "amendment": amendment,
             "stop": "SIGINT/SIGTERM or wall-time limit: checkpoint after update",
         },
     )
@@ -186,11 +195,18 @@ def run(seed, attempt, resume):
 
         if initial_summary is None:
             tick = time.perf_counter()
-            initial_summary = evaluate(
-                base, "rl_greedy", out / "validation/update-0000", model
-            )
+            if amendment:
+                initial_summary = retained_control(
+                    amendment,
+                    state_digest(model.state_dict()),
+                    out / "validation/update-0000",
+                )
+            else:
+                initial_summary = evaluate(
+                    base, "rl_greedy", out / "validation/update-0000", model
+                )
+                selection_key(initial_summary, 0)
             evaluation_seconds += time.perf_counter() - tick
-            selection_key(initial_summary, 0)  # reject incomplete initial control
             history.append(
                 {
                     "update": 0,
@@ -344,11 +360,20 @@ def run(seed, attempt, resume):
                 "last_checkpoint": str(last_path),
                 "best_checkpoint": best[1] if best else None,
                 "initial_summary": initial_summary,
+                "amendment": amendment,
+                "primary_comparison_complete": initial_summary["error"] == 0,
                 "final_summary": final_summary,
-                "fixed_final_minus_initial_hp": final_summary["mean_final_hp_all_cases"]
-                - initial_summary["mean_final_hp_all_cases"],
-                "fixed_final_minus_initial_win_rate": final_summary["win_rate"]
-                - initial_summary["win_rate"],
+                "fixed_final_minus_initial_hp": (
+                    final_summary["mean_final_hp_all_cases"]
+                    - initial_summary["mean_final_hp_all_cases"]
+                    if initial_summary["error"] == 0
+                    else None
+                ),
+                "fixed_final_minus_initial_win_rate": (
+                    final_summary["win_rate"] - initial_summary["win_rate"]
+                    if initial_summary["error"] == 0
+                    else None
+                ),
                 "sampling_seconds": sampling_seconds,
                 "optimization_seconds": optimization_seconds,
                 "evaluation_seconds": evaluation_seconds,

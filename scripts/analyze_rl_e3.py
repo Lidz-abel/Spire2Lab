@@ -15,12 +15,53 @@ def lines(path):
     return [json.loads(line) for line in path.read_text().splitlines()]
 
 
-def case_map(path):
+def case_map(path, allow_error=False):
     rows = lines(path)
     mapping = {(r["encounter"], r["seed"]): r for r in rows}
-    if len(mapping) != len(rows) or any(r["outcome"] == "error" for r in rows):
+    if len(mapping) != len(rows) or (
+        not allow_error and any(r["outcome"] == "error" for r in rows)
+    ):
         raise ValueError("Duplicate or failed evaluation cases")
     return mapping
+
+
+def complete_statistics(values):
+    import numpy as np
+
+    available = sum(v is not None for v in values)
+    return {
+        "available_seed_count": available,
+        "expected_seed_count": len(values),
+        "mean": float(np.mean(values)) if available == len(values) else None,
+        "sample_std": (
+            float(np.std(values, ddof=1))
+            if available == len(values) and available > 1
+            else None
+        ),
+    }
+
+
+def historical_compatibility(path, spec, base):
+    """Bind historical drivers to committed source, keeping core compatibility strict."""
+    import hashlib
+    import subprocess
+    from sts2lab.contracts import digest
+    from sts2lab.rl_io import compatibility
+
+    manifest = json.loads((path / "run.json").read_text())
+    expected = manifest["compatibility"]
+    assert not manifest["source"]["dirty"]
+    assert expected["base"] == compatibility(base)
+    assert expected["experiment"] == digest(spec)
+    files = dict(expected["files"])
+    if "amendment" in expected:
+        files.update(expected["amendment"]["files"])
+    for name, checksum in files.items():
+        content = subprocess.check_output(
+            ["git", "show", f"{manifest['source']['commit']}:{name}"], cwd=ROOT
+        )
+        assert hashlib.sha256(content).hexdigest() == checksum
+    return expected
 
 
 def audit_seed(path):
@@ -201,7 +242,7 @@ def capture_case(model, expected, output):
 def summarize(campaign):
     import numpy as np
     import torch
-    from sts2lab.rl_experiment import load_experiment, experiment_compatibility
+    from sts2lab.rl_experiment import load_experiment
     from sts2lab.rl_io import file_hash, load_checkpoint, write_json
     from sts2lab.rl_model import ActorCritic
 
@@ -213,9 +254,36 @@ def summarize(campaign):
     heuristic = case_map(campaign / "baselines/heuristic/cases.jsonl")
     random_rows = case_map(campaign / "baselines/random/cases.jsonl")
     records, audits, replay, curve, paired, failures = [], [], [], [], [], []
+    training_curve = []
     capture_steps = 0
     for seed in spec["training_run_seeds"]:
-        path = campaign / f"seed-{seed}-attempt-1"
+        completed = [
+            p.parent
+            for p in campaign.glob(f"seed-{seed}-attempt-*/result.json")
+            if json.loads(p.read_text())["status"] == "passed"
+        ]
+        if len(completed) != 1:
+            raise ValueError(f"Expected one completed attempt for seed {seed}")
+        path = completed[0]
+        for update_row in lines(path / "updates.jsonl"):
+            training_curve.append(
+                {
+                    "run_seed": seed,
+                    **{
+                        k: update_row[k]
+                        for k in (
+                            "updates",
+                            "valid_steps",
+                            "loss",
+                            "policy_loss",
+                            "value_loss",
+                            "entropy",
+                            "grad_norm",
+                            "approx_kl",
+                        )
+                    },
+                }
+            )
         audits.append(audit_seed(path))
         replay.append(replay_first_update(path, seed, base))
         result = json.loads((path / "result.json").read_text())
@@ -225,7 +293,10 @@ def summarize(campaign):
             "selected": Path(result["best_checkpoint"]),
         }
         cases = {
-            k: case_map(p.parent.parent / "validation" / p.stem / "cases.jsonl")
+            k: case_map(
+                p.parent.parent / "validation" / p.stem / "cases.jsonl",
+                allow_error=k == "initial",
+            )
             for k, p in paths.items()
         }
         assert all(
@@ -234,6 +305,9 @@ def summarize(campaign):
         )
         row = {
             "seed": seed,
+            "attempt_directory": str(path.relative_to(ROOT)),
+            "source": json.loads((path / "run.json").read_text())["source"],
+            "amendment": result.get("amendment"),
             "training_transitions": result["run_valid_transitions"],
             "total_seconds": result["total_seconds"],
             "training_transitions_per_second": result[
@@ -249,12 +323,17 @@ def summarize(campaign):
                 "won": sum(c["outcome"] == "won" for c in values.values()),
                 "lost": sum(c["outcome"] == "lost" for c in values.values()),
                 "truncated": sum(c["outcome"] == "truncated" for c in values.values()),
-                "mean_final_hp": float(
-                    np.mean([c["final_hp"] for c in values.values()])
+                "error": sum(c["outcome"] == "error" for c in values.values()),
+                "mean_final_hp": (
+                    float(np.mean([c["final_hp"] for c in values.values()]))
+                    if all(c["final_hp"] is not None for c in values.values())
+                    else None
                 ),
             }
         row["final_minus_initial_hp"] = (
             row["final"]["mean_final_hp"] - row["initial"]["mean_final_hp"]
+            if row["initial"]["mean_final_hp"] is not None
+            else None
         )
         row["selected_minus_heuristic_hp"] = row["selected"]["mean_final_hp"] - float(
             np.mean([c["final_hp"] for c in heuristic.values()])
@@ -269,8 +348,13 @@ def summarize(campaign):
                     **{f"{k}_hp": v[key]["final_hp"] for k, v in cases.items()},
                     "heuristic_hp": heuristic[key]["final_hp"],
                     "random_hp": random_rows[key]["final_hp"],
-                    "final_minus_initial_hp": cases["final"][key]["final_hp"]
-                    - cases["initial"][key]["final_hp"],
+                    "final_minus_initial_hp": (
+                        cases["final"][key]["final_hp"]
+                        - cases["initial"][key]["final_hp"]
+                        if cases["initial"][key]["final_hp"] is not None
+                        else None
+                    ),
+                    "initial_outcome": cases["initial"][key]["outcome"],
                 }
             )
         for p in sorted((path / "validation").glob("update-*/summary.json")):
@@ -283,6 +367,7 @@ def summarize(campaign):
                     "valid_steps": number * 512,
                     "win_rate": data["win_rate"],
                     "mean_final_hp": data["mean_final_hp_all_cases"],
+                    "error": data["error"],
                 }
             )
         # Deterministic three largest final-model HP deficits per seed, including losses.
@@ -295,7 +380,7 @@ def summarize(campaign):
             paths["final"],
             model,
             None,
-            experiment_compatibility(spec, base),
+            historical_compatibility(path, spec, base),
             restore_random=False,
         )
         model.eval()
@@ -323,21 +408,25 @@ def summarize(campaign):
     aggregates = {}
     for label in ("initial", "final", "selected"):
         values = [r[label]["mean_final_hp"] for r in records]
-        aggregates[label + "_hp"] = {
-            "mean": float(np.mean(values)),
-            "sample_std": float(np.std(values, ddof=1)),
-        }
+        aggregates[label + "_hp"] = complete_statistics(values)
     deltas = [r["final_minus_initial_hp"] for r in records]
-    aggregates["final_minus_initial_hp"] = {
-        "mean": float(np.mean(deltas)),
-        "sample_std": float(np.std(deltas, ddof=1)),
-    }
-    for name, rows in (("paired-cases.csv", paired), ("validation-curve.csv", curve)):
+    aggregates["final_minus_initial_hp"] = complete_statistics(deltas)
+    for name, rows in (
+        ("paired-cases.csv", paired),
+        ("validation-curve.csv", curve),
+        ("training-curve.csv", training_curve),
+    ):
         with (output / name).open("x") as f:
             writer = csv.DictWriter(f, fieldnames=list(rows[0]))
             writer.writeheader()
             writer.writerows(rows)
     summary = {
+        "status": "training_complete_initial_control_incomplete",
+        "primary_comparison_complete": all(v is not None for v in deltas),
+        "failed_attempts": [
+            {"path": str(p.relative_to(ROOT)), "failure": json.loads(p.read_text())}
+            for p in sorted(campaign.glob("seed-*-attempt-*/failure.json"))
+        ],
         "scope": "E3_small_budget_simulator_validation_only",
         "recipe": "config/rl-e3-v1.json",
         "budget_charged": charged,
@@ -355,6 +444,7 @@ def summarize(campaign):
         "final_test_cases_executed": 0,
         "original_game_evidence_added": False,
         "limitations": [
+            "Post-failure amendment retains seed43 initial capacity error; primary three-seed HP contrast is incomplete, no imputation or exclusion.",
             "Three training seeds on the same 60 validation cases, not 180 independent tasks.",
             "Selected checkpoints are validation-optimistic; primary contrast is fixed final versus initialization.",
             "No full-run training, original-game model deployment, final test or million-step budget.",

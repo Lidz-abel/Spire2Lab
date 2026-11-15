@@ -8,8 +8,12 @@ E3已获用户授权推进：事前配方config/rl-e3-v1.json、计划docs/cours
 CPU4环境/单学习器线程，seed41/42/43各32768，总98304，顺序运行，每次900秒软限。
 接续先查artifacts/rl-mvp/experiments/e3-20261115-v1/的run.json、result/failure和
 budget.jsonl，核对PID再操作；不可重建目录绕额度。入口scripts/train_rl_e3.py。
-seed41已完成32768转换和全量边界审计（末次HP68.05，初始61.43；60例均胜）；
-当前推进seed42，之后seed43，实际进程以run.json和PID实查为准。SIGINT/TERM请求
+seed41/42各完成32768转换和边界审计；末次HP分别68.05/67.55，初始61.43/0。
+seed43-attempt1在初始验证slimes-weak/20015出现64张牌区编码容量错误，训练0步。
+原始失败保留；config/rl-e3-v1-amendment1.json显式登记事后修订，仅允许attempt2
+复用同权重/同指纹的不完整初始对照并继续原预算训练。其初始HP和HP提升记null，
+三seed主要HP比较不完整；不扩容量、不删用例、不补值。训练后验证仍遇错即停。
+当前准备seed43-attempt2，实际进程以run.json和PID实查为准。SIGINT/TERM请求
 在完整update后保存；E3全部重复和最终分析尚未完成，不能提前判为通过。
 新增训练前同初始化对照，固定末次与验证选模分开报告；最终测试、Windows整幕仍未执行。
 
@@ -17,7 +21,7 @@ E2已完成（2026-11-15）：main8192 + resume256 + workers2/4共1536 = 9984有
 预算预留/确认一致；四个run通过、进程已退出，acceptance.json审计通过。公开结果
 docs/RL-E2-RESULTS.json；入口docs/RL-TRAINING.txt。证据根为
 artifacts/rl-mvp/smoke/e2-20261115/。本轮预算仅余16，不能新建campaign绕过上限。
-下一步E3需事前另行冻结预算/实验方案；尚未启动。最终测试、原版整幕验收仍待完成。
+E3已另行冻结预算并执行，详见本页顶部。最终测试、原版整幕验收仍待完成。
 
 ## 2026-11-15 用户最新要求与课程期限
 
