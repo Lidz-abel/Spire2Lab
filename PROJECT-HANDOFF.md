@@ -2,6 +2,12 @@
 
 更新时间：2026-11-15
 
+2026-11-15 E0本地交付：3a4c70b保存环境锁、检查器与接续记录，提交后工作树干净。
+一次限时非交互推送origin phase2/search-hierarchy退出128，错误为could not read
+Username for https://github.com: terminal prompts disabled；缺少当前可用HTTPS认证。
+日志artifacts/rl-mvp/environment/e0-20261115/github-push.log。未推送，远程HEAD未认证；
+用户提供的Git作者邮箱只用于提交元数据，不能替代GitHub登录。E0服务器就绪结论不变。
+
 2026-11-15 E0服务器恢复通过：用户提供硬件输出后，当前环境直接确认128逻辑CPU、
 377GiB内存、四张RTX4090标签/49140MiB设备；GPU0有异常，本轮只以UUID选择GPU1。
 worktree repair修复phase2双向Git路径，四个.tools链接改相对路径；新建独立.venv-rl，

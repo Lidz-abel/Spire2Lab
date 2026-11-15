@@ -59,11 +59,19 @@
       "browser_replay": "artifacts/phase2-live/20261023T170930347979/browser-replay.json"
     },
     "remote_delivery": {
-      "status": "pending_latest_push_timed_out_prior_write_auth_failure",
+      "status": "pending_latest_push_requires_https_authentication",
       "attempted_commit": "a8a861c1a7eff58d4f3d617ad7c47eb80f78d1d7",
       "report": "artifacts/single-act/github-push.json",
       "exit_code": 143,
-      "remote_head_verified": false
+      "remote_head_verified": false,
+      "latest_attempt": {
+        "checked_at": "2026-11-15",
+        "commit": "3a4c70bb56c29bc9d3e9bb610542373d74ea99f2",
+        "report": "artifacts/rl-mvp/environment/e0-20261115/github-push.log",
+        "exit_code": 128,
+        "result": "could_not_read_github_username_terminal_prompts_disabled",
+        "pushed": false
+      }
     },
     "conditioned_belief": {
       "summary": "docs/BELIEF-V2-VALIDATION.json",
