@@ -50,6 +50,10 @@ worktree共享此本地配置。SSH主机密钥按GitHub官方指纹固定在.to
 单幕与模型部署、E5 2–3 页报告及 Demo。E0 服务器环境门、E1 训练契约门已通过；
 详见 `docs/RL-ENVIRONMENT.md`。普通第一幕与最终完整自主通关目标保留，Windows
 连接与实装版本仍待核验。下一个独立工作包为 E2，不自动启动长期训练。
+E2细化计划已保存docs/course/E2-EXECUTION-PLAN.txt，仍是规划。下一次从网络、
+单环境采样和首个128转换更新开始；8192主运行+256恢复+512/1024并行短测，
+总计9984且失败重试共享10000硬上限。目标11.18前首次更新、11.23前完成E2；
+11.16 Proposal上传优先，E2不依赖Windows。尚未创建训练进程或修改冻结配方。
 
 E1 已交付 docs/RL-MVP.md、config/rl-mvp-v1.json、sts2lab/rl_contract.py 和检查脚本。
 固定公开特征缩放/embedding/候选评分规格、terminal-win-v1、GAE终局/截断边界、
