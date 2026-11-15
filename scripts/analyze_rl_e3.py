@@ -405,6 +405,13 @@ def summarize(campaign):
     charged = sum(r.get("reserved", 0) for r in ledger)
     confirmed = sum(r.get("confirmed", 0) for r in ledger)
     assert charged == confirmed == spec["campaign_hard_cap"] == 98304
+    budget_by_seed = []
+    for seed in spec["training_run_seeds"]:
+        events = [r for r in ledger if r.get("seed") == seed]
+        reserved = sum(r.get("reserved", 0) for r in events)
+        valid = sum(r.get("confirmed", 0) for r in events)
+        assert reserved == valid == spec["valid_transitions_per_seed"]
+        budget_by_seed.append({"seed": seed, "charged": reserved, "confirmed": valid})
     aggregates = {}
     for label in ("initial", "final", "selected"):
         values = [r[label]["mean_final_hp"] for r in records]
@@ -431,6 +438,7 @@ def summarize(campaign):
         "recipe": "config/rl-e3-v1.json",
         "budget_charged": charged,
         "budget_confirmed": confirmed,
+        "budget_by_seed": budget_by_seed,
         "training_seeds": records,
         "across_seed_statistics": aggregates,
         "audits": audits,
