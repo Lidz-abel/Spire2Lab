@@ -21,8 +21,12 @@ Windows配合；恢复命令artifacts/handoff/20261117/LOCAL-RESUME.txt已改为
 同目录diagnosis.json记录SHA/大小；16929字节，服务器SHA已计算，尚未与Windows源比对。
 日志明确运行v0.111.1，旧Mod目标v0.107.1；ReflectionTypeLoadException缺少
 MegaCrit.Sts2.Core.Entities.Multiplayer.LobbyPlayer，0个Mod加载成功。
-此前旧路径data_sts2_windows_x86_64/sts2.dll哈希匹配，仅证明该文件，不证明运行时引用。
-下一步只读核对Windows release_info.json及全部sts2.dll路径/哈希；尚未确定实际程序集。
+用户补充只读核对：release_info为v0.111.1/cc1f9462，递归仅列出原路径的sts2.dll，
+9757184字节、SHA 3fb1fa1bf0249087b706a5d0f062a60579e2f5b08df4ee477ddd6f2607f654d5。
+与此前同路径a1f9e6…不同，更新发生时间未知；不再假设另有旧目录/新布局。
+隔离接收目录artifacts/windows/version-probes/v0.111.1-20261118-input01/已建立，
+user-inventory.json保存用户输出；待上传sts2/GodotSharp/0Harmony.dll及release_info.json。
+下一步核验收到的文件，再在独立目录评估新版API/Mod适配与规则差异；尚未构建新版。
 不要重装旧包或运行Connect-Windows.ps1覆盖冻结assemblies/report；新版本资料须独立保存。
 安装器已补发行版本检查，拒绝版本不符/缺失/无效；2项PowerShell相关mock测试通过，
 不是实机验证。游戏/Mod/native/模型二进制未修改。日志中曾切换profile1/2/3，当前槽位未知。
@@ -115,7 +119,7 @@ E2主源码bc277f4，恢复/短测1811ccf；E3各run.json保留干净源码与�
 ## 版本与端口：恢复前必须核对
 
 2026-11-18实查8766监听，8765/18526无监听。上传日志显示Windows运行v0.111.1，
-与冻结v0.107.1不兼容；当前实际程序集位置及Mod运行时指纹待查。
+与冻结v0.107.1不兼容；用户已报同路径新版DLL哈希，服务器尚待接收；Mod运行时指纹待查。
 
 目标是历史固定版本 **v0.107.1，2026-06-18，Steam build 23811903**，不是 11 月的
 “默认最新版”。如果 Steam 更新了游戏，要重新确认版本及引用，不能绕过哈希检查。

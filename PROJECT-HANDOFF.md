@@ -2,6 +2,13 @@
 
 更新时间：2026-11-18
 
+2026-11-18 用户补充版本清单：release_info.json为v0.111.1/cc1f9462，递归仅列出
+原data_sts2_windows_x86_64/sts2.dll，9757184字节、SHA3fb1fa1b…f654d5。
+这与此前同路径a1f9e6…不同，具体更新时点未知；无需继续假设另有新程序集目录。
+原始用户清单存artifacts/windows/version-probes/v0.111.1-20261118-input01/user-inventory.json。
+该私有隔离目录已准备，下一步用户直接上传三份引用DLL和发行JSON，不增加Windows副本。
+服务器文件尚未收到/校验；旧引用、模型、native和Mod包不变，新版本兼容性仍未建立。
+
 2026-11-18 启动日志收到并定位新阻塞：私有artifacts/windows/logs/startup-20261118-003437.log
 共16929字节，SHA及诊断见同目录startup-20261118-003437-diagnosis.json；尚未核对Windows源SHA。
 运行v0.111.1，加载旧Mod时ReflectionTypeLoadException缺少LobbyPlayer类型，0个Mod加载成功。
