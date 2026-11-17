@@ -2,6 +2,13 @@
 
 更新时间：2026-11-18
 
+2026-11-18 探针超时根因已明确：用户输出21526属于Code.exe/PID49180，绕代理curl5秒零字节；
+godot.log明确探针在HttpListener.Start抛异常32，端口监听失败。游戏随后记录Loaded 1 mods，
+仅说明Mod加载流程完成，不能证明HTTP初始化成功。无需重装探针或修改监听实现。
+下一步退出游戏、保存工作并退出所有VS Code窗口，用独立PowerShell核实端口空闲后Steam重启游戏，
+再GET /probe。不强杀进程、不换端口。readonly-02/windows-feedback-port-conflict.json保留用户证据。
+当前尚无成功HTTP响应、运行时指纹读回或游戏动作；E4实机门仍未执行。
+
 2026-11-18 探针Windows反馈：安装前检查仍见21526/PID49180，用户按转发排查后称已释放，
 随后称模组正常运行；但GET /probe的Invoke-RestMethod十秒超时，尚未读回实际Mod指纹。
 不能把模组列表加载或用户口头运行确认当HTTP连通证据。下一步核查当前端口进程、绕代理curl、

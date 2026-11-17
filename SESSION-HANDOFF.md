@@ -33,13 +33,15 @@ receipt.json核对sts2哈希/大小及发行JSON，另外两份DLL仅有服务�
 其SHA80cf809bcebc9d272711c30a9450bf714e629044ff7a1ede9e7d474ae58b0428。
 01因Environment同名编译失败保留。3项相关测试通过（合成游戏真实HTTP+Windows mock），非实机。
 探针只GET，lab_protocol=0、无控制能力，不能用于PPO/整幕；旧控制器应拒绝，禁止放宽校验。
-用户先反馈安装前21526仍为PID49180，随后称已释放并报告Mod正常运行；安装指纹尚未读回。
-最新Invoke-RestMethod GET /probe 10秒超时，不能认定探针接口已启动或可用。
-反馈见探针02目录windows-feedback-timeout.json；下一步核对当前监听/进程、curl绕代理、
-Spire2Lab Probe启动日志及已装Mod SHA。不能仅凭之前端口释放/模组列表成功认定连通。
+用户已安装探针并称Mod正常；但GET /probe超时。随后确认21526再次由Code.exe/PID49180占用，
+绕代理curl仍5秒零字节，启动日志明确RuntimeProbe.Initialize的HttpListener.Start异常32。
+“Loaded 1 mods”不是HTTP启动成功；初始化捕获异常后仍会被游戏列为已加载，未自动重试监听。
+证据readonly-02/windows-feedback-port-conflict.json；先前timeout记录保留。
+下一步退出游戏、保存工作后退出所有VS Code窗口，在独立Windows PowerShell确认端口空闲，
+再从Steam重启游戏并GET /probe；无需重装。Windows端口当前是否释放仍待用户核验。
 不要运行Connect-Windows.ps1覆盖冻结assemblies/report；不要重装旧v107控制包。
 模型/native/旧Mod包与冻结引用未改；v111规则及控制适配需后续独立验证。当前槽位未知。
-此前21526由Code.exe占用（Windows PID49180），用户称已释放，当前拥有者需重新查询；
+最新用户输出确认21526再次由Code.exe占用（Windows PID49180）；
 如再次占用只停止对应转发，不杀整个编辑器。本轮实查8766 PID2628732监听，18526/8765无监听。
 E4两个实机门仍未执行；不重跑E3、不改single-act-v1。兼容恢复后再核验版本/实例/profile2/菜单。
 用户要求后续日志备份到服务器、控制Windows存储。scripts/Upload-Windows-Logs.ps1
