@@ -33,12 +33,14 @@ receipt.json核对sts2哈希/大小及发行JSON，另外两份DLL仅有服务�
 其SHA80cf809bcebc9d272711c30a9450bf714e629044ff7a1ede9e7d474ae58b0428。
 01因Environment同名编译失败保留。3项相关测试通过（合成游戏真实HTTP+Windows mock），非实机。
 探针只GET，lab_protocol=0、无控制能力，不能用于PPO/整幕；旧控制器应拒绝，禁止放宽校验。
-下一步关闭游戏/确认21526空闲，下载更新安装器，显式-PackageDirectory指向上述02包，
-Steam主菜单读GET /probe返回指纹/profile/采样时间。当前Windows仍未安装此探针。
+用户先反馈安装前21526仍为PID49180，随后称已释放并报告Mod正常运行；安装指纹尚未读回。
+最新Invoke-RestMethod GET /probe 10秒超时，不能认定探针接口已启动或可用。
+反馈见探针02目录windows-feedback-timeout.json；下一步核对当前监听/进程、curl绕代理、
+Spire2Lab Probe启动日志及已装Mod SHA。不能仅凭之前端口释放/模组列表成功认定连通。
 不要运行Connect-Windows.ps1覆盖冻结assemblies/report；不要重装旧v107控制包。
 模型/native/旧Mod包与冻结引用未改；v111规则及控制适配需后续独立验证。当前槽位未知。
-另用户报告21526仍由Code.exe占用（Windows PID49180），与类型加载错误分别处理；
-停止对应本地转发并核实空闲，不杀整个编辑器。本轮实查8766 PID2628732监听，18526/8765无监听。
+此前21526由Code.exe占用（Windows PID49180），用户称已释放，当前拥有者需重新查询；
+如再次占用只停止对应转发，不杀整个编辑器。本轮实查8766 PID2628732监听，18526/8765无监听。
 E4两个实机门仍未执行；不重跑E3、不改single-act-v1。兼容恢复后再核验版本/实例/profile2/菜单。
 用户要求后续日志备份到服务器、控制Windows存储。scripts/Upload-Windows-Logs.ps1
 直接上传、不额外本地复制，唯一目录及双端SHA校验；见docs/WINDOWS-LOGS.txt。
