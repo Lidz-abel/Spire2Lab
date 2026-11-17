@@ -24,12 +24,19 @@ MegaCrit.Sts2.Core.Entities.Multiplayer.LobbyPlayer，0个Mod加载成功。
 用户补充只读核对：release_info为v0.111.1/cc1f9462，递归仅列出原路径的sts2.dll，
 9757184字节、SHA 3fb1fa1bf0249087b706a5d0f062a60579e2f5b08df4ee477ddd6f2607f654d5。
 与此前同路径a1f9e6…不同，更新发生时间未知；不再假设另有旧目录/新布局。
-隔离接收目录artifacts/windows/version-probes/v0.111.1-20261118-input01/已建立，
-user-inventory.json保存用户输出；待上传sts2/GodotSharp/0Harmony.dll及release_info.json。
-下一步核验收到的文件，再在独立目录评估新版API/Mod适配与规则差异；尚未构建新版。
-不要重装旧包或运行Connect-Windows.ps1覆盖冻结assemblies/report；新版本资料须独立保存。
-安装器已补发行版本检查，拒绝版本不符/缺失/无效；2项PowerShell相关mock测试通过，
-不是实机验证。游戏/Mod/native/模型二进制未修改。日志中曾切换profile1/2/3，当前槽位未知。
+新版三份DLL及release_info已收到并隔离在artifacts/windows/version-probes/v0.111.1-20261118-input01/。
+receipt.json核对sts2哈希/大小及发行JSON，另外两份DLL仅有服务器SHA。较早missing检查保留。
+完整旧桥接副本编译7错误1警告；元数据确认RunRngSet.Seed由uint变ulong，Rng公开Seed/Counter
+移除、随机数保存格式变化，以及大厅接口变化。旧实验契约不可直接移植，不只是重编译。
+详见docs/WINDOWS-V111-PROBE.txt，私有compatibility-summary.json保存诊断和旧文件不变核验。
+已独立实现只读诊断Mod，包artifacts/windows/probes/v0.111.1-readonly-02/，0警告0错误。
+其SHA80cf809bcebc9d272711c30a9450bf714e629044ff7a1ede9e7d474ae58b0428。
+01因Environment同名编译失败保留。3项相关测试通过（合成游戏真实HTTP+Windows mock），非实机。
+探针只GET，lab_protocol=0、无控制能力，不能用于PPO/整幕；旧控制器应拒绝，禁止放宽校验。
+下一步关闭游戏/确认21526空闲，下载更新安装器，显式-PackageDirectory指向上述02包，
+Steam主菜单读GET /probe返回指纹/profile/采样时间。当前Windows仍未安装此探针。
+不要运行Connect-Windows.ps1覆盖冻结assemblies/report；不要重装旧v107控制包。
+模型/native/旧Mod包与冻结引用未改；v111规则及控制适配需后续独立验证。当前槽位未知。
 另用户报告21526仍由Code.exe占用（Windows PID49180），与类型加载错误分别处理；
 停止对应本地转发并核实空闲，不杀整个编辑器。本轮实查8766 PID2628732监听，18526/8765无监听。
 E4两个实机门仍未执行；不重跑E3、不改single-act-v1。兼容恢复后再核验版本/实例/profile2/菜单。
@@ -119,7 +126,7 @@ E2主源码bc277f4，恢复/短测1811ccf；E3各run.json保留干净源码与�
 ## 版本与端口：恢复前必须核对
 
 2026-11-18实查8766监听，8765/18526无监听。上传日志显示Windows运行v0.111.1，
-与冻结v0.107.1不兼容；用户已报同路径新版DLL哈希，服务器尚待接收；Mod运行时指纹待查。
+与冻结v0.107.1不兼容；用户同路径新版DLL哈希与服务器接收一致；只读探针待安装及读回。
 
 目标是历史固定版本 **v0.107.1，2026-06-18，Steam build 23811903**，不是 11 月的
 “默认最新版”。如果 Steam 更新了游戏，要重新确认版本及引用，不能绕过哈希检查。

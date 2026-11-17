@@ -1,0 +1,55 @@
+Spire2Lab v0.111.1 连接恢复与版本隔离（2026-11-18）
+
+已确认
+  Windows发行信息v0.111.1/cc1f9462，上传sts2.dll为9757184字节，SHA256：
+  3fb1fa1bf0249087b706a5d0f062a60579e2f5b08df4ee477ddd6f2607f654d5。
+  三份DLL及release_info已收到，私有目录：
+  artifacts/windows/version-probes/v0.111.1-20261118-input01/。
+  receipt.json保存服务器SHA；sts2与用户Windows哈希一致，另两份DLL未提供Windows哈希。
+  较早receipt-check-missing.json是文件到达之前的检查，不删除。
+
+兼容性诊断
+  冻结桥接源副本对新版引用编译出现7处错误（compile-attempt-01/build.log）。
+  元数据只读检查发现RunRngSet.Seed由uint变ulong，Rng不再公开Seed/Counter，
+  新SerializableRng有counter/state0/state1/state2/state3；旧种子初始化契约不可沿用。
+  大厅MaxPlayers/ConnectedPlayerIds接口也变更；原LobbyPlayer已不存在。
+  原版v0.107.1的规则、种子、轨迹、模型部署结论不能继承给新版。
+  此诊断尚未证明全部游戏规则差异，也不声称仅7处编译错误就是全部迁移范围。
+
+已准备的只读诊断包
+  bridge/probe/RuntimeProbe.cs为独立小型Mod，不包含游戏控制、Harmony补丁或场景初始化。
+  scripts/build_runtime_probe.py核对新版文件和接收收据，在独立新目录构建。
+  构建示例（每次换新的输出目录，既有失败保留）：
+    .venv-rl/bin/python scripts/build_runtime_probe.py \
+      --references artifacts/windows/version-probes/v0.111.1-20261118-input01 \
+      --output artifacts/windows/probes/v0.111.1-readonly-02
+  已生成上述02包，0警告0错误；01因System/Godot.Environment同名编译失败，已保留。
+  Mod SHA：80cf809bcebc9d272711c30a9450bf714e629044ff7a1ede9e7d474ae58b0428。
+  包有独立build.json/源文件/构建命令日志；未替换artifacts/windows/mod及旧版引用。
+
+诊断协议
+  只监听127.0.0.1，默认21526，优先读取既有STS2_MCP.conf；非法配置拒绝启动。
+  GET /、/probe、/api/v1/singleplayer返回同一份诊断快照，其他GET路径404，其他方法405。
+  Godot主线程每500ms只读当前profile及是否已有run，HTTP线程读缓存，不执行游戏代码。
+  probe_protocol=1，lab_protocol=0，read_only=true，control_supported=false，能力列表为空。
+  读取失败返回unavailable，不能把此前成功状态继续作为当前结果。
+  现有BridgeClient必须拒绝lab_protocol=0；禁止为探针放宽生产控制器的协议/哈希检查。
+  字段expected_game_version是构建目标；实际程序集SHA在初始化时强校验。
+
+Windows操作
+  关闭游戏，确认21526无监听；若Code.exe占用，在对应VS Code端口转发视图停止该转发。
+  下载服务器新版scripts/Install-Windows-Mod.ps1到Windows工具目录。
+  安装时显式指定：-PackageDirectory artifacts/windows/probes/v0.111.1-readonly-02
+  其余Server/RemoteRoot/GameDir沿用；安装器验证发行版本及SHA，备份原包，保留端口配置。
+  这是暂时替换出错旧Mod的诊断包，不能运行PPO、开局或整幕。
+  Steam启动并进入主菜单后：
+    Invoke-RestMethod -Uri 'http://127.0.0.1:21526/probe' -TimeoutSec 10 | ConvertTo-Json -Depth 5
+  先检查本地GET，暂不运行会覆盖冻结引用的Connect-Windows.ps1。
+  日志仍使用Upload-Windows-Logs.ps1直接备份服务器，无额外本地日志副本。
+
+验证与后续
+  pytest tests/test_runtime_probe.py tests/test_windows_scripts.py tests/test_windows_log_upload.py：3通过。
+  HTTP探针测试使用合成Godot/游戏对象、真实本机HTTP监听；包括修改请求拒绝、协议隔离、
+  快照和读取失败失效。安装/上传为mock检查，均不属于Windows实机验收。
+  下一步是用户安装并读回探针指纹/profile/采样时间，解决残留端口冲突。
+  随后另行设计新版控制适配与参考集再验证；E4模型实机与正常整幕门仍0，E3不追加训练。

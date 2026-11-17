@@ -348,10 +348,18 @@
       "loaded_mod_count": 0,
       "actual_runtime_assembly_unverified": true,
       "port_conflict_separate": true,
-      "next_work": "receive_new_references_in_isolated_directory_verify_hashes_then_assess_compatibility",
+      "next_work": "install_read_only_probe_verify_local_GET_then_plan_version_scoped_control_and_rule_validation",
       "user_assembly_inventory": "artifacts/windows/version-probes/v0.111.1-20261118-input01/user-inventory.json",
       "user_reported_game_sha256": "3fb1fa1bf0249087b706a5d0f062a60579e2f5b08df4ee477ddd6f2607f654d5",
-      "new_reference_files_received": false
+      "new_reference_files_received": true,
+      "server_game_hash_matches_user": true,
+      "receipt": "artifacts/windows/version-probes/v0.111.1-20261118-input01/receipt.json",
+      "full_bridge_compile_errors": 7,
+      "rng_contract_changed": true,
+      "read_only_probe_package": "artifacts/windows/probes/v0.111.1-readonly-02",
+      "read_only_probe_live_verified": false,
+      "probe_checks_passed": 3,
+      "probe_checks_scope": "synthetic_game_real_HTTP_and_mocked_Windows_scripts"
     }
   }
 }

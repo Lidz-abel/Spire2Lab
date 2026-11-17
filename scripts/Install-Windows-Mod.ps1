@@ -4,10 +4,12 @@ param(
     [Parameter(Mandatory=$true)][ValidatePattern('^[a-zA-Z0-9_.@:\[\]-]+$')][string]$Server,
     [Parameter(Mandatory=$true)][ValidatePattern('^/[a-zA-Z0-9_][a-zA-Z0-9_./-]*$')][string]$RemoteRoot,
     [ValidateRange(1,65535)][int]$SshPort = 22,
-    [string]$GameDir = ''
+    [string]$GameDir = '',
+    [ValidatePattern('^artifacts/windows/[a-zA-Z0-9_./-]+$')][string]$PackageDirectory = 'artifacts/windows/mod'
 )
 $ErrorActionPreference = 'Stop'
 if ($Server.StartsWith('-')) { throw 'Invalid SSH server.' }
+if (($PackageDirectory -split '/') -contains '..') { throw 'Invalid package directory.' }
 $RemoteRoot = $RemoteRoot.TrimEnd('/')
 if (-not (Get-Command scp -ErrorAction SilentlyContinue)) { throw 'Windows OpenSSH client is required: scp was not found.' }
 $ReportPath = Join-Path $env:TEMP 'sts2-lab-windows-report.json'
@@ -20,7 +22,7 @@ $Stage = Join-Path $env:LOCALAPPDATA 'STS2Lab\mod-package'
 $ManagedNames = @('STS2_MCP.dll','mod_manifest.json','LICENSE.txt','build.json')
 New-Item -ItemType Directory -Force -Path $Stage | Out-Null
 foreach ($Name in $ManagedNames) {
-    & scp -P $SshPort "${Server}:$RemoteRoot/artifacts/windows/mod/$Name" (Join-Path $Stage $Name)
+    & scp -P $SshPort "${Server}:$RemoteRoot/$PackageDirectory/$Name" (Join-Path $Stage $Name)
     if ($LASTEXITCODE -ne 0) { throw "Download failed: $Name; the Linux mod build must finish first." }
 }
 $Build = Get-Content -Raw (Join-Path $Stage 'build.json') | ConvertFrom-Json
@@ -72,6 +74,9 @@ try {
 }
 Write-Host "Installed bridge files in: $Target"
 Write-Host "Previous files backed up at: $Backup"
+if ($Build.read_only -eq $true) {
+    Write-Host 'This is a READ-ONLY diagnostic probe. It cannot control the game or run experiments.'
+}
 Write-Host 'Launch the game through Steam and enable mods if the game asks for consent.'
-Write-Host 'Keep Connect-Windows.ps1 running in the other terminal. Do not start an important saved run for reference capture.'
+Write-Host 'Verify the local bridge and package capabilities before creating a tunnel or starting experiments.'
 Start-Process 'steam://rungameid/2868840'

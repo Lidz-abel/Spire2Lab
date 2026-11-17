@@ -1,6 +1,12 @@
 # Spire2Lab 代码来源说明
 
-更新时间：2026-11-17
+更新时间：2026-11-18
+
+2026-11-18 新版连接诊断：RuntimeProbe.cs及build_runtime_probe.py按只读版本/profile/连接检查
+需求由本项目AI辅助编写。沿用已知Godot ProcessFrame与游戏ModInitializer公开调用方式，参考本项目
+既有桥接的程序集指纹/profile读取；未复制游戏方法实现或上游控制器代码。仅引用用户私有DLL编译，
+不含Harmony补丁、场景准备或游戏动作。另元数据工具只读PE元数据比较新旧API，原始输出私有存储。
+该探针不继承v107桥接/模拟器/模型的验收结论，v111游戏控制尚未适配；详见docs/WINDOWS-V111-PROBE.txt。
 
 2026-11-17 E4：learned_policy.py、learned_replay.py及部署/审计脚本按E4输入、输出、
 拒绝行为和证据要求由本项目AI辅助编写；复用本项目冻结CombatEnv编码、ActorCritic、

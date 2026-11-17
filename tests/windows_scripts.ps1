@@ -164,4 +164,14 @@ foreach ($Name in $Before.Keys) {
 }
 Assert-True (@($global:SpireTestCalls | Where-Object tool -eq 'start').Count -eq 1) 'Failed installation launched Steam'
 Assert-True ((Get-FileHash (Join-Path $Target 'STS2_MCP.conf')).Hash -eq $ConfigHash) 'Rollback overwrote custom port configuration'
+$global:SpireTestCalls.Clear()
+Assert-Throws { & $Install @Options -PackageDirectory 'artifacts/windows/../escape' } 'Invalid package directory'
+Assert-True ($global:SpireTestCalls.Count -eq 0) 'Traversal path reached SCP'
+$Build.read_only = $true
+$Build | ConvertTo-Json | Set-Content (Join-Path $FakeRemote 'build.json')
+& $Install @Options -PackageDirectory 'artifacts/windows/probes/test-probe'
+foreach ($Call in @($global:SpireTestCalls | Where-Object tool -eq 'scp')) {
+    Assert-True ($Call.arguments[-2].StartsWith('tester@host:/srv/relocated/Spire2Lab/artifacts/windows/probes/test-probe/')) 'Probe download ignored package directory'
+}
+Assert-True ((Get-FileHash (Join-Path $Target 'STS2_MCP.conf')).Hash -eq $ConfigHash) 'Probe installation changed port'
 Write-Output 'PASS: relocated checkout, custom game port, invalid port rejection, SSH failure classification and local report retention, unsafe path, hash refusal, install provenance, rollback, preserved port configuration'
