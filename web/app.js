@@ -64,6 +64,7 @@ function render(view) {
   $('planning-goal').innerHTML=goal?`<p class="planning-goal"><strong>${esc(goalNames[goal.kind]||goal.kind)}</strong>${goal.target_type?` · ${esc(goal.target_type)}`:''}<br><span class="small muted">已执行 ${goal.duration} 步 · 最多 ${planning.config.goal_max_actions} 步后重选目标</span></p>`:'';
   $('planning-completed').textContent=completed?`上个目标：${goalNames[completed.kind]||completed.kind} · ${completed.duration} 步 · ${completed.termination_reason}`:'';
   $('decision-meta').textContent=d?`${d.policy} · ${d.elapsed_ms.toFixed(2)} ms`:'当前没有待执行决策';
+  if(view.learned) $('decision-meta').textContent+=` · 模型 ${view.learned.checkpoint_sha256.slice(0,12)} · 无规则回退`;
   const best=d?.candidates.find(c=>c.action_id===selected);
   $('proposal').innerHTML=chosen?`<div class="proposal"><span class="tag">当前选择</span><strong>${esc(chosen.label)}</strong><ul class="reasons">${best.reasons.map(r=>`<li>${esc(r)}</li>`).join('')}</ul></div>`:`<p class="empty">${view.status==='closed'?'实验已归档，不再生成动作。':'当前没有可执行的决策。'}</p>`;
   $('candidates').innerHTML=(d?.candidates||[]).map(c=>`<button class="candidate ${c.action_id===selected?'chosen':''}" data-action="${esc(c.action_id)}" ${replay||view.status!=='paused'||busy?'disabled':''}><span>${esc(o.legal_actions.find(a=>a.action_id===c.action_id)?.label)}</span><span class="candidate-score">${c.score.toFixed(2)}${planning?.candidates?.find(x=>x.action_ids.includes(c.action_id))?`<small class="visit-count">n=${planning.candidates.find(x=>x.action_ids.includes(c.action_id)).visits}</small>`:''}</span></button>`).join('');
@@ -118,20 +119,21 @@ $('load-replay').onclick=()=>action(async()=>{
   if(live.status==='running'||(['planning','executing','reconciling'].includes(live.status)&&live.resume_after_step))live=await api('/api/control',{running:false});
   const events=await api(`/api/runs/${$('run-list').value}`);
   replay={metadata:events[0].data.metadata};replayFrames=[];
-  let observation=events[0].data.observation, decision=null, history=[], last_result=null, planning=null, goal_event=null, decision_image=null;
+  let observation=events[0].data.observation, decision=null, history=[], last_result=null, planning=null, learned=null, goal_event=null, decision_image=null;
   for(const event of events.slice(1)){
     if(event.kind==='decision_image')decision_image=event.data;
     if(event.kind==='decision')decision=event.data;
     if(event.kind==='planning_report')planning=event.data;
+    if(event.kind==='learned_report')learned=event.data;
     if(event.kind==='goal_completed')goal_event=event.data;
-    if(event.kind==='action_submitted')replayFrames.push({metadata:replay.metadata,observation,decision,planning,goal_event,decision_image,history:[...history],last_result,status:'paused'});
+    if(event.kind==='action_submitted')replayFrames.push({metadata:replay.metadata,observation,decision,planning,learned,goal_event,decision_image,history:[...history],last_result,status:'paused'});
     if(event.kind==='transition'){
       const t=event.data;
       history.push({step:history.length+1,label:t.action.label,hp_delta:t.facts.player_hp_delta,manual:t.facts.manual_intervention});
-      observation=t.observation;decision=null;planning=null;goal_event=null;decision_image=null;last_result={action:t.action,facts:t.facts,execution_ms:t.execution_ms};
+      observation=t.observation;decision=null;planning=null;learned=null;goal_event=null;decision_image=null;last_result={action:t.action,facts:t.facts,execution_ms:t.execution_ms};
     }
   }
-  replayFrames.push({metadata:replay.metadata,observation,decision,planning,goal_event,decision_image,history,last_result,status:observation.outcome==='ongoing'?'paused':'finished'});
+  replayFrames.push({metadata:replay.metadata,observation,decision,planning,learned,goal_event,decision_image,history,last_result,status:observation.outcome==='ongoing'?'paused':'finished'});
   $('replay-controls').hidden=false;$('back-live').hidden=false;
   $('replay-position').max=replayFrames.length-1;$('replay-position').value=0;
   renderReplay();

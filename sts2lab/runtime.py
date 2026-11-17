@@ -43,6 +43,7 @@ class Lab:
         self.planning = None
         self.goal_event = None
         self.decision_image = None
+        self.learned = None
 
     async def _capture_image(self):
         self.decision_image = None
@@ -90,6 +91,7 @@ class Lab:
 
     async def _proposal(self):
         self.decision, self.planning = None, None
+        self.learned = None
         await self._capture_image()
         if self.observation.legal_actions:
             if isinstance(self.policy, PlanningPolicy):
@@ -114,6 +116,23 @@ class Lab:
                     )
                 self.planning = self.policy.last_report
                 self.trace.append("planning_report", self.planning)
+            elif getattr(self.policy, "is_learned", False):
+                try:
+                    self.decision = self.policy.decide(self.observation)
+                except Exception as exc:
+                    self.trace.append(
+                        "policy_rejected",
+                        {
+                            "decision_id": self.observation.decision_id,
+                            "observation_sha256": digest(self.observation),
+                            "provenance": self.policy.provenance(),
+                            "error": f"{type(exc).__name__}: {exc}",
+                            "fallback": False,
+                        },
+                    )
+                    raise
+                self.learned = self.policy.last_report
+                self.trace.append("learned_report", self.learned)
             else:
                 self.decision = self.policy.decide(self.observation)
         if self.decision:
@@ -150,7 +169,13 @@ class Lab:
     ):
         self._require_free()
         async with self.lock:
-            if policy in PlanningPolicy.names:
+            if policy == "ppo":
+                if planning_config is not None:
+                    raise ValueError("PPO deployment does not accept planning config")
+                from .learned_policy import LearnedPolicy
+
+                new_policy = await asyncio.to_thread(LearnedPolicy, encounter)
+            elif policy in PlanningPolicy.names:
                 config = (
                     PlanningConfig.model_validate(planning_config)
                     if planning_config is not None
@@ -219,11 +244,17 @@ class Lab:
                 self.metadata["planning_config"] = new_policy.config.model_dump()
                 self.metadata["planning_information"] = "confirmed_public_history_only"
                 self.metadata["planning_provenance"] = new_policy.provenance()
+            if getattr(new_policy, "is_learned", False):
+                self.metadata["learned_provenance"] = new_policy.provenance()
             self.trace.append(
                 "session_started",
                 {"metadata": self.metadata, "observation": new_obs.model_dump()},
             )
-            await self._proposal()
+            try:
+                await self._proposal()
+            except Exception as exc:
+                self._failure(exc)
+                raise
             self.revision += 1
             return self.view()
 
@@ -236,6 +267,7 @@ class Lab:
             "observation": self.observation.model_dump(),
             "decision": self.decision.model_dump() if self.decision else None,
             "planning": self.planning,
+            "learned": self.learned,
             "goal_event": self.goal_event,
             "decision_image": self.decision_image,
             "last_result": self.last_result,

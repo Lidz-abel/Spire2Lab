@@ -6,6 +6,13 @@
 
 ## 当前任务与结果
 
+用户已要求推进E4。模型适配/面板入口/只读审计已实现，见docs/RL-DEPLOYMENT.txt及
+docs/course/E4-EXECUTION-PLAN.txt。固定部署E3 seed42/update8，config/rl-deployment-v1.json。
+首批51项针对性、完整306项回归通过（有重叠，不相加）；正在保存部署演示及浏览器证据。
+证据根artifacts/rl-mvp/deployment/e4-20261117/。桥接只读探测失败ConnectError，实机仍待
+Windows配合；恢复命令artifacts/handoff/20261117/LOCAL-RESUME.txt已改为迁移后路径。
+已有异步问题询问用户能否操作Windows。E4尚未完成，不重跑E3、不改single-act-v1配方。
+
 E3三次CPU训练和全量分析已结束，seed41/42/43各32768转换，总98304；训练进程均退出。
 公开结果[docs/RL-E3-RESULTS.json](docs/RL-E3-RESULTS.json)，入口[docs/RL-E3-TRAINING.txt](docs/RL-E3-TRAINING.txt)，
 配方[config/rl-e3-v1.json](config/rl-e3-v1.json)，解释[docs/RL-E3-ANALYSIS.txt](docs/RL-E3-ANALYSIS.txt)。

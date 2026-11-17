@@ -1,6 +1,12 @@
 # Spire2Lab 代码来源说明
 
-更新时间：2026-11-15
+更新时间：2026-11-17
+
+2026-11-17 E4：learned_policy.py、learned_replay.py及部署/审计脚本按E4输入、输出、
+拒绝行为和证据要求由本项目AI辅助编写；复用本项目冻结CombatEnv编码、ActorCritic、
+checkpoint加载器、原版投影核验、图片存储和trace协议，无外部策略代码复制。
+训练核心文件和上游native/Mod未改，无新增依赖。策略只读公开Observation；原编码器
+的observe来源为只读值对象，不包含引擎/seed/RNG。历史原版输入兼容不算新实机执行。
 
 E3补充：analyze_rl_e3.py与rl_e3_amendment.py由本项目AI辅助编写，需求为全转换审计、
 同初始化对照、缺失值保留、历史源码绑定与失败留痕。seed43初始编码容量错误后登记

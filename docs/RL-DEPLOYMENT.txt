@@ -1,0 +1,55 @@
+Spire2Lab E4 — starter PPO 部署与原版恢复
+2026-11-17；计划docs/course/E4-EXECUTION-PLAN.txt。当前实机状态以PHASE2-STATUS.json为准。
+
+支持范围
+  战斗面板新增PPO学习策略，固定config/rl-deployment-v1.json的E3 seed42/update8。
+  按已有验证HP选用，具有选模偏差；不是新的性能对照。仅限三类starter战斗、原始牌组、
+  固定角色/遗物。未知内容、升级/附魔、编码容量、引用错误等会停止，不切换规则。
+  原始E1/E2模型/编码/训练文件保持不变，通过只读Observation对象调用原编码函数。
+  不创建策略私有模拟器，不传seed/RNG/真实牌序。只有公开状态进入网络。
+  固定checkpoint的SHA在Torch反序列化前验证；只加载可信项目自产文件，HTTP不接受
+  任意文件路径。历史驱动指纹与当前核心依赖须吻合，模型缺失/漂移直接拒绝。
+  Git不含模型权重和私有原版数据，只有服务器现有证据工作区可直接运行以下演示。
+
+启动与使用
+  在phase2根目录，使用现有.venv-rl，不运行旧bootstrap.py、不安装新依赖。
+  .venv-rl/bin/python -m uvicorn sts2lab.server:app --host 127.0.0.1 --port 8766
+  服务启动只创建暂停的模拟会话。启动前查端口与已有PID，避免重复服务。
+  浏览器打开http://127.0.0.1:8766/，选择PPO和支持遭遇，新建实验后可单步或自动运行。
+  原版模式只连接符合固定基准的首回合战斗，不自动重置/开局；仍受原版适配器版本、
+  场景、实例、请求去重及所有权检查。单幕控制占用原版时，战斗连接会拒绝。
+  API POST /api/session 示例：
+  {"policy":"ppo","backend":"native_simulator","encounter":"nibbits-weak","seed":3}
+  session创建不提交动作，初始状态paused。policy_seed不改变固定greedy模型。
+  在原版模式seed字段不作为策略输入；实际开局由受检准备流程控制。
+
+记录与回放
+  会话metadata.learned_provenance记录模型、训练来源、部署/适配/控制代码指纹。
+  每次learned_report包含公开观测摘要、编码摘要、原顺序合法动作ID、logits、所选索引、
+  模型价值估计和模型调用数。logit不是胜率，value也不是经校准的原版成功概率。
+  界面显示模型指纹、候选评分与无规则回退；既有实际动作确认/人工接管/截图继续记录。
+  回放读取保存的learned_report，不触发推理动作或游戏POST。遇拒绝保存policy_rejected，
+  清空待执行决策并停止；如果上一动作已经确认，不因下一次推理失败而重发上一动作。
+
+离线验证（不可称原版模型验收）
+  先提交实现，再从项目根运行，选择不存在的新输出目录以保留证据：
+  .venv-rl/bin/python scripts/check_learned_deployment.py --output artifacts/rl-mvp/deployment/e4-20261117/simulator-attempt1
+  三类旧开发seed3实际模拟战斗，逐决策比较训练编码与部署编码、保存轨迹，重算模型
+  决策并重新执行模拟轨迹。另核验三份历史原版公开观测可编码/推理，不执行游戏动作。
+  固定历史文件见脚本；缺文件应保存失败，不静默当成功或重新称新实机测试。
+  .venv-rl/bin/python scripts/audit_learned.py artifacts/runs/RUN_ID.jsonl --output artifacts/rl-mvp/deployment/AUDIT_ID.json
+  审计只读：核对hash链、模型/代码指纹、全部公开输入与预测、动作确认及人工干预。
+  原版轨迹还要由私有原始捕获佐证，并核对每个决策/终局PNG的内容和实例/版本/状态
+  绑定。缺图、未完成、人工接管或拒绝记录不能通过完整部署验收。输出拒绝覆盖。
+
+Windows与两个实机门
+  用户负责Windows安装/重启和SSH；本机路径/命令仅在忽略文件
+  artifacts/handoff/20261117/LOCAL-RESUME.txt中，已修正迁移后的RemoteRoot。
+  目标游戏/Mod仍为既有固定版本，安装脚本遇游戏哈希变化必须停下核对。
+  SSH：Windows21526反向到Linux18526，面板8766本地转发；密码只在本地SSH提示输入。
+  连接后先GET核对游戏/Mod SHA、实例、profile2、主菜单与结算，随后才准备实机场景。
+  模型部署门：三类starter seed1按计划依次执行并保留失败，模型决策/确认/图片完整。
+  普通整幕门：单独按single-act-v1和原启发式策略运行ACT001/002/003，最多1200动作，
+  连续Boss通关与地图/奖励/真实购买/实际休息或升级覆盖，使用scripts/audit_act.py。
+  调试starter战斗不计普通整幕；未增加混合策略，不将starter模型强接未知牌组。
+  隧道未恢复时，E4仅可报告服务器和离线进展，不能标记E4实机门或完整通关通过。

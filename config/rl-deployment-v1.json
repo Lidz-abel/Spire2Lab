@@ -1,0 +1,17 @@
+{
+  "version": "starter-ppo-deployment-v1",
+  "policy_name": "ppo",
+  "checkpoint": "artifacts/rl-mvp/experiments/e3-20261115-v1/seed-42-attempt-1/checkpoints/update-0008.pt",
+  "checkpoint_sha256": "687a17eeac06098e6e14ab91bbbcf035ba5344d10937c2aee5609891673d5b3a",
+  "run_manifest": "artifacts/rl-mvp/experiments/e3-20261115-v1/seed-42-attempt-1/run.json",
+  "selection_basis": "Highest validation HP among E3 selected checkpoints; engineering demo selection, not independent evaluation.",
+  "encounters": ["nibbits-weak", "slimes-weak", "sludge-spinner"],
+  "action_rule": "greedy_logits_first_index_on_tie",
+  "fallback": "refuse_unsupported_no_rule_fallback",
+  "device": "cpu",
+  "torch_threads": 1,
+  "max_decisions": 300,
+  "scope": "fixed_starter_combat_only",
+  "original_act_policy_changed": false,
+  "final_test_enabled": false
+}
