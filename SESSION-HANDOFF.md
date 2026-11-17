@@ -6,6 +6,16 @@
 
 ## 当前任务与结果
 
+用户指出每次助手运行后21526转发似乎重建，已多次删除；不能继续归因于用户未删除。
+工具输出里的Windows本地地址可能触发VS Code自动转发，具体创建事件尚未证明。
+已发现并修复设置作用域缺口：本会话根/user/chenzk/sts2原无.vscode/settings.json，
+禁用设置仅在phase2子目录；现将同一配置新建到根目录，关闭自动/恢复/打开链接转发，
+桥接三端口均ignore。未改用户全局/远端机器设置；根配置不在phase2 Git，迁移需单独保留。
+收据readonly-02/workspace-forwarding-fix.json含原不存在/新SHA/回滚方法。
+还需用户保存后Reload Window使实际窗口重新核对配置、移除现有转发，再重启游戏。
+不能声称配置已被VS Code加载或端口已释放。后续避免远程终端回显Windows接口URL、
+不从Linux访问Windows本机端口；用户在独立Windows PowerShell核验，服务器使用反向隧道入口。
+
 用户已要求推进E4。模型适配/面板入口/只读审计已实现，见docs/RL-DEPLOYMENT.txt及
 docs/course/E4-EXECUTION-PLAN.txt。固定部署E3 seed42/update8，config/rl-deployment-v1.json。
 首批51项针对性、完整306项回归通过（有重叠，不相加）；公开结果docs/RL-E4-RESULTS.json。
