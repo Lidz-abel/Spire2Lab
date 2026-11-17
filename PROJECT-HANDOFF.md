@@ -2,6 +2,15 @@
 
 更新时间：2026-11-18
 
+2026-11-18 用户要求分析21526反复占用：服务器VS Code日志发现4次连接Linux localhost:21526
+被拒绝，时间01:31/01:33/02:16/02:19；与Windows Code.exe/PID49180监听证据结合，强烈支持
+存在错误方向的正向转发。正确链路Linux18526→Windows21526，不应让VS Code占Windows21526。
+现有Connect-Windows.ps1的-R绑定在Linux18526，Windows21526仅为目标，不能由此推断它占用本地端口。
+仓库已有自动/恢复关闭配置，父目录/user/chenzk/sts2无该配置；用户实际VS Code工作区未确认。
+官方文档确认工作区设置作用域、历史转发恢复、可不同本地端口，以及关闭自动转发不阻止全部扩展转发。
+复发触发机制仍待核对实际Ports条目/来源和有效设置，未改用户全局配置或清理VS Code状态库。
+私有证据readonly-02/vscode-forwarding-analysis.json，HTTP实机门仍未通过。
+
 2026-11-18 探针超时根因已明确：用户输出21526属于Code.exe/PID49180，绕代理curl5秒零字节；
 godot.log明确探针在HttpListener.Start抛异常32，端口监听失败。游戏随后记录Loaded 1 mods，
 仅说明Mod加载流程完成，不能证明HTTP初始化成功。无需重装探针或修改监听实现。

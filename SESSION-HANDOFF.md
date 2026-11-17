@@ -39,6 +39,13 @@ receipt.json核对sts2哈希/大小及发行JSON，另外两份DLL仅有服务�
 证据readonly-02/windows-feedback-port-conflict.json；先前timeout记录保留。
 下一步退出游戏、保存工作后退出所有VS Code窗口，在独立Windows PowerShell确认端口空闲，
 再从Steam重启游戏并GET /probe；无需重装。Windows端口当前是否释放仍待用户核验。
+进一步调查发现服务器VS Code remoteagent.log在01:31/01:33/02:16/02:19多次记录
+Failed to connect tunnel to localhost:21526 / ECONNREFUSED。结合Windows Code.exe占用，
+强烈支持错误正向转发Windows21526→Linux21526；正确是Linux18526→Windows21526。
+本项目.vscode/settings.json已关闭自动/恢复，但父目录/user/chenzk/sts2无该配置；
+实际打开的工作区与转发创建来源仍未知。不要把自动恢复候选原因写成已证实根因。
+证据readonly-02/vscode-forwarding-analysis.json。下一步在持有转发的实际VS Code窗口
+查21526对应行/来源及有效设置，删除该转发；关闭所有窗口仅作定位，不要求永久不用VS Code。
 不要运行Connect-Windows.ps1覆盖冻结assemblies/report；不要重装旧v107控制包。
 模型/native/旧Mod包与冻结引用未改；v111规则及控制适配需后续独立验证。当前槽位未知。
 最新用户输出确认21526再次由Code.exe占用（Windows PID49180）；
