@@ -2,6 +2,17 @@
 
 更新时间：2026-11-18
 
+2026-11-18 启动日志收到并定位新阻塞：私有artifacts/windows/logs/startup-20261118-003437.log
+共16929字节，SHA及诊断见同目录startup-20261118-003437-diagnosis.json；尚未核对Windows源SHA。
+运行v0.111.1，加载旧Mod时ReflectionTypeLoadException缺少LobbyPlayer类型，0个Mod加载成功。
+冻结桥接/模拟器为v0.107.1；先前旧路径DLL哈希匹配不等于实际加载的程序集已验证。
+Code.exe占用21526是另一项用户报告，不能将其当本次类型加载错误的原因。
+下一步只读核对release_info和所有sts2.dll位置/哈希，未知版本文件独立保存，禁止覆盖冻结引用。
+不重复安装旧包、不运行会覆盖旧report/assemblies的连接脚本；尚未决定迁移或恢复版本方案。
+安装器新增发行版本检查，版本不符/缺失/无效均拒绝；匹配旧DLL但新发行版本的mock回归通过。
+相关pytest共2项通过，不是Windows实机验收。无新游戏动作、训练、依赖或二进制更换。
+本轮8766 PID2628732仍监听，18526/8765无监听。原日志留服务器，未删除Windows文件。
+
 2026-11-18 日志存储要求：用户要求后续Windows日志备份到服务器以控制本地占用。
 建立私有artifacts/windows/logs/，新增Upload-Windows-Logs.ps1，直接上传当前或指定
 日志到UTC+GUID目录，上传前后与远端SHA256匹配才报告成功，不生成额外本地副本。

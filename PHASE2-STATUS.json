@@ -338,6 +338,17 @@
     "windows_tunnel_connected": false,
     "server_port": 8766,
     "server_manifest": "artifacts/rl-mvp/deployment/e4-20261117/server-run.json",
-    "next_work": "restore_windows_then_separate_starter_rl_and_normal_act_live_acceptance"
+    "next_work": "restore_windows_then_separate_starter_rl_and_normal_act_live_acceptance",
+    "windows_runtime_diagnosis": {
+      "date": "2026-11-18",
+      "evidence": "artifacts/windows/logs/startup-20261118-003437-diagnosis.json",
+      "runtime_release": "v0.111.1",
+      "bridge_target": "v0.107.1",
+      "mod_load_error": "ReflectionTypeLoadException: missing LobbyPlayer",
+      "loaded_mod_count": 0,
+      "actual_runtime_assembly_unverified": true,
+      "port_conflict_separate": true,
+      "next_work": "read_only_release_and_assembly_inventory_keep_frozen_references_unchanged"
+    }
   }
 }

@@ -17,17 +17,21 @@ Windows配合；恢复命令artifacts/handoff/20261117/LOCAL-RESUME.txt已改为
 8766服务已启动，PID2628732，源码ff80df0；server-run.json/server.log在上述证据根。
 当前模拟会话finished，单幕idle；服务保留等待Windows，核对PID/命令后用SIGTERM停止。
 初始urllib健康探测受代理影响失败；httpx(trust_env=False)直连状态和健康正常。
-11.18用户已操作Windows：游戏DLL哈希匹配，原装旧截图Mod、端口21526；随后确认新版
-安装成功，但运行时指纹尚未读回。本机API与绕过代理的根GET都超时；用户查到21526
-由Code.exe占用（当时Windows PID49180，不能在Linux操作该PID）。下一步关闭游戏、
-停止对应本地21526的VS Code转发、确认端口空闲再重启游戏；不要杀整个编辑器。
-用户原始反馈记录在E4证据根windows-feedback/。E4两个实机门均未执行；不重跑E3、
-不改single-act-v1配方。连通后先核验实例/版本/profile2/菜单，再按E4计划执行实机门。
-用户称停止转发后21526仍为同PID49180；游戏另报Mod错误，目前只收到退出清理日志，
-根因未定。已准备artifacts/windows/logs/，请用户上传完整启动日志后继续查最早异常。
+11.18完整启动日志已收到：artifacts/windows/logs/startup-20261118-003437.log，
+同目录diagnosis.json记录SHA/大小；16929字节，服务器SHA已计算，尚未与Windows源比对。
+日志明确运行v0.111.1，旧Mod目标v0.107.1；ReflectionTypeLoadException缺少
+MegaCrit.Sts2.Core.Entities.Multiplayer.LobbyPlayer，0个Mod加载成功。
+此前旧路径data_sts2_windows_x86_64/sts2.dll哈希匹配，仅证明该文件，不证明运行时引用。
+下一步只读核对Windows release_info.json及全部sts2.dll路径/哈希；尚未确定实际程序集。
+不要重装旧包或运行Connect-Windows.ps1覆盖冻结assemblies/report；新版本资料须独立保存。
+安装器已补发行版本检查，拒绝版本不符/缺失/无效；2项PowerShell相关mock测试通过，
+不是实机验证。游戏/Mod/native/模型二进制未修改。日志中曾切换profile1/2/3，当前槽位未知。
+另用户报告21526仍由Code.exe占用（Windows PID49180），与类型加载错误分别处理；
+停止对应本地转发并核实空闲，不杀整个编辑器。本轮实查8766 PID2628732监听，18526/8765无监听。
+E4两个实机门仍未执行；不重跑E3、不改single-act-v1。兼容恢复后再核验版本/实例/profile2/菜单。
 用户要求后续日志备份到服务器、控制Windows存储。scripts/Upload-Windows-Logs.ps1
 直接上传、不额外本地复制，唯一目录及双端SHA校验；见docs/WINDOWS-LOGS.txt。
-脚本语法及2项PowerShell相关mock测试通过，尚待实际上传；不自动删本地源或批量清理。
+该脚本仍只有mock证据；本次日志由用户手工scp上传。不自动删本地源或批量清理。
 
 E3三次CPU训练和全量分析已结束，seed41/42/43各32768转换，总98304；训练进程均退出。
 公开结果[docs/RL-E3-RESULTS.json](docs/RL-E3-RESULTS.json)，入口[docs/RL-E3-TRAINING.txt](docs/RL-E3-TRAINING.txt)，
@@ -110,7 +114,8 @@ E2主源码bc277f4，恢复/短测1811ccf；E3各run.json保留干净源码与�
 
 ## 版本与端口：恢复前必须核对
 
-2026-11-17 E4实查8766监听且健康正常，8765/18526无监听，Windows实装版本未知。
+2026-11-18实查8766监听，8765/18526无监听。上传日志显示Windows运行v0.111.1，
+与冻结v0.107.1不兼容；当前实际程序集位置及Mod运行时指纹待查。
 
 目标是历史固定版本 **v0.107.1，2026-06-18，Steam build 23811903**，不是 11 月的
 “默认最新版”。如果 Steam 更新了游戏，要重新确认版本及引用，不能绕过哈希检查。

@@ -24,8 +24,17 @@ foreach ($Name in $ManagedNames) {
     if ($LASTEXITCODE -ne 0) { throw "Download failed: $Name; the Linux mod build must finish first." }
 }
 $Build = Get-Content -Raw (Join-Path $Stage 'build.json') | ConvertFrom-Json
+$ReleasePath = Join-Path $GameDir 'release_info.json'
+if (-not (Test-Path $ReleasePath -PathType Leaf)) { throw 'Missing release_info.json; stop and inspect the installed game version before installing.' }
+$Release = Get-Content -Raw $ReleasePath | ConvertFrom-Json
+$ReleaseVersion = ([string]$Release.version).Trim() -replace '^v',''
+$TargetVersion = ([string]$Build.configured_target_game_version).Trim() -replace '^v',''
+if (-not $ReleaseVersion -or -not $TargetVersion) { throw 'Missing game or bridge target version; installation refused.' }
+if ($ReleaseVersion -cne $TargetVersion) {
+    throw "Game release version mismatch: installed $ReleaseVersion, bridge target $TargetVersion. Stop and inspect runtime files; a matching DLL in an old directory is insufficient."
+}
 $ActualGameHash = (Get-FileHash (Join-Path $GameDir 'data_sts2_windows_x86_64\sts2.dll') -Algorithm SHA256).Hash.ToLower()
-if ($ActualGameHash -ne $Build.game_assembly_sha256) { throw 'Game files changed after bridge compilation. Run Connect-Windows.ps1 again; do not install this build.' }
+if ($ActualGameHash -ne $Build.game_assembly_sha256) { throw 'Game files changed after bridge compilation. Stop and inspect runtime files; do not overwrite frozen server references or install this build.' }
 $ActualModHash = (Get-FileHash (Join-Path $Stage 'STS2_MCP.dll') -Algorithm SHA256).Hash.ToLower()
 if ($ActualModHash -ne $Build.mod_sha256) { throw 'Downloaded mod checksum mismatch.' }
 $ActualManifestHash = (Get-FileHash (Join-Path $Stage 'mod_manifest.json') -Algorithm SHA256).Hash.ToLower()

@@ -116,16 +116,30 @@ foreach ($Name in @('STS2_MCP.dll','mod_manifest.json','LICENSE.txt')) {
     Set-Content (Join-Path $FakeRemote $Name) "synthetic package $Name"
 }
 $Build = @{
+    configured_target_game_version='0.107.1'
     game_assembly_sha256='incorrect-game-hash'
     mod_sha256=(Get-FileHash (Join-Path $FakeRemote 'STS2_MCP.dll')).Hash.ToLower()
     manifest_sha256=(Get-FileHash (Join-Path $FakeRemote 'mod_manifest.json')).Hash.ToLower()
 }
+$ReleasePath = Join-Path $GameDir 'release_info.json'
+Set-Content $ReleasePath '{"version":"v0.107.1"}'
 $Build | ConvertTo-Json | Set-Content (Join-Path $FakeRemote 'build.json')
 Assert-Throws { & $Install @Options }
 Assert-True ((Get-Content (Join-Path $Target 'STS2_MCP.dll')) -eq 'previous mod') 'Hash rejection modified installed mod'
 Assert-True (@($global:SpireTestCalls | Where-Object tool -eq 'start').Count -eq 0) 'Hash rejection launched game'
 $Build.game_assembly_sha256 = $Report.assemblies.'sts2.dll'.sha256
 $Build | ConvertTo-Json | Set-Content (Join-Path $FakeRemote 'build.json')
+# A stale DLL can match while Steam's installed release has changed.
+foreach ($ReleaseFixture in @('{"version":"v0.111.1"}', '{}', 'invalid-json')) {
+    Set-Content $ReleasePath $ReleaseFixture
+    Assert-Throws { & $Install @Options }
+    Assert-True ((Get-Content (Join-Path $Target 'STS2_MCP.dll')) -eq 'previous mod') 'Version rejection modified installed mod'
+    Assert-True ((Get-FileHash (Join-Path $Target 'STS2_MCP.conf')).Hash -eq $ConfigHash) 'Version rejection changed port configuration'
+    Assert-True (@($global:SpireTestCalls | Where-Object tool -eq 'start').Count -eq 0) 'Version rejection launched game'
+}
+Remove-Item $ReleasePath
+Assert-Throws { & $Install @Options } 'Missing release_info.json'
+Set-Content $ReleasePath '{"version":"v0.107.1"}'
 & $Install @Options
 foreach ($Name in @('STS2_MCP.dll','mod_manifest.json','LICENSE.txt','build.json')) {
     Assert-True ((Get-FileHash (Join-Path $Target $Name)).Hash -eq (Get-FileHash (Join-Path $FakeRemote $Name)).Hash) "Installation lost $Name"
