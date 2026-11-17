@@ -51,6 +51,8 @@ Spire2Lab E4 — starter PPO 部署与原版恢复
   日志见证据根server-run.json。停止前核验/proc/PID/cmdline再SIGTERM，不影响其他服务。
 
 Windows与两个实机门
+  日志归档：使用scripts/Upload-Windows-Logs.ps1直接备份至服务器，避免额外Windows
+  日志副本；操作与校验规则见docs/WINDOWS-LOGS.txt。上传不依赖游戏接口/SSH反向隧道。
   用户负责Windows安装/重启和SSH；本机路径/命令仅在忽略文件
   artifacts/handoff/20261117/LOCAL-RESUME.txt中，已修正迁移后的RemoteRoot。
   目标游戏/Mod仍为既有固定版本，安装脚本遇游戏哈希变化必须停下核对。

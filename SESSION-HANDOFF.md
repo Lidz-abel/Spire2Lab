@@ -1,6 +1,6 @@
 # Spire2Lab：新会话接续入口
 
-核对日期：2026-11-17，Asia/Shanghai。本页只保留当前摘要；历史与失败见
+核对日期：2026-11-18，Asia/Shanghai。本页只保留当前摘要；历史与失败见
 [PROJECT-HANDOFF.md](PROJECT-HANDOFF.md)。旧摘要可从Git历史读取，不必全量加载日志。
 进程、端口、Windows安装及远端SHA必须实查，不能沿用旧PID或“已推送”描述。
 
@@ -23,6 +23,11 @@ Windows配合；恢复命令artifacts/handoff/20261117/LOCAL-RESUME.txt已改为
 停止对应本地21526的VS Code转发、确认端口空闲再重启游戏；不要杀整个编辑器。
 用户原始反馈记录在E4证据根windows-feedback/。E4两个实机门均未执行；不重跑E3、
 不改single-act-v1配方。连通后先核验实例/版本/profile2/菜单，再按E4计划执行实机门。
+用户称停止转发后21526仍为同PID49180；游戏另报Mod错误，目前只收到退出清理日志，
+根因未定。已准备artifacts/windows/logs/，请用户上传完整启动日志后继续查最早异常。
+用户要求后续日志备份到服务器、控制Windows存储。scripts/Upload-Windows-Logs.ps1
+直接上传、不额外本地复制，唯一目录及双端SHA校验；见docs/WINDOWS-LOGS.txt。
+脚本语法及2项PowerShell相关mock测试通过，尚待实际上传；不自动删本地源或批量清理。
 
 E3三次CPU训练和全量分析已结束，seed41/42/43各32768转换，总98304；训练进程均退出。
 公开结果[docs/RL-E3-RESULTS.json](docs/RL-E3-RESULTS.json)，入口[docs/RL-E3-TRAINING.txt](docs/RL-E3-TRAINING.txt)，

@@ -2,6 +2,15 @@
 
 更新时间：2026-11-18
 
+2026-11-18 日志存储要求：用户要求后续Windows日志备份到服务器以控制本地占用。
+建立私有artifacts/windows/logs/，新增Upload-Windows-Logs.ps1，直接上传当前或指定
+日志到UTC+GUID目录，上传前后与远端SHA256匹配才报告成功，不生成额外本地副本。
+失败保留源文件/远端证据，不自动删除用户日志。语法和2项PowerShell相关mock检查通过，
+实际Windows上传尚待用户执行。说明docs/WINDOWS-LOGS.txt，不把模拟上传当实际接收。
+当前端口仍报Code.exe/PID49180，即使用户已点击停止转发；游戏报Mod错误，但先前
+筛选最后12个ERROR只留下退出清理信息，尚不能定根因。已请用户上传完整备份
+Spire2Lab-startup-20261118-003437.log，服务器读取后定位早期加载/启动异常。
+
 2026-11-18 Windows恢复：用户PowerShell核验游戏DLL为目标a1f9e6…，已装Mod原为
 旧截图版b6c1a3…、JSON端口21526。指导用迁移后RemoteRoot安装单幕版，用户确认成功；
 尚无运行时Mod/profile/menu证据。Invoke-RestMethod本机单人接口10秒超时，curl绕过

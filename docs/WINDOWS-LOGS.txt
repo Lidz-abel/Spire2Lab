@@ -1,0 +1,31 @@
+Spire2Lab Windows 日志归档
+2026-11-18：用户要求日志备份到服务器，避免Windows额外备份占空间。
+
+归档方式
+  scripts/Upload-Windows-Logs.ps1直接上传指定文件，默认游戏godot.log。
+  不额外复制完整日志到Windows临时目录，不删除游戏当前日志。
+  服务器目的地：<RemoteRoot>/artifacts/windows/logs/<UTC时间-GUID>/godot.log。
+  目录按umask077创建；每次新目录，禁止覆盖既有采集。日志为私有证据，artifacts不入Git。
+  上传前后本地SHA256及服务器SHA256必须相同，才报告uploaded_and_sha256_verified。
+  游戏写入期间日志可能变化；不一致时保留文件并报失败，退出游戏后重试新采集目录。
+  scp或远端校验失败不删除任何本地源文件，也保留服务器上的部分传输证据。
+
+Windows PowerShell用法（在已有工具目录执行，替换SERVER和REMOTE_ROOT）：
+  scp -P 22 SERVER:REMOTE_ROOT/scripts/Upload-Windows-Logs.ps1 .\Upload-Windows-Logs.ps1
+  Set-ExecutionPolicy -Scope Process Bypass -Force
+  .\Upload-Windows-Logs.ps1 -Server SERVER -RemoteRoot REMOTE_ROOT
+  指定之前已经保存的日志：追加 -LogPath "C:\path\saved-startup.log"。
+  不需要游戏桥接或21526端口，只需要普通SSH/SCP能访问服务器。
+  输出ServerPath和SHA256交给后续会话查验；凭据仅在本地SSH提示输入。
+  以前手工创建的临时副本，确认服务器完整接收和校验后再清理具体文件；不批量清理游戏
+  日志目录或整个TEMP。游戏自身日志生成/轮转不由本上传脚本改变。
+
+错误排查
+  首先保存完整启动日志；仅筛选最后几条ERROR可能只看到退出清理信息，遗漏启动根因。
+  读取服务器日志时优先搜索STS2 MCP、STS2_MCP、Failed to start、HttpListener、异常栈。
+  Windows端口拥有者与日志是不同证据：Code.exe占用端口不能单独证明所有Mod错误的原因。
+  先核验本地监听地址与PID，再停止对应VS Code转发；不把Windows PID用于Linux进程操作。
+
+验证范围
+  PowerShell语法与mocked SSH/SCP检查已通过：唯一目录、不增加本地副本、错误哈希拒绝、
+  传输失败保留源文件和失败证据。不是实际Windows上传验收；实际上传以服务器文件为准。
