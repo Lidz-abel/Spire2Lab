@@ -17,7 +17,11 @@ Windows配合；恢复命令artifacts/handoff/20261117/LOCAL-RESUME.txt已改为
 8766服务已启动，PID2628732，源码ff80df0；server-run.json/server.log在上述证据根。
 当前模拟会话finished，单幕idle；服务保留等待Windows，核对PID/命令后用SIGTERM停止。
 初始urllib健康探测受代理影响失败；httpx(trust_env=False)直连状态和健康正常。
-已有异步问题询问用户能否操作Windows，尚未收到回复。E4两个实机门均未执行；不重跑E3、
+11.18用户已操作Windows：游戏DLL哈希匹配，原装旧截图Mod、端口21526；随后确认新版
+安装成功，但运行时指纹尚未读回。本机API与绕过代理的根GET都超时；用户查到21526
+由Code.exe占用（当时Windows PID49180，不能在Linux操作该PID）。下一步关闭游戏、
+停止对应本地21526的VS Code转发、确认端口空闲再重启游戏；不要杀整个编辑器。
+用户原始反馈记录在E4证据根windows-feedback/。E4两个实机门均未执行；不重跑E3、
 不改single-act-v1配方。连通后先核验实例/版本/profile2/菜单，再按E4计划执行实机门。
 
 E3三次CPU训练和全量分析已结束，seed41/42/43各32768转换，总98304；训练进程均退出。
