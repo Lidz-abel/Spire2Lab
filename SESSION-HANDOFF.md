@@ -1,6 +1,6 @@
 # Spire2Lab：新会话接续入口
 
-核对日期：2026-11-15，Asia/Shanghai。本页只保留当前摘要；历史与失败见
+核对日期：2026-11-17，Asia/Shanghai。本页只保留当前摘要；历史与失败见
 [PROJECT-HANDOFF.md](PROJECT-HANDOFF.md)。旧摘要可从Git历史读取，不必全量加载日志。
 进程、端口、Windows安装及远端SHA必须实查，不能沿用旧PID或“已推送”描述。
 
@@ -46,7 +46,8 @@ E3事前94项、修订92项及后续6项检查有重叠，不相加。合成检�
 
 Proposal个人版 `artifacts/course/proposal-20261116-personalized/241240041_proposal.zip`
 已生成并核验两页/打包；源docs/course/proposal.html，说明docs/course/PROPOSAL-BUILD.txt。
-课程平台上传回执未知；需本人审阅并于11.16截止前上传，不能使用旧占位版。
+用户于11.17确认Proposal已经上传；按用户确认记为已提交，不再作为待上传事项。
+具体上传时间与平台回执未独立核验，不据确认日期推断是否逾期。
 披露既有工作、外部依赖和AI辅助，准备离线回放与备用录屏。Milestone工作包见
 [docs/course/MILESTONE-PLAN.txt](docs/course/MILESTONE-PLAN.txt)，E4原版部署/整幕门及E5报告待完成。
 
@@ -86,7 +87,7 @@ E2主源码bc277f4，恢复/短测1811ccf；E3各run.json保留干净源码与�
 
 ## 版本与端口：恢复前必须核对
 
-2026-11-15实查8765/8766/18526均无监听，服务/隧道未恢复，Windows实装版本未知。
+2026-11-17实查8765/8766/18526仍均无监听，服务/隧道未恢复，Windows实装版本未知。
 
 目标是历史固定版本 **v0.107.1，2026-06-18，Steam build 23811903**，不是 11 月的
 “默认最新版”。如果 Steam 更新了游戏，要重新确认版本及引用，不能绕过哈希检查。
