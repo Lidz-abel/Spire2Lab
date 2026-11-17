@@ -1,0 +1,205 @@
+{
+  "date": "2026-11-17",
+  "status": "server_and_offline_verified_pending_windows_live_gates",
+  "plan": "docs/course/E4-EXECUTION-PLAN.txt",
+  "documentation": "docs/RL-DEPLOYMENT.txt",
+  "deployment_recipe": "config/rl-deployment-v1.json",
+  "implementation_source_commit": "ff80df09cb1589c37894dbccc273c678fc983d3f",
+  "checkpoint_sha256": "687a17eeac06098e6e14ab91bbbcf035ba5344d10937c2aee5609891673d5b3a",
+  "model_selection": "Highest validation HP among E3 selected checkpoints; engineering demo selection, not independent evaluation.",
+  "supported_scope": "fixed_starter_combat_only",
+  "policy_fallback": false,
+  "training_core_changed": false,
+  "native_or_mod_changed": false,
+  "dependencies_added": false,
+  "new_experiment_training_transitions": 0,
+  "final_test_cases_executed": 0,
+  "targeted_checks_passed": 51,
+  "full_regression_checks_passed": 306,
+  "test_counts_overlap": true,
+  "test_evidence_kind": "synthetic_and_simulator_engineering_not_live_game_acceptance",
+  "simulator_deployment": {
+    "seed": 3,
+    "case_count": 3,
+    "confirmed_actions": 30,
+    "cases": [
+      {
+        "encounter": "nibbits-weak",
+        "seed": 3,
+        "trace": "artifacts/rl-mvp/deployment/e4-20261117/simulator-attempt1/runs/c08285bc5c494e74abcd7c75b4bfd025.jsonl",
+        "encoded_decisions_exact": 9,
+        "policy_audit": {
+          "passed": true,
+          "scope": "offline_learned_decision_and_confirmation_audit",
+          "backend": "native_simulator",
+          "run_id": "c08285bc5c494e74abcd7c75b4bfd025",
+          "model_calls": 9,
+          "confirmed_actions": 9,
+          "manual_interventions": 0,
+          "checkpoint_sha256": "687a17eeac06098e6e14ab91bbbcf035ba5344d10937c2aee5609891673d5b3a",
+          "outcome": "won",
+          "final_hp": 73,
+          "original_images": 0,
+          "new_game_actions": 0,
+          "normal_original_act_acceptance": false
+        },
+        "simulator_reexecution": {
+          "passed": true,
+          "steps": 9,
+          "outcome": "won",
+          "scope": "simulator_reexecution"
+        }
+      },
+      {
+        "encounter": "slimes-weak",
+        "seed": 3,
+        "trace": "artifacts/rl-mvp/deployment/e4-20261117/simulator-attempt1/runs/a66ad0df83ba4093808384ea6e28d2e1.jsonl",
+        "encoded_decisions_exact": 12,
+        "policy_audit": {
+          "passed": true,
+          "scope": "offline_learned_decision_and_confirmation_audit",
+          "backend": "native_simulator",
+          "run_id": "a66ad0df83ba4093808384ea6e28d2e1",
+          "model_calls": 12,
+          "confirmed_actions": 12,
+          "manual_interventions": 0,
+          "checkpoint_sha256": "687a17eeac06098e6e14ab91bbbcf035ba5344d10937c2aee5609891673d5b3a",
+          "outcome": "won",
+          "final_hp": 75,
+          "original_images": 0,
+          "new_game_actions": 0,
+          "normal_original_act_acceptance": false
+        },
+        "simulator_reexecution": {
+          "passed": true,
+          "steps": 12,
+          "outcome": "won",
+          "scope": "simulator_reexecution"
+        }
+      },
+      {
+        "encounter": "sludge-spinner",
+        "seed": 3,
+        "trace": "artifacts/rl-mvp/deployment/e4-20261117/simulator-attempt1/runs/f79dab42e1564742b20af788634b75d0.jsonl",
+        "encoded_decisions_exact": 9,
+        "policy_audit": {
+          "passed": true,
+          "scope": "offline_learned_decision_and_confirmation_audit",
+          "backend": "native_simulator",
+          "run_id": "f79dab42e1564742b20af788634b75d0",
+          "model_calls": 9,
+          "confirmed_actions": 9,
+          "manual_interventions": 0,
+          "checkpoint_sha256": "687a17eeac06098e6e14ab91bbbcf035ba5344d10937c2aee5609891673d5b3a",
+          "outcome": "won",
+          "final_hp": 72,
+          "original_images": 0,
+          "new_game_actions": 0,
+          "normal_original_act_acceptance": false
+        },
+        "simulator_reexecution": {
+          "passed": true,
+          "steps": 9,
+          "outcome": "won",
+          "scope": "simulator_reexecution"
+        }
+      }
+    ]
+  },
+  "historical_original_input_compatibility": {
+    "source": "previously_recorded_original_public_observations",
+    "cases": [
+      {
+        "trace": "artifacts/live-cases/20261023T082638297591/reference.jsonl",
+        "trace_sha256": "9f4899feeadf49bc045b9946edf3b4fea213d7edaaefdf5341b73dd6584c0739",
+        "encounter": "slimes-weak",
+        "public_observations_checked": 19
+      },
+      {
+        "trace": "artifacts/live-cases/20261023T082758051402/reference.jsonl",
+        "trace_sha256": "16a052930756d80b8a7f87a9ba1da658b140605540058f70f97b9e2c98b8f5f6",
+        "encounter": "sludge-spinner",
+        "public_observations_checked": 9
+      },
+      {
+        "trace": "artifacts/live-cases/20261023T083527094616/reference.jsonl",
+        "trace_sha256": "355deae7e8bfb101ccb71f6d9d9e7aab232770548141a72d0747304dfd069557",
+        "encounter": "nibbits-weak",
+        "public_observations_checked": 20
+      }
+    ],
+    "public_observations_checked": 48,
+    "new_original_game_actions": 0,
+    "model_actually_executed_in_original_game": false
+  },
+  "browser": {
+    "passed": true,
+    "scope": "simulator_browser_ui_not_original_game",
+    "run_id": "e5c39feeb0c84379ab131e11b2777ee0",
+    "replay_frames": 10,
+    "replay_mutations": [],
+    "javascript_errors": [],
+    "mobile_no_horizontal_overflow": true,
+    "model_audit": {
+      "passed": true,
+      "scope": "offline_learned_decision_and_confirmation_audit",
+      "backend": "native_simulator",
+      "run_id": "e5c39feeb0c84379ab131e11b2777ee0",
+      "model_calls": 9,
+      "confirmed_actions": 9,
+      "manual_interventions": 0,
+      "checkpoint_sha256": "687a17eeac06098e6e14ab91bbbcf035ba5344d10937c2aee5609891673d5b3a",
+      "outcome": "won",
+      "final_hp": 73,
+      "original_images": 0,
+      "new_game_actions": 0,
+      "normal_original_act_acceptance": false
+    },
+    "original_game_actions": 0
+  },
+  "retained_failures": [
+    {
+      "evidence": "artifacts/rl-mvp/deployment/e4-20261117/browser-attempt1/failure.json",
+      "reason": "QA script chose unavailable speed 0.1; empty select value produced control delay0 and HTTP422; no game actions. Fixed QA to choose existing0.25 option; attempt2 passed.",
+      "confirmed_actions": 0
+    },
+    {
+      "evidence": "artifacts/rl-mvp/deployment/e4-20261117/bridge-check-attempt1.json",
+      "reason": "Read-only live bridge GET failed: no Windows tunnel."
+    },
+    {
+      "evidence": "artifacts/rl-mvp/deployment/e4-20261117/server-run.json",
+      "reason": "Initial urllib startup health probe used inherited proxy and timed out; direct loopback HTTP with trust_env=False succeeded. Server itself started normally."
+    }
+  ],
+  "service": {
+    "port": 8766,
+    "server_manifest": "artifacts/rl-mvp/deployment/e4-20261117/server-run.json",
+    "log": "artifacts/rl-mvp/deployment/e4-20261117/server.log",
+    "state": "finished_native_simulator_session_original_act_idle",
+    "left_running_for_windows_connection": true
+  },
+  "live_gates": {
+    "starter_rl_original_battles_executed": 0,
+    "normal_original_act_attempts": 0,
+    "original_model_acceptance": false,
+    "normal_act_acceptance": false,
+    "blocker": "Windows tunnel absent; installed Mod/game version cannot yet be checked live."
+  },
+  "evidence_directory": "artifacts/rl-mvp/deployment/e4-20261117",
+  "evidence_sha256": {
+    "simulator-attempt1/result.json": "a9a829548d92331bf6fac1acda64769391205f279bab37bd6a6119b6fb9791ae",
+    "browser-attempt2/result.json": "9a096e26d78bcbf3e1d5af76dbf1a863ac5f55ad5ac9494aba0505e6dc9f99f2",
+    "full-tests-attempt1.xml": "68d03bf2cacecba2a69d11cd6fa7cc5f45dd71a11ecc83ca51978b65efffc25d",
+    "final-state.json": "33a793aec442d0bbcfa115c57c8e323f71ff2d04592ff9f8140009d3bb27b424"
+  },
+  "browser_qa_script_sha256": "80cdeb3777590fc5f341f8b811ebc621604216d5a7b610cd1daedbc5824b6ec0",
+  "limitations": [
+    "Simulator seed3 demos are engineering checks, not held-out evaluation.",
+    "Historical original inputs prove offline compatibility only; PPO did not generate the historical game actions.",
+    "Original starter battles and continuous normal first-act acceptance remain separate required live gates.",
+    "Frozen single-act recipe/policy unchanged; no learned full-act or full-game claim.",
+    "E3 incomplete initial control and validation selection bias remain unchanged."
+  ],
+  "next_action": "User restores Windows game/profile2/main menu and SSH tunnel using local recovery instructions; verify live fingerprints before any original action."
+}

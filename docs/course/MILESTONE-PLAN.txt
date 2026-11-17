@@ -13,6 +13,9 @@ E3执行更新（11.15提前完成小预算批次）：三seed各32768转换/64�
 全量审计通过。末次均60/60验证胜，HP均值67.90±0.30（跨训练seed样本SD），低于
 启发式76.55。seed43初始编码容量错误保留，主要三seed前后对照不完整，不能称完整验收。
 见docs/RL-E3-RESULTS.json、RL-E3-ANALYSIS.txt；无原版新增证据，E4/E5仍待完成。
+E4执行更新（11.17）：模型适配、面板与离线审计完成；完整306项回归、三类模拟部署、
+历史原版公开输入兼容和模拟器浏览器演示通过。8766服务已启动，Windows隧道仍缺，
+两个实机门未执行，E4不能标为完成。结果docs/RL-E4-RESULTS.json，操作docs/RL-DEPLOYMENT.txt。
 课程截止：2026-11-30 23:59，Asia/Shanghai。
 交付：2–3 页 Milestone Report + 初步结果或 Prototype Demo。
 

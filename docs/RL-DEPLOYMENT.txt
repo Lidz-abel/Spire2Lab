@@ -42,6 +42,14 @@ Spire2Lab E4 — starter PPO 部署与原版恢复
   原版轨迹还要由私有原始捕获佐证，并核对每个决策/终局PNG的内容和实例/版本/状态
   绑定。缺图、未完成、人工接管或拒绝记录不能通过完整部署验收。输出拒绝覆盖。
 
+  浏览器检查（8766服务需先启动；只允许暂停/结束的模拟会话，原版控制器必须空闲）：
+  .venv-rl/bin/python scripts/check_learned_dashboard.py --output artifacts/rl-mvp/deployment/e4-20261117/browser-NEW
+  使用现有.tools/browsers，不下载浏览器。该命令会新建seed3模拟会话、运行PPO并检查
+  桌面/手机和只读回放，不连接原版。初次检查的速度选项错误导致422，保留browser-attempt1；
+  修正测试脚本选择既有0.25秒选项后browser-attempt2通过。两者不合并成一次无失败运行。
+  HTTP探测用httpx(trust_env=False)避免继承代理拦截localhost；当前服务的PID、源码与
+  日志见证据根server-run.json。停止前核验/proc/PID/cmdline再SIGTERM，不影响其他服务。
+
 Windows与两个实机门
   用户负责Windows安装/重启和SSH；本机路径/命令仅在忽略文件
   artifacts/handoff/20261117/LOCAL-RESUME.txt中，已修正迁移后的RemoteRoot。

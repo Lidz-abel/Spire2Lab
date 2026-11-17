@@ -8,10 +8,17 @@
 
 用户已要求推进E4。模型适配/面板入口/只读审计已实现，见docs/RL-DEPLOYMENT.txt及
 docs/course/E4-EXECUTION-PLAN.txt。固定部署E3 seed42/update8，config/rl-deployment-v1.json。
-首批51项针对性、完整306项回归通过（有重叠，不相加）；正在保存部署演示及浏览器证据。
+首批51项针对性、完整306项回归通过（有重叠，不相加）；公开结果docs/RL-E4-RESULTS.json。
+三类seed3模拟演示30动作，编码/模型审计/重执行一致；另历史原版48公开观测兼容，
+不是新实机执行。浏览器模拟演示9动作、10帧回放，零修改请求/JS错误、手机无横向溢出。
+浏览器attempt1因测试脚本速度选项错误返回422（0动作），修正后attempt2通过，失败保留。
 证据根artifacts/rl-mvp/deployment/e4-20261117/。桥接只读探测失败ConnectError，实机仍待
 Windows配合；恢复命令artifacts/handoff/20261117/LOCAL-RESUME.txt已改为迁移后路径。
-已有异步问题询问用户能否操作Windows。E4尚未完成，不重跑E3、不改single-act-v1配方。
+8766服务已启动，PID2628732，源码ff80df0；server-run.json/server.log在上述证据根。
+当前模拟会话finished，单幕idle；服务保留等待Windows，核对PID/命令后用SIGTERM停止。
+初始urllib健康探测受代理影响失败；httpx(trust_env=False)直连状态和健康正常。
+已有异步问题询问用户能否操作Windows，尚未收到回复。E4两个实机门均未执行；不重跑E3、
+不改single-act-v1配方。连通后先核验实例/版本/profile2/菜单，再按E4计划执行实机门。
 
 E3三次CPU训练和全量分析已结束，seed41/42/43各32768转换，总98304；训练进程均退出。
 公开结果[docs/RL-E3-RESULTS.json](docs/RL-E3-RESULTS.json)，入口[docs/RL-E3-TRAINING.txt](docs/RL-E3-TRAINING.txt)，
@@ -94,7 +101,7 @@ E2主源码bc277f4，恢复/短测1811ccf；E3各run.json保留干净源码与�
 
 ## 版本与端口：恢复前必须核对
 
-2026-11-17实查8765/8766/18526仍均无监听，服务/隧道未恢复，Windows实装版本未知。
+2026-11-17 E4实查8766监听且健康正常，8765/18526无监听，Windows实装版本未知。
 
 目标是历史固定版本 **v0.107.1，2026-06-18，Steam build 23811903**，不是 11 月的
 “默认最新版”。如果 Steam 更新了游戏，要重新确认版本及引用，不能绕过哈希检查。

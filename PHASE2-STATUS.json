@@ -303,17 +303,41 @@
   },
   "handoff": {
     "document": "SESSION-HANDOFF.md",
-    "checked_at": "2026-11-15",
-    "private_snapshot": "artifacts/handoff/20261115/state-check.json",
+    "checked_at": "2026-11-17",
+    "private_snapshot": "artifacts/rl-mvp/deployment/e4-20261117/final-state.json",
     "services": {
       "8765": "not_listening",
-      "8766": "not_listening",
+      "8766": "listening_paused_or_finished_simulator_only",
       "18526": "not_listening"
     },
     "normal_act_trace_count": 0,
     "goal_status": "blocked",
     "no_experiment_started": false,
-    "new_experiment_scope": "bounded_E2_and_E3_simulator_training_only",
+    "new_experiment_scope": "E2_E3_simulator_training_and_E4_offline_deployment_no_new_original_execution",
     "remote_delivery_verified": true
+  },
+  "rl_deployment": {
+    "milestone_work_package": "E4",
+    "status": "server_and_offline_verified_pending_windows_live_gates",
+    "plan": "docs/course/E4-EXECUTION-PLAN.txt",
+    "documentation": "docs/RL-DEPLOYMENT.txt",
+    "recipe": "config/rl-deployment-v1.json",
+    "public_results": "docs/RL-E4-RESULTS.json",
+    "evidence_directory": "artifacts/rl-mvp/deployment/e4-20261117",
+    "targeted_checks_passed": 51,
+    "full_regression_checks_passed": 306,
+    "test_counts_overlap": true,
+    "simulator_deployment_actions": 30,
+    "historical_public_observations_checked": 48,
+    "browser_replay_frames": 10,
+    "browser_replay_mutations": 0,
+    "live_original_model_battles": 0,
+    "normal_original_act_attempts": 0,
+    "original_game_evidence_added": false,
+    "original_act_policy_changed": false,
+    "windows_tunnel_connected": false,
+    "server_port": 8766,
+    "server_manifest": "artifacts/rl-mvp/deployment/e4-20261117/server-run.json",
+    "next_work": "restore_windows_then_separate_starter_rl_and_normal_act_live_acceptance"
   }
 }

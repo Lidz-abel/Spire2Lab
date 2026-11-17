@@ -188,6 +188,8 @@ The [E2 CPU PPO smoke run](docs/RL-E2-RESULTS.json) used one training seed and 8
 
 The [E3 repeated runs](docs/RL-E3-RESULTS.json) trained three fresh models for **32,768 transitions each**. Each fixed-budget final model won all 60 validation cases, with **67.90 ± 0.30 HP** across training seeds (sample standard deviation), below the heuristic's **76.55**. Initial HP was 61.43, 0, and missing: seed 43 exceeded the fixed card encoding capacity in one initial-control case. An [explicit post-failure amendment](config/rl-e3-v1-amendment1.json) retained that error and allowed training within the original budget; no three-seed mean improvement is reported. All 98,304 transitions, 27 checkpoint reloads and each first-update replay passed their audits. [Execution instructions](docs/RL-E3-TRAINING.txt) and [case analysis](docs/RL-E3-ANALYSIS.txt) preserve this limitation. The final test split and original-game deployment remain pending.
 
+The [E4 deployment adapter](docs/RL-DEPLOYMENT.txt) exposes the pinned PPO model through the combat API and dashboard. It accepts public starter observations, rejects unsupported inputs, and records model fingerprints, logits and confirmed actions without a rule fallback. **306 regression checks**, three simulator demonstrations (**30 actions**), compatibility with **48 historical original-game observations**, and desktop/mobile simulator replay checks passed. These are [offline and simulator results](docs/RL-E4-RESULTS.json); new original-game model battles and continuous first-act acceptance still require Windows connectivity and live evidence.
+
 The first [planning evaluation](docs/PLANNING-RESULTS.md) covers **360 simulator battles**, **24 complete policy replays**, **152 tests** and one fresh original-game search battle. All benchmark configurations won their starter battles, but search finished with less HP than the heuristic baseline. This is a reproducible baseline with explicit limitations, not evidence of a performance gain. Full case counts, compute settings and build bindings are in the [phase-two summary](docs/PHASE2-VALIDATION.json).
 
 | Check | What it establishes | Boundary |
@@ -263,7 +265,7 @@ The current plan is **three-stage-v1**. Full tasks and exit criteria are in [ARC
 
 Original visuals begin with decision-boundary screenshots in stage 2, followed by synchronized presentation in stage 3. A vision-only policy is an optional separate research task. Independent bindings, a minimal Mod, and a finite combat engine will replace upstream components incrementally after their own validation.
 
-The course E2/E3 training work runs alongside the remaining stage-two original-act gate. Its completion does not close that gate or the full-game objective. E3's registered budget is exhausted; further training requires a new experiment and resource registration. The next integration task is a learned-policy adapter within supported starter encounters and restored Windows connectivity.
+The course E2/E3 training and E4 adapter work run alongside the remaining stage-two original-act gate. Their completion does not close that gate or the full-game objective. E3's registered budget is exhausted; further training requires a new experiment and resource registration. The next task is restoring Windows connectivity and validating the learned starter policy and the separate normal first-act controller in the original game.
 
 ## Development and provenance
 
